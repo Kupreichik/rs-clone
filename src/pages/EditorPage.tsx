@@ -1,3 +1,5 @@
+import './EditorsPage.scss';
+
 import { useState } from 'react';
 
 import Editor from '../components/Editor/Editor';
