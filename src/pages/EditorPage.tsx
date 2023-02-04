@@ -3,11 +3,12 @@ import './EditorsPage.scss';
 import { useEffect, useState } from 'react';
 
 import Editor from '../components/Editor/Editor';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 export const EditorPage = () => {
-  const [html, setHtml] = useState('');
-  const [css, setCss] = useState('');
-  const [js, setJS] = useState('');
+  const [html, setHtml] = useLocalStorage('html', '');
+  const [css, setCss] = useLocalStorage('css', '');
+  const [js, setJS] = useLocalStorage('js', '');
 
   const [srcDoc, setSrcDoc] = useState('');
 
