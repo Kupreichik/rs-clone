@@ -1,0 +1,63 @@
+@import '../../styles/vars.scss';
+
+.footer {
+  background: $gray;
+}
+
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.footer__items {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.footer__item {
+  cursor: pointer;
+}
+
+.footer__item-link .footer__svg {
+  width: 25px;
+  height: 25px;
+}
+
+.footer__item-link-rss .footer__svg {
+  width: 70px;
+  height: 30px;
+}
+
+.footer__svg {
+  transition: all 0.3s;
+}
+
+.footer__svg1:hover {
+  fill: #d1d452;
+}
+
+.footer__svg2:hover {
+  fill: #a26be6;
+}
+
+.footer__svg3:hover {
+  fill: #33c7a6;
+}
+
+.footer__item-link-rss .footer__svg:hover {
+  fill: #648ef0;
+}
+
+.footer__copyright {
+  text-align: center;
+  font-weight: 700;
+}
+
+@media screen and (max-width: 575px) {
+  .footer_up-text {
+    font-size: 30px;
+  }
+}
