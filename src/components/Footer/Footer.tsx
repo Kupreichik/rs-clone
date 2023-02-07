@@ -66,7 +66,7 @@ export const Footer = () => {
               </a>
             </div>
           </div>
-          <p className={styles.footer__copyright}>Copyright • 2023</p>
+          <p className={styles.footer__copyright}>@ 2023</p>
           <div className={styles.footer__item}>
             <a
               className={cn(styles['footer__item-link'], styles['footer__item-link-rss'])}
