@@ -78,6 +78,7 @@
 .header__input::placeholder {
   color: $text;
 }
+
 .header__input:focus::-webkit-input-placeholder {
   color: transparent;
 }
@@ -95,7 +96,6 @@
 }
 
 .header__button {
-  padding: 10px 16px;
   background: $green;
   color: black;
   border-radius: 5px;
@@ -109,4 +109,74 @@
 
 .button {
   background: gray;
+}
+
+.header__burger {
+  display: none;
+}
+
+@media screen and (max-width: 700px) {
+  .nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    z-index: -1;
+  }
+
+  .nav-active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .nav__list {
+    position: absolute;
+    top: 108px;
+    left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 100px 40px 30px;
+    width: 40%;
+    background: $gray;
+    border: none;
+  }
+
+  .nav__item {
+    border-bottom: 2px solid $background;
+    font-size: 16px;
+  }
+
+  .nav__item > a {
+    padding: 8px 15px 8px 0;
+  }
+
+  .header__burger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $text;
+    width: 35px;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    order: -1;
+  }
+
+  .header__burger:hover,
+  .header__burger:focus {
+    background: $textHover;
+  }
+
+  .header__input {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .header__top > a > svg {
+    width: 100px;
+  }
 }

@@ -97,3 +97,10 @@ body {
   background: $lightBackground;
   cursor: pointer;
 }
+
+@media screen and (max-width: 700px) {
+  .button {
+    font-size: 14px;
+    padding: 5.5px 5px;
+  }
+}
