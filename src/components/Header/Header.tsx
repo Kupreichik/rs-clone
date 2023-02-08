@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import { Link, NavLink } from 'react-router-dom';
 
+import { ReactComponent as Logo } from '../../assets/svg/logo.svg';
+import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import styles from './header.module.scss';
-import { Logo } from './logo/Logo';
 
 const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
@@ -26,7 +27,13 @@ export const Header = () => {
               className={burger ? cn(styles.nav, styles['nav-active']) : styles.nav}
               onClick={() => setBurger(false)}
             >
-              <ul className={styles.nav__list} onClick={(e) => e.stopPropagation()}>
+              <ul
+                className={styles.nav__list}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBurger(false);
+                }}
+              >
                 <li className={styles.nav__item}>
                   <NavLink className={setActive} to="/">
                     Home
@@ -51,9 +58,7 @@ export const Header = () => {
           <div className={styles.header__bottom}>
             <form action="" className={styles.header__form}>
               <label className={styles['header__form-label']}>
-                <svg className={styles['header__form-icon']} viewBox="0 0 56.7 56.7">
-                  <path d="M42.8 7.3C33-2.4 17.1-2.4 7.3 7.3c-9.8 9.8-9.8 25.7 0 35.5 8.7 8.7 22.2 9.7 32 2.9l9.6 9.6c1.8 1.8 4.7 1.8 6.4 0 1.8-1.8 1.8-4.7 0-6.4l-9.6-9.6c6.8-9.8 5.8-23.3-2.9-32zm-6.2 29.3c-6.4 6.4-16.7 6.4-23.1 0s-6.4-16.7 0-23.1c6.4-6.4 16.7-6.4 23.1 0 6.4 6.4 6.4 16.8 0 23.1z"></path>
-                </svg>
+                <Magnifier className={styles['header__form-icon']} />
                 <input className={styles.header__input} type="text" placeholder="Search CodePen..." />
               </label>
             </form>
