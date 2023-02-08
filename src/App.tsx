@@ -1,8 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 
 import { Layout } from './components/Layout';
+import { Account } from './pages/Account';
 import { EditorPage } from './pages/EditorPage';
 import { Homepage } from './pages/Homepage';
+import { Login } from './pages/Login';
 import { Notefoundpage } from './pages/Notefoundpage';
 import { Workspace } from './pages/Workspace';
 
@@ -13,6 +15,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Homepage />} />
           <Route path="workspace" element={<Workspace />} />
+          <Route path="login" element={<Login />} />
+          <Route path="account" element={<Account />} />
           <Route path="editor" element={<EditorPage />} />
           <Route path="*" element={<Notefoundpage />} />
         </Route>

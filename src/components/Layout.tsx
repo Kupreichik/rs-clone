@@ -1,18 +1,21 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import '../styles/global.scss';
+import '../styles/vars.scss';
+
+import { Outlet } from 'react-router-dom';
+
+import { Footer } from './Footer/Footer';
+import { Header } from './Header/Header';
 
 export const Layout = () => {
   return (
     <>
-      <header className="container">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/workspace">Posts</NavLink>
-        <NavLink to="/editor">Editor</NavLink>
-      </header>
-      <main className="container">
-        <Outlet />
+      <Header />
+      <main className="main">
+        <div className="container">
+          <Outlet />
+        </div>
       </main>
-
-      <footer className="container">2023</footer>
+      <Footer />
     </>
   );
 };

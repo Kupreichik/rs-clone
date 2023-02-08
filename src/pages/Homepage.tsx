@@ -1,8 +1,25 @@
+import { NavLink } from 'react-router-dom';
+
 export const Homepage = () => {
   return (
-    <div>
-      <h1>Home</h1>
-      <p>Home pages</p>
-    </div>
+    <section className="home">
+      <div className="container">
+        <div>
+          <NavLink style={{ textDecoration: 'underline' }} to="/">
+            Home
+          </NavLink>
+        </div>
+        <div>
+          <NavLink style={{ textDecoration: 'underline' }} to="/workspace">
+            Posts
+          </NavLink>
+        </div>
+        <div>
+          <NavLink style={{ textDecoration: 'underline' }} to="/editor">
+            Editor
+          </NavLink>
+        </div>
+      </div>
+    </section>
   );
 };

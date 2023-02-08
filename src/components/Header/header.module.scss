@@ -1,0 +1,179 @@
+@import '../../styles/vars.scss';
+
+.header {
+  background: $gray;
+}
+
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0 10px;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid $background;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.nav__item {
+  color: $text;
+  padding: 8px 0;
+  font-size: 20px;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.nav__item:hover {
+  color: $textHover;
+}
+
+.nav__item > a {
+  padding: 8px 15px;
+}
+
+.header__form {
+  flex-grow: 1;
+}
+
+.header__form-label {
+  position: relative;
+  font-size: 20px;
+}
+
+.header__form-icon {
+  position: absolute;
+  top: 0;
+  left: 0.6em;
+  bottom: 0;
+  margin: auto auto auto 0;
+  width: 1em;
+  height: 1em;
+  z-index: 1;
+  fill: $text;
+  width: 20px;
+  height: 20px;
+}
+
+.header__input {
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 20px;
+  background: $background;
+  outline: none;
+  border: none;
+  caret-color: white;
+  color: white;
+  font-weight: 700;
+  text-indent: 40px;
+}
+
+.header__input::placeholder {
+  color: $text;
+}
+
+.header__input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.header__input:focus {
+  background: $lightBackground;
+}
+
+.header__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.header__button {
+  background: $green;
+  color: black;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.header__button:hover {
+  color: white;
+  background: $greenHover;
+}
+
+.button {
+  background: gray;
+}
+
+.header__burger {
+  display: none;
+}
+
+@media screen and (max-width: 700px) {
+  .nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    z-index: -1;
+  }
+
+  .nav-active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .nav__list {
+    position: absolute;
+    top: 108px;
+    left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 100px 40px 30px;
+    width: 40%;
+    background: $gray;
+    border: none;
+  }
+
+  .nav__item {
+    border-bottom: 2px solid $background;
+    font-size: 16px;
+  }
+
+  .nav__item > a {
+    padding: 8px 15px 8px 0;
+  }
+
+  .header__burger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $text;
+    padding: 0 6px;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .header__burger:hover,
+  .header__burger:focus {
+    background: $textHover;
+  }
+
+  .header__input {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .header__top > a > svg {
+    width: 100px;
+  }
+}
