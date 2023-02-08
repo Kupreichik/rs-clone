@@ -22,7 +22,7 @@ export const Footer = () => {
                 rel="noreferrer"
               >
                 <Github className={styles.footer__svg} />
-                Dazmond-ru
+                Sergey Fedorov
               </a>
             </div>
             <div className={styles.footer__item}>
@@ -33,7 +33,7 @@ export const Footer = () => {
                 rel="noreferrer"
               >
                 <Github className={styles.footer__svg} />
-                Kupreichik
+                Julia Kupreichik
               </a>
             </div>
             <div className={styles.footer__item}>
@@ -44,7 +44,7 @@ export const Footer = () => {
                 rel="noreferrer"
               >
                 <Github className={styles.footer__svg} />
-                andb106
+                Andrey Boytsov
               </a>
             </div>
           </div>

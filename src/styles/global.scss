@@ -70,7 +70,6 @@ body {
 }
 
 .container {
-  max-width: 1440px;
   width: 100%;
   padding: 0 20px;
   margin: 0 auto;
@@ -90,6 +89,7 @@ body {
   background: $background;
   color: white;
   border-radius: 5px;
+  white-space: nowrap;
   transition: all 0.3s;
 }
 
@@ -99,6 +99,10 @@ body {
 }
 
 @media screen and (max-width: 700px) {
+  .container {
+    padding: 0 5px;
+  }
+
   .button {
     font-size: 14px;
     padding: 5.5px 5px;

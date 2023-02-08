@@ -1,8 +1,10 @@
 export const Workspace = () => {
   return (
-    <div>
-      <h1>Workspace</h1>
-      <p>Workspace pages</p>
-    </div>
+    <section className="workspace">
+      <div className="container">
+        <h1>Workspace</h1>
+        <p>Workspace pages</p>
+      </div>
+    </section>
   );
 };
