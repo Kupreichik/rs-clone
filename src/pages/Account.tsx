@@ -1,6 +1,6 @@
 export const Account = () => {
   return (
-    <section className="1">
+    <section className="account">
       <div className="container">
         <form action="" method="post">
           <p>Your Name</p>
