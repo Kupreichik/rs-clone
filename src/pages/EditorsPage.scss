@@ -29,9 +29,40 @@
   height: 100%;
 }
 
+.editor-title {
+  padding-left: 10px;
+}
+
 .div-absolute {
   position: absolute;
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+.view-button {
+  position: absolute;
+  top: -50px;
+  right: 200px;
+
+  width: 36px;
+  height: 36px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.rotate {
+    transform: rotate(-90deg);
+  }
+
+  @media screen and (max-width: 700px) {
+    width: 28px;
+    height: 28px;
+    top: -43px;
+    right: 124px;
+  }
+
+  &:hover {
+    filter: brightness(0.5);
+  }
 }
