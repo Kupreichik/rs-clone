@@ -1,9 +1,11 @@
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-import { fetchAuth } from '../redux/slices/auth';
+import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
 
 export const Login = () => {
+  const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
 
   const {
@@ -18,15 +20,19 @@ export const Login = () => {
     },
   });
 
-  interface DefaultValues {
-    identifier: string;
-    password: string;
-  }
+  const onSubmit = async (values: UserData) => {
+    const data = await dispatch(fetchAuth(values));
 
-  const onSubmit = (values: DefaultValues) => {
-    console.log(values);
-    dispatch(fetchAuth(values));
+    if (!data.payload) alert('Failed to log in');
+
+    if ('token' in data.payload) {
+      window.localStorage.setItem('token', data.payload.token);
+    }
   };
+
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <section className="login">
@@ -40,7 +46,7 @@ export const Login = () => {
               placeholder="Name or Email"
             />
             <div>
-              <span>{errors.login?.message}</span>
+              <span>{errors.identifier?.message}</span>
             </div>
           </label>
 

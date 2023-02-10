@@ -2,11 +2,13 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import Media from 'react-media';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/LogoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
+import { selectIsAuth } from '../../redux/slices/auth';
 import styles from './header.module.scss';
 
 // const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
@@ -14,6 +16,14 @@ const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isAc
 
 export const Header = () => {
   const [burger, setBurger] = useState(false);
+  const dispatch = useDispatch();
+
+  const isAuth = useSelector(selectIsAuth);
+
+  const onClickLogout = () => {
+    if (window.confirm('Are you sure you want to log?')) dispatch(logout());
+  };
+
   return (
     <header className={styles.header}>
       <div className="container">
@@ -31,12 +41,20 @@ export const Header = () => {
             </label>
           </form>
           <div className={styles.header__buttons}>
-            <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/account">
-              Sign Up
-            </NavLink>
-            <NavLink className="button" style={setLoginButton} to="/login">
-              Log In
-            </NavLink>
+            {isAuth ? (
+              <Link onClick={() => onClickLogout()} className="button" to="/">
+                Log Out
+              </Link>
+            ) : (
+              <>
+                <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/account">
+                  Sign Up
+                </NavLink>
+                <NavLink className="button" style={setLoginButton} to="/login">
+                  Log In
+                </NavLink>
+              </>
+            )}
           </div>
         </div>
       </div>
