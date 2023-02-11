@@ -8,7 +8,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/LogoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
-import { selectIsAuth } from '../../redux/slices/auth';
+import { fetchAuthLogout, selectIsAuth } from '../../redux/slices/auth';
 import styles from './header.module.scss';
 
 // const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
@@ -21,7 +21,10 @@ export const Header = () => {
   const isAuth = useSelector(selectIsAuth);
 
   const onClickLogout = () => {
-    if (window.confirm('Are you sure you want to log?')) dispatch(logout());
+    if (window.confirm('Are you sure you want to log out?')) {
+      dispatch(fetchAuthLogout());
+      dispatch(logout());
+    }
   };
 
   return (
@@ -47,7 +50,7 @@ export const Header = () => {
               </Link>
             ) : (
               <>
-                <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/account">
+                <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
                   Sign Up
                 </NavLink>
                 <NavLink className="button" style={setLoginButton} to="/login">

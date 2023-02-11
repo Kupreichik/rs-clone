@@ -1,12 +1,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://rs-clone-api.onrender.com/',
-});
-
-instance.interceptors.request.use((config) => {
-  config.headers.Authorizations = window.localStorage.getItem('token');
-  return config;
+  // baseURL: 'https://rs-clone-api.onrender.com/',
+  baseURL: 'http://localhost:3033/',
+  withCredentials: true,
 });
 
 export default instance;
