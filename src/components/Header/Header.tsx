@@ -8,6 +8,7 @@ import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg'
 import { ReactComponent as LogoMobile } from '../../assets/svg/LogoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import styles from './header.module.scss';
+import { PenInfo } from './PenInfo/PenInfo';
 
 // const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
@@ -24,6 +25,7 @@ export const Header = () => {
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
+          <PenInfo />
           <form action="" className={styles.header__form}>
             <label className={styles['header__form-label']}>
               <Magnifier className={styles['header__form-icon']} />
