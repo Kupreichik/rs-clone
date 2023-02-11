@@ -1,0 +1,36 @@
+@import '../styles/vars.scss';
+
+.auth__inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 73px - 71px);
+}
+
+.auth__title {
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.auth__form {
+  max-width: 482px;
+  width: 100%;
+}
+
+@media screen and (max-width: 700px) {
+  .auth__inner {
+    margin-top: 10px;
+    height: calc(100vh - 68px - 35px);
+  }
+
+  .auth__title {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .auth__inner {
+    height: calc(100vh - 68px - 71px);
+  }
+}

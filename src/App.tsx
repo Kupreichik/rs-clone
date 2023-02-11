@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ function App() {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchAuthMe());
   }, []);
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="workspace" element={<Workspace />} />
           <Route path="login" element={<Login />} />
-          <Route path="registration" element={<Registration />} />
+          <Route path="register" element={<Registration />} />
           <Route path="editor" element={<EditorPage />} />
           <Route path="*" element={<Notefoundpage />} />
         </Route>

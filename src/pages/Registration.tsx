@@ -1,8 +1,10 @@
+import { Button, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import { fetchAuthRegister, selectIsAuth } from '../redux/slices/auth';
+import styles from './auth.module.scss';
 
 export const Registration = () => {
   const isAuth = useSelector(selectIsAuth);
@@ -35,41 +37,74 @@ export const Registration = () => {
   }
 
   return (
-    <section className="registration">
+    <section className={styles.auth}>
       <div className="container">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <p>Your Name</p>
-          <input {...register('name', { required: 'Enter correct name' })} type="text" placeholder="Name" />{' '}
-          <div>
-            <span>{errors.name?.message}</span>
-          </div>
-          <p>Choose a username</p>
-          <input
-            {...register('username', { required: 'Enter correct username' })}
-            type="text"
-            placeholder="Username"
-          />{' '}
-          <div>
-            <span>{errors.username?.message}</span>
-          </div>
-          <p>E-mail</p>
-          <input {...register('email', { required: 'Enter correct e-mail' })} type="text" placeholder="E-mail" />{' '}
-          <div>
-            <span>{errors.email?.message}</span>
-          </div>
-          <p>Choose Password</p>
-          <input
-            {...register('password', { required: 'Enter correct password' })}
-            type="password"
-            placeholder="Password"
-          />{' '}
-          <div>
-            <span>{errors.password?.message}</span>
-          </div>
-          <button type="submit" disabled={!isValid}>
-            Sign Up
-          </button>
-        </form>
+        <div className={styles.auth__inner}>
+          <h1 className={styles.auth__title}>Sign Up</h1>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.auth__form}>
+            <TextField
+              label="Your Name"
+              error={Boolean(errors.name?.message)}
+              helperText={errors.name?.message}
+              {...register('name', {
+                required: 'Enter correct login',
+                minLength: {
+                  value: 3,
+                  message: 'Minimum 3 symbols',
+                },
+              })}
+              fullWidth
+            />
+            <TextField
+              label="Choose a username"
+              error={Boolean(errors.username?.message)}
+              helperText={errors.username?.message}
+              {...register('username', {
+                required: 'Enter correct username',
+                minLength: {
+                  value: 3,
+                  message: 'Minimum 3 symbols',
+                },
+              })}
+              fullWidth
+            />
+            <TextField
+              label="E-mail"
+              error={Boolean(errors.email?.message)}
+              helperText={errors.email?.message}
+              {...register('email', {
+                required: 'Enter correct E-mail',
+                pattern: {
+                  value: /^[_a-z0-9-+-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i,
+                  message: 'Enter correct E-mail',
+                },
+              })}
+              fullWidth
+            />
+            <TextField
+              label="Password"
+              error={Boolean(errors.password?.message)}
+              helperText={errors.password?.message}
+              {...register('password', {
+                required: 'Enter correct password',
+                minLength: {
+                  value: 6,
+                  message: 'Minimum 6 symbols',
+                },
+              })}
+              fullWidth
+            />
+            <Button disabled={!isValid} type="submit" size="large" variant="contained" fullWidth>
+              Sign Up
+            </Button>
+          </form>
+          <Link
+            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=http://localhost:3033/users/github-auth?path=/&scope=user:email"
+            className="button button-github"
+          >
+            Sign Up with GitHub
+          </Link>
+        </div>
       </div>
     </section>
   );

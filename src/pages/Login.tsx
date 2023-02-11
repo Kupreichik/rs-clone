@@ -1,8 +1,10 @@
+import { Button, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
+import styles from './auth.module.scss';
 
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
@@ -33,45 +35,49 @@ export const Login = () => {
   }
 
   return (
-    <section className="login">
+    <section className={styles.auth}>
       <div className="container">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label>
-            Your Name or Email
-            <input
-              {...register('identifier', { required: 'Enter correct login' })}
-              type="text"
-              placeholder="Name or Email"
+        <div className={styles.auth__inner}>
+          <h1 className={styles.auth__title}>Log In</h1>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.auth__form}>
+            <TextField
+              label="Name or E-Mail"
+              error={Boolean(errors.identifier?.message)}
+              helperText={errors.identifier?.message}
+              {...register('identifier', {
+                required: 'Enter correct login',
+                minLength: {
+                  value: 6,
+                  message: 'Minimum 6 symbols',
+                },
+              })}
+              fullWidth
             />
-            <div>
-              <span>{errors.identifier?.message}</span>
-            </div>
-          </label>
-
-          <label>
-            Choose Password
-            <input
-              {...register('password', { required: 'Enter correct password' })}
-              type="password"
-              placeholder="Password"
+            <TextField
+              label="Password"
+              error={Boolean(errors.password?.message)}
+              helperText={errors.password?.message}
+              {...register('password', {
+                required: 'Enter correct password',
+                minLength: {
+                  value: 6,
+                  message: 'Minimum 6 symbols',
+                },
+              })}
+              fullWidth
             />
-            <div>
-              <span>{errors.password?.message}</span>
-            </div>
-          </label>
+            <Button disabled={!isValid} type="submit" size="large" variant="contained" fullWidth>
+              Log In
+            </Button>
+          </form>
 
-          <button type="submit" disabled={!isValid}>
-            Log In
-          </button>
-        </form>
-
-        <a
-          href="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=http://localhost:3033/users/github-auth?path=/editor&scope=user:email"
-          className="button"
-          style={{ display: 'block', marginTop: '20px', width: '100px', background: 'green' }}
-        >
-          Github
-        </a>
+          <Link
+            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=http://localhost:3033/users/github-auth?path=/&scope=user:email"
+            className="button button-github"
+          >
+            Log In with GitHub
+          </Link>
+        </div>
       </div>
     </section>
   );

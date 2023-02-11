@@ -1,5 +1,6 @@
 import '../styles/global.scss';
 import '../styles/vars.scss';
+import '../styles/form.scss';
 
 import { Outlet } from 'react-router-dom';
 
