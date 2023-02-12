@@ -7,23 +7,28 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/css/css';
 
+import { ReactNode } from 'react';
 import { Controlled as ControlledEditor } from 'react-codemirror2-react-17';
 
 type EditorProps = {
   displayName: string;
+  icon: ReactNode;
   language: string;
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Editor({ displayName, language, value, onChange }: EditorProps) {
+function Editor({ displayName, icon, language, value, onChange }: EditorProps) {
   function handleChange(currentValue: string) {
     onChange(currentValue);
   }
 
   return (
     <div className="editor-container">
-      <div className="editor-title">{displayName}</div>
+      <div className="editor-title">
+        {icon}
+        <h3>{displayName}</h3>
+      </div>
       <ControlledEditor
         onBeforeChange={(_editor, _data, currentValue) => handleChange(currentValue)}
         value={value}
