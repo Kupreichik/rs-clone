@@ -1,14 +1,15 @@
 import { Button, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
+import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     register,

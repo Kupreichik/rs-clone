@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axios from '../../axios';
+import { RootState } from '../store';
 
-type UserResponse = {
+export type UserResponse = {
   name: string;
   username: string;
-  email: string;
-  avatar: string;
-  token: string;
+  email?: string;
+  avatar?: string;
+  token?: string;
 };
 
 export type UserData = {
@@ -15,34 +16,34 @@ export type UserData = {
   password: string;
 };
 
-type InitialState = {
+export type InitialState = {
   data: UserResponse | null;
   status: 'loading' | 'loaded' | 'error';
 };
 
-export const fetchAuth = createAsyncThunk('auth/fetchAuth', async (params: InitialState) => {
+export const fetchAuth = createAsyncThunk('auth/fetchAuth', async (params: UserData) => {
+  console.log(params, 'params');
+
   const { data } = await axios.post('/users/login', params);
-  return data;
+  return data as UserResponse;
 });
 
 export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async () => {
   const { data } = await axios.get('/users/me');
-  return data;
+  return data as UserResponse;
 });
 
 export const fetchAuthLogout = createAsyncThunk('auth/fetchAuthLogout', async () => {
   const { data } = await axios.patch('/users/logout');
-  return data;
+  return data as UserResponse;
 });
 
-export const fetchAuthRegister = createAsyncThunk('auth/fetchAuthRegister', async (params) => {
+export const fetchAuthRegister = createAsyncThunk('auth/fetchAuthRegister', async (params: UserResponse) => {
   const { data } = await axios.post('/users/register', params);
-  console.log(params);
-
-  return data;
+  return data as UserResponse;
 });
 
-const initialState = {
+const initialState: InitialState = {
   data: null,
   status: 'loading',
 };
@@ -108,7 +109,7 @@ const authSlice = createSlice({
   },
 });
 
-export const selectIsAuth = (state) => Boolean(state.auth.data);
+export const selectIsAuth = (state: RootState) => Boolean(state.auth.data);
 
 export const authReducer = authSlice.reducer;
 

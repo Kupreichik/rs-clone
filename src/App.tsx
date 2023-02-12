@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 import { Layout } from './components/Layout';
@@ -10,10 +10,11 @@ import { Notefoundpage } from './pages/Notefoundpage';
 import { Registration } from './pages/Registration';
 import { Workspace } from './pages/Workspace';
 import { fetchAuthMe, selectIsAuth } from './redux/slices/auth';
+import { useAppDispatch } from './redux/store';
 
 function App() {
-  const dispatch = useDispatch();
-  const isAuth = useSelector(selectIsAuth);
+  const dispatch = useAppDispatch();
+  useSelector(selectIsAuth);
 
   useEffect(() => {
     dispatch(fetchAuthMe());

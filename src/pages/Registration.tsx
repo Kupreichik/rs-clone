@@ -1,14 +1,15 @@
 import { Button, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
-import { fetchAuthRegister, selectIsAuth } from '../redux/slices/auth';
+import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
+import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
 export const Registration = () => {
   const isAuth = useSelector(selectIsAuth);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -24,7 +25,7 @@ export const Registration = () => {
     mode: 'onChange',
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: UserResponse) => {
     const data = await dispatch(fetchAuthRegister(values));
 
     if (!data.payload) {
