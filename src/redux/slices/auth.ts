@@ -8,7 +8,7 @@ export type UserResponse = {
   username: string;
   email?: string;
   avatar?: string;
-  token?: string;
+  loved?: string[];
 };
 
 export type UserData = {
@@ -22,8 +22,6 @@ export type InitialState = {
 };
 
 export const fetchAuth = createAsyncThunk('auth/fetchAuth', async (params: UserData) => {
-  console.log(params, 'params');
-
   const { data } = await axios.post('/users/login', params);
   return data as UserResponse;
 });
@@ -75,7 +73,6 @@ const authSlice = createSlice({
         state.data = null;
       })
       .addCase(fetchAuthMe.fulfilled, (state, action) => {
-        console.log(action);
         state.status = 'loaded';
         state.data = action.payload;
       })

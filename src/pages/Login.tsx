@@ -18,8 +18,8 @@ export const Login = () => {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      identifier: 'billy55',
-      password: 'qwerty',
+      identifier: '',
+      password: '',
     },
     mode: 'onChange',
   });
@@ -56,6 +56,7 @@ export const Login = () => {
               fullWidth
             />
             <TextField
+              type={'password'}
               label="Password"
               error={Boolean(errors.password?.message)}
               helperText={errors.password?.message}

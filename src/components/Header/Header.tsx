@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
-import { ReactComponent as LogoMobile } from '../../assets/svg/LogoMobile.svg';
+import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { fetchAuthLogout, logout, selectIsAuth } from '../../redux/slices/auth';
-import { useAppDispatch } from '../../redux/store';
+import { RootState, useAppDispatch } from '../../redux/store';
 import styles from './header.module.scss';
 
 // const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
@@ -27,6 +27,8 @@ export const Header = () => {
       dispatch(logout());
     }
   };
+
+  const userAvatar = useSelector((state: RootState) => state.auth.data?.avatar);
 
   return (
     <header className={styles.header}>
@@ -46,9 +48,12 @@ export const Header = () => {
           </form>
           <div className={styles.header__buttons}>
             {isAuth ? (
-              <Link onClick={() => onClickLogout()} className="button" to="/">
-                Log Out
-              </Link>
+              <>
+                <img className={styles.header__avatar} src={userAvatar} alt="avatar" />
+                <Link onClick={() => onClickLogout()} className="button" to="/">
+                  Log Out
+                </Link>
+              </>
             ) : (
               <>
                 <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">

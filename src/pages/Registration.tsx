@@ -19,10 +19,10 @@ export const Registration = () => {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      name: 'Eugene',
-      username: 'Eugene',
-      email: 'eugen@gmail.ru',
-      password: '123456',
+      name: '',
+      username: '',
+      email: '',
+      password: '',
     },
     mode: 'onChange',
   });
@@ -68,9 +68,9 @@ export const Registration = () => {
                   value: 3,
                   message: 'Minimum 3 symbols',
                 },
-                onChange: async ({ target }) => {
-                  const { data } = await axios.get(`/users/username/${target.value}`);
-                  return data.canUse ? 'Minimum 3 symbols' : '123';
+                validate: async (value) => {
+                  const { data } = await axios.get(`/users/username/${value}`);
+                  return data.canUse || 'This name already taken!';
                 },
               })}
               fullWidth
@@ -89,6 +89,7 @@ export const Registration = () => {
               fullWidth
             />
             <TextField
+              type={'password'}
               label="Password"
               error={Boolean(errors.password?.message)}
               helperText={errors.password?.message}
