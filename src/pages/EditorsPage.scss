@@ -32,6 +32,13 @@
 
 .editor-title {
   padding-left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  & svg {
+    flex-shrink: 0;
+  }
 }
 
 .div-absolute {
