@@ -75,6 +75,7 @@ const authSlice = createSlice({
         state.data = null;
       })
       .addCase(fetchAuthMe.fulfilled, (state, action) => {
+        console.log(action);
         state.status = 'loaded';
         state.data = action.payload;
       })

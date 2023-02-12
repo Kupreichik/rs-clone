@@ -9,6 +9,7 @@ import styles from './auth.module.scss';
 
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
+
   const dispatch = useAppDispatch();
 
   const {
@@ -42,14 +43,14 @@ export const Login = () => {
           <h1 className={styles.auth__title}>Log In</h1>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.auth__form}>
             <TextField
-              label="Name or E-Mail"
+              label="Username or E-Mail"
               error={Boolean(errors.identifier?.message)}
               helperText={errors.identifier?.message}
               {...register('identifier', {
                 required: 'Enter correct login',
                 minLength: {
-                  value: 6,
-                  message: 'Minimum 6 symbols',
+                  value: 3,
+                  message: 'Minimum 3 symbols',
                 },
               })}
               fullWidth
@@ -73,7 +74,7 @@ export const Login = () => {
           </form>
 
           <Link
-            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=http://localhost:3033/users/github-auth?path=/&scope=user:email"
+            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=https://rs-clone-api.onrender.com/users/github-auth?path=/&scope=user:email"
             className="button button-github"
           >
             Log In with GitHub

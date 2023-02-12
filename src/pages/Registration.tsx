@@ -3,12 +3,14 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
+import axios from '../axios';
 import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
 export const Registration = () => {
   const isAuth = useSelector(selectIsAuth);
+
   const dispatch = useAppDispatch();
 
   const {
@@ -48,7 +50,7 @@ export const Registration = () => {
               error={Boolean(errors.name?.message)}
               helperText={errors.name?.message}
               {...register('name', {
-                required: 'Enter correct login',
+                required: 'Enter your correct name',
                 minLength: {
                   value: 3,
                   message: 'Minimum 3 symbols',
@@ -65,6 +67,10 @@ export const Registration = () => {
                 minLength: {
                   value: 3,
                   message: 'Minimum 3 symbols',
+                },
+                onChange: async ({ target }) => {
+                  const { data } = await axios.get(`/users/username/${target.value}`);
+                  return data.canUse ? 'Minimum 3 symbols' : '123';
                 },
               })}
               fullWidth
@@ -100,7 +106,7 @@ export const Registration = () => {
             </Button>
           </form>
           <Link
-            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=http://localhost:3033/users/github-auth?path=/&scope=user:email"
+            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=https://rs-clone-api.onrender.com/users/github-auth?path=/&scope=user:email"
             className="button button-github"
           >
             Sign Up with GitHub
