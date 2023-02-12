@@ -2,13 +2,14 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import Media from 'react-media';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/LogoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
-import { fetchAuthLogout, selectIsAuth } from '../../redux/slices/auth';
+import { fetchAuthLogout, logout, selectIsAuth } from '../../redux/slices/auth';
+import { useAppDispatch } from '../../redux/store';
 import styles from './header.module.scss';
 
 // const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
@@ -16,13 +17,13 @@ const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isAc
 
 export const Header = () => {
   const [burger, setBurger] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const isAuth = useSelector(selectIsAuth);
 
-  const onClickLogout = () => {
+  const onClickLogout = async () => {
     if (window.confirm('Are you sure you want to log out?')) {
-      dispatch(fetchAuthLogout());
+      await dispatch(fetchAuthLogout());
       dispatch(logout());
     }
   };
