@@ -15,10 +15,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 3px;
 }
 
 .footer__item {
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.3s;
   padding: 0 10px;
@@ -33,8 +34,8 @@
 }
 
 .footer__item-link .footer__svg {
-  width: 25px;
-  height: 25px;
+  width: 15px;
+  height: 15px;
 }
 
 .footer__item-link-rss .footer__svg {
@@ -101,6 +102,6 @@
 @media screen and (max-width: 550px) {
   .footer__items {
     flex-direction: column;
-    gap: 10px;
+    gap: 3px;
   }
 }

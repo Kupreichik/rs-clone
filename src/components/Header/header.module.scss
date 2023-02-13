@@ -113,6 +113,13 @@
   display: none;
 }
 
+.header__avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 700px) {
   .nav {
     position: absolute;
@@ -152,7 +159,7 @@
   }
 
   .header__burger {
-    display: flex;
+    // display: flex;
     justify-content: center;
     align-items: center;
     background: $text;
@@ -169,6 +176,12 @@
 
   .header__input {
     font-size: 16px;
+  }
+
+  .header__avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
   }
 }
 

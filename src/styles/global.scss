@@ -99,6 +99,35 @@ body {
   cursor: pointer;
 }
 
+.button-github {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: $text;
+  border: 2px solid $text;
+  position: relative;
+  font-weight: 700;
+  text-align: center;
+  padding-left: 40px;
+  max-width: 482px;
+  width: 100%;
+}
+
+.button-github::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 6px;
+  width: 35px;
+  height: 35px;
+  background-image: url('../assets/svg/github.svg');
+  background-repeat: no-repeat;
+  background-size: 25px;
+}
+
+.button-github:hover {
+  border: 2px solid $text;
+}
+
 @media screen and (max-width: 700px) {
   .container {
     padding: 0 5px;
@@ -107,5 +136,9 @@ body {
   .button {
     font-size: 14px;
     padding: 5.5px 5px;
+  }
+
+  .button-github::before {
+    top: 2px;
   }
 }

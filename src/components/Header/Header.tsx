@@ -2,11 +2,16 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import Media from 'react-media';
+
+import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
+
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
-import { ReactComponent as LogoMobile } from '../../assets/svg/LogoMobile.svg';
+import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
+import { fetchAuthLogout, logout, selectIsAuth } from '../../redux/slices/auth';
+import { RootState, useAppDispatch } from '../../redux/store';
 import styles from './header.module.scss';
 import { PenInfo } from './PenInfo/PenInfo';
 
@@ -15,6 +20,17 @@ const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isAc
 
 export const Header = () => {
   const [burger, setBurger] = useState(false);
+  const dispatch = useAppDispatch();
+  const isAuth = useSelector(selectIsAuth);
+
+  const onClickLogout = async () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      await dispatch(fetchAuthLogout());
+      dispatch(logout());
+    }
+  };
+
+  const userAvatar = useSelector((state: RootState) => state.auth.data?.avatar);
   const locationRouter = useLocation();
 
   return (
@@ -37,12 +53,23 @@ export const Header = () => {
             </form>
           )}
           <div className={styles.header__buttons}>
-            <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/account">
-              Sign Up
-            </NavLink>
-            <NavLink className="button" style={setLoginButton} to="/login">
-              Log In
-            </NavLink>
+            {isAuth ? (
+              <>
+                <img className={styles.header__avatar} src={userAvatar} alt="avatar" />
+                <Link onClick={() => onClickLogout()} className="button" to="/">
+                  Log Out
+                </Link>
+              </>
+            ) : (
+              <>
+                <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
+                  Sign Up
+                </NavLink>
+                <NavLink className="button" style={setLoginButton} to="/login">
+                  Log In
+                </NavLink>
+              </>
+            )}
           </div>
         </div>
       </div>

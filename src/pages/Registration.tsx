@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
-import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
+import axios from '../axios';
+import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
-export const Login = () => {
+export const Registration = () => {
   const isAuth = useSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
@@ -18,17 +19,19 @@ export const Login = () => {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      identifier: '',
+      name: '',
+      username: '',
+      email: '',
       password: '',
     },
     mode: 'onChange',
   });
 
-  const onSubmit = async (values: UserData) => {
-    const data = await dispatch(fetchAuth(values));
+  const onSubmit = async (values: UserResponse) => {
+    const data = await dispatch(fetchAuthRegister(values));
 
     if (!data.payload) {
-      return alert('Failed to log in');
+      return alert('Failed to register');
     }
   };
 
@@ -40,17 +43,47 @@ export const Login = () => {
     <section className={styles.auth}>
       <div className="container">
         <div className={styles.auth__inner}>
-          <h1 className={styles.auth__title}>Log In</h1>
+          <h1 className={styles.auth__title}>Sign Up</h1>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.auth__form}>
             <TextField
-              label="Username or E-Mail"
-              error={Boolean(errors.identifier?.message)}
-              helperText={errors.identifier?.message}
-              {...register('identifier', {
-                required: 'Enter correct login',
+              label="Your Name"
+              error={Boolean(errors.name?.message)}
+              helperText={errors.name?.message}
+              {...register('name', {
+                required: 'Enter your correct name',
                 minLength: {
                   value: 3,
                   message: 'Minimum 3 symbols',
+                },
+              })}
+              fullWidth
+            />
+            <TextField
+              label="Choose a username"
+              error={Boolean(errors.username?.message)}
+              helperText={errors.username?.message}
+              {...register('username', {
+                required: 'Enter correct username',
+                minLength: {
+                  value: 3,
+                  message: 'Minimum 3 symbols',
+                },
+                validate: async (value) => {
+                  const { data } = await axios.get(`/users/username/${value}`);
+                  return data.canUse || 'This name already taken!';
+                },
+              })}
+              fullWidth
+            />
+            <TextField
+              label="E-mail"
+              error={Boolean(errors.email?.message)}
+              helperText={errors.email?.message}
+              {...register('email', {
+                required: 'Enter correct E-mail',
+                pattern: {
+                  value: /^[_a-z0-9-+-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i,
+                  message: 'Enter correct E-mail',
                 },
               })}
               fullWidth
@@ -70,15 +103,14 @@ export const Login = () => {
               fullWidth
             />
             <Button disabled={!isValid} type="submit" size="large" variant="contained" fullWidth>
-              Log In
+              Sign Up
             </Button>
           </form>
-
           <Link
             to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=https://rs-clone-api.onrender.com/users/github-auth?path=/&scope=user:email"
             className="button button-github"
           >
-            Log In with GitHub
+            Sign Up with GitHub
           </Link>
         </div>
       </div>
