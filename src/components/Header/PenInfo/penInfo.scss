@@ -1,0 +1,55 @@
+.pen-info {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 1;
+  margin-right: 30px;
+}
+
+.pen-info__title {
+  display: flex;
+  position: relative;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.pen-info__author {
+  white-space: nowrap;
+}
+
+.pen-info__title-btn {
+  cursor: pointer;
+  padding-left: 5px;
+
+  &:hover {
+    animation: pencilAnimate 0.5s;
+    filter: contrast(0.5);
+  }
+}
+
+@keyframes pencilAnimate {
+  0% {
+    transform: rotate(-5deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  100% {
+    transform: rotate(-5deg);
+  }
+}
+
+.isVisHidden {
+  position: absolute;
+  visibility: hidden;
+}
+
+.pen-info__input {
+  background-color: inherit;
+  color: inherit;
+  font-weight: bold;
+  border-style: none;
+  outline: none;
+  width: 100%;
+}

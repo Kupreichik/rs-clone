@@ -2,8 +2,10 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import Media from 'react-media';
+
 import { useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
@@ -11,6 +13,7 @@ import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { fetchAuthLogout, logout, selectIsAuth } from '../../redux/slices/auth';
 import { RootState, useAppDispatch } from '../../redux/store';
 import styles from './header.module.scss';
+import { PenInfo } from './PenInfo/PenInfo';
 
 // const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
@@ -18,7 +21,6 @@ const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isAc
 export const Header = () => {
   const [burger, setBurger] = useState(false);
   const dispatch = useAppDispatch();
-
   const isAuth = useSelector(selectIsAuth);
 
   const onClickLogout = async () => {
@@ -29,6 +31,7 @@ export const Header = () => {
   };
 
   const userAvatar = useSelector((state: RootState) => state.auth.data?.avatar);
+  const locationRouter = useLocation();
 
   return (
     <header className={styles.header}>
@@ -40,12 +43,15 @@ export const Header = () => {
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
-          <form action="" className={styles.header__form}>
-            <label className={styles['header__form-label']}>
-              <Magnifier className={styles['header__form-icon']} />
-              <input className={styles.header__input} type="text" placeholder="Search CodePen..." />
-            </label>
-          </form>
+          {locationRouter.pathname === '/editor' && <PenInfo />}
+          {locationRouter.pathname !== '/editor' && (
+            <form action="" className={styles.header__form}>
+              <label className={styles['header__form-label']}>
+                <Magnifier className={styles['header__form-icon']} />
+                <input className={styles.header__input} type="text" placeholder="Search CodePen..." />
+              </label>
+            </form>
+          )}
           <div className={styles.header__buttons}>
             {isAuth ? (
               <>

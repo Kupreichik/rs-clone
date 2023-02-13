@@ -1,12 +1,14 @@
 import 'react-reflex/styles.css';
 import './EditorsPage.scss';
 
+import cn from 'classnames';
 import { useEffect, useState } from 'react';
+import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
+import { ReactComponent as ViewBtnIcon } from '../assets/svg/viewBtn.svg';
 import Editor from '../components/Editor/Editor';
 import useLocalStorage from '../hooks/useLocalStorage';
-
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
@@ -47,9 +49,9 @@ export const EditorPage = () => {
 
   return (
     <div className="main-wrapper-editor">
-      <button onClick={onChangeMode} style={{ position: 'absolute', top: '-23px', right: '50%' }}>
-        Change view mode
-      </button>
+      <div onClick={onChangeMode} className={cn({ 'view-button': true, rotate: viewMode === 'vertical' })}>
+        <ViewBtnIcon />
+      </div>
       <ReflexContainer orientation={viewMode}>
         <ReflexElement flex={0.25} minSize={30}>
           <div className="div-absolute">
@@ -57,7 +59,13 @@ export const EditorPage = () => {
               <ReflexContainer orientation={oppositeViewMode(viewMode)}>
                 <ReflexElement minSize={30}>
                   <div className="div-absolute">
-                    <Editor language="xml" displayName="HTML" onChange={setHtml} value={html} />
+                    <Editor
+                      icon={<TbBrandHtml5 color="red" size={20} />}
+                      language="xml"
+                      displayName="HTML"
+                      onChange={setHtml}
+                      value={html}
+                    />
                   </div>
                 </ReflexElement>
 
@@ -65,7 +73,13 @@ export const EditorPage = () => {
 
                 <ReflexElement minSize={30}>
                   <div className="div-absolute">
-                    <Editor language="css" displayName="CSS" onChange={setCss} value={css} />
+                    <Editor
+                      icon={<TbBrandCss3 color="blue" size={20} />}
+                      language="css"
+                      displayName="CSS"
+                      onChange={setCss}
+                      value={css}
+                    />
                   </div>
                 </ReflexElement>
 
@@ -73,7 +87,13 @@ export const EditorPage = () => {
 
                 <ReflexElement minSize={30}>
                   <div className="div-absolute">
-                    <Editor language="javascript" displayName="JAVASCRIPT" onChange={setJS} value={js} />
+                    <Editor
+                      icon={<TbBrandJavascript color="yellow" size={20} />}
+                      language="javascript"
+                      displayName="JS"
+                      onChange={setJS}
+                      value={js}
+                    />
                   </div>
                 </ReflexElement>
               </ReflexContainer>
