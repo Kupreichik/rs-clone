@@ -31,123 +31,21 @@ export const Homepage = () => {
                     <h4 className={styles['home__item-title']}>SSSsssssssssssssssssssssssssssssssssssssss</h4>
                     <p className={styles['home__item-author']}>{userName}</p>
                   </div>
-                  {/* <button> */}
-                  <IoMdHeartEmpty className={cn(styles['home__item-icon'], styles['icon-fill'])} />
-                  {/* {heartIcon ? (
-                      
+                  <div
+                    className={styles['home__item-like']}
+                    onMouseOver={() => setHeartIcon(true)}
+                    onMouseOut={() => setHeartIcon(false)}
+                  >
+                    {heartIcon ? (
+                      <IoMdHeart className={styles['home__item-icon']} />
                     ) : (
-                      <IoMdHeart className={cn(styles['home__item-icon'], styles['icon-stroke'])} />
-                    )} */}
-                  {/* </button> */}
+                      <IoMdHeartEmpty className={styles['home__item-icon']} />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            {/*  */}{' '}
-            <div className={styles.home__item}>
-              <div className={styles['home__item-content']}>
-                <div className={styles['home__item-background']}></div>
-                <img className={styles['home__item-img']} src="http://placehold.it/350x200" alt="placeholder" />
-                <div className={styles['home__item-info']}>
-                  <img className={styles['home__item-avatar']} src={userAvatar} alt="avatar" />
-                  <div className={styles['home__item-description']}>
-                    <h4 className={styles['home__item-title']}>SSSsssssssssssssssssssssssssssssssssssssss</h4>
-                    <p className={styles['home__item-author']}>{userName}</p>
-                  </div>
-                  {/* <button> */}
-                  <IoMdHeartEmpty className={cn(styles['home__item-icon'], styles['icon-fill'])} />
-                  {/* {heartIcon ? (
-                      
-                    ) : (
-                      <IoMdHeart className={cn(styles['home__item-icon'], styles['icon-stroke'])} />
-                    )} */}
-                  {/* </button> */}
-                </div>
-              </div>
-            </div>{' '}
-            <div className={styles.home__item}>
-              <div className={styles['home__item-content']}>
-                <div className={styles['home__item-background']}></div>
-                <img className={styles['home__item-img']} src="http://placehold.it/350x200" alt="placeholder" />
-                <div className={styles['home__item-info']}>
-                  <img className={styles['home__item-avatar']} src={userAvatar} alt="avatar" />
-                  <div className={styles['home__item-description']}>
-                    <h4 className={styles['home__item-title']}>SSSsssssssssssssssssssssssssssssssssssssss</h4>
-                    <p className={styles['home__item-author']}>{userName}</p>
-                  </div>
-                  {/* <button> */}
-                  <IoMdHeartEmpty className={cn(styles['home__item-icon'], styles['icon-fill'])} />
-                  {/* {heartIcon ? (
-                      
-                    ) : (
-                      <IoMdHeart className={cn(styles['home__item-icon'], styles['icon-stroke'])} />
-                    )} */}
-                  {/* </button> */}
-                </div>
-              </div>
-            </div>{' '}
-            <div className={styles.home__item}>
-              <div className={styles['home__item-content']}>
-                <div className={styles['home__item-background']}></div>
-                <img className={styles['home__item-img']} src="http://placehold.it/350x200" alt="placeholder" />
-                <div className={styles['home__item-info']}>
-                  <img className={styles['home__item-avatar']} src={userAvatar} alt="avatar" />
-                  <div className={styles['home__item-description']}>
-                    <h4 className={styles['home__item-title']}>SSSsssssssssssssssssssssssssssssssssssssss</h4>
-                    <p className={styles['home__item-author']}>{userName}</p>
-                  </div>
-                  {/* <button> */}
-                  <IoMdHeartEmpty className={cn(styles['home__item-icon'], styles['icon-fill'])} />
-                  {/* {heartIcon ? (
-                      
-                    ) : (
-                      <IoMdHeart className={cn(styles['home__item-icon'], styles['icon-stroke'])} />
-                    )} */}
-                  {/* </button> */}
-                </div>
-              </div>
-            </div>{' '}
-            <div className={styles.home__item}>
-              <div className={styles['home__item-content']}>
-                <div className={styles['home__item-background']}></div>
-                <img className={styles['home__item-img']} src="http://placehold.it/350x200" alt="placeholder" />
-                <div className={styles['home__item-info']}>
-                  <img className={styles['home__item-avatar']} src={userAvatar} alt="avatar" />
-                  <div className={styles['home__item-description']}>
-                    <h4 className={styles['home__item-title']}>SSSsssssssssssssssssssssssssssssssssssssss</h4>
-                    <p className={styles['home__item-author']}>{userName}</p>
-                  </div>
-                  {/* <button> */}
-                  <IoMdHeartEmpty className={cn(styles['home__item-icon'], styles['icon-fill'])} />
-                  {/* {heartIcon ? (
-                      
-                    ) : (
-                      <IoMdHeart className={cn(styles['home__item-icon'], styles['icon-stroke'])} />
-                    )} */}
-                  {/* </button> */}
-                </div>
-              </div>
-            </div>{' '}
-            <div className={styles.home__item}>
-              <div className={styles['home__item-content']}>
-                <div className={styles['home__item-background']}></div>
-                <img className={styles['home__item-img']} src="http://placehold.it/350x200" alt="placeholder" />
-                <div className={styles['home__item-info']}>
-                  <img className={styles['home__item-avatar']} src={userAvatar} alt="avatar" />
-                  <div className={styles['home__item-description']}>
-                    <h4 className={styles['home__item-title']}>SSSsssssssssssssssssssssssssssssssssssssss</h4>
-                    <p className={styles['home__item-author']}>{userName}</p>
-                  </div>
-                  {/* <button> */}
-                  <IoMdHeartEmpty className={cn(styles['home__item-icon'], styles['icon-fill'])} />
-                  {/* {heartIcon ? (
-                      
-                    ) : (
-                      <IoMdHeart className={cn(styles['home__item-icon'], styles['icon-stroke'])} />
-                    )} */}
-                  {/* </button> */}
-                </div>
-              </div>
-            </div>
+            {/*  */}
             {/*  */}
           </div>
         </div>

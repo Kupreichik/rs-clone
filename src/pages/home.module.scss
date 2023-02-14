@@ -95,7 +95,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 20px 0 0;
 }
 
 .home__item-avatar {
@@ -125,18 +124,13 @@
   font-weight: 300;
 }
 
+.home__item-like {
+  padding: 2px;
+}
+
 .home__item-icon {
   width: 30px;
   height: 30px;
-}
-
-.icon-stroke {
-}
-
-.icon-fill {
-}
-
-.icon-stroke:hover + .icon-fill {
 }
 
 @media screen and (max-width: 700px) {
