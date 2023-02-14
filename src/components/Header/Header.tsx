@@ -2,10 +2,8 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import Media from 'react-media';
-
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
