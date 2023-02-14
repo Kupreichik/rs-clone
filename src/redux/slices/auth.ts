@@ -41,6 +41,11 @@ export const fetchAuthRegister = createAsyncThunk('auth/fetchAuthRegister', asyn
   return data as UserResponse;
 });
 
+export const fetchAuthUpdate = createAsyncThunk('auth/fetchAuthUpdate', async (params: Pick<UserResponse, 'name'>) => {
+  const { data } = await axios.patch('/users/me', params);
+  return data as UserResponse;
+});
+
 const initialState: InitialState = {
   data: null,
   status: 'loading',
@@ -103,6 +108,10 @@ const authSlice = createSlice({
       .addCase(fetchAuthRegister.rejected, (state) => {
         state.status = 'error';
         state.data = null;
+      })
+      .addCase(fetchAuthUpdate.fulfilled, (state, action) => {
+        state.status = 'loaded';
+        state.data = action.payload;
       });
   },
 });

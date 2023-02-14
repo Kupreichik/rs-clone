@@ -4,7 +4,8 @@ import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { RootState } from '../redux/store';
+import { fetchAuthUpdate } from '../redux/slices/auth';
+import { RootState, useAppDispatch } from '../redux/store';
 
 export const Profile = () => {
   const userName = useSelector((state: RootState) => state.auth.data?.name);
@@ -15,13 +16,21 @@ export const Profile = () => {
   const [isEditName, useEditName] = useState(false);
   const [profileName, useProfileName] = useState(userName);
 
+  const dispatch = useAppDispatch();
+
   const onBtn = () => {
     useEditName(!isEditName);
   };
 
   const onBlurInput = () => {
-    useProfileName(nameInputRef.current?.value);
+    const newName = nameInputRef.current?.value as string;
+    useProfileName(newName);
     useEditName(false);
+    dispatch(fetchAuthUpdate({ name: newName }));
+  };
+
+  const onFocusInput = () => {
+    (nameInputRef.current as HTMLInputElement).value = userName as string;
   };
 
   useEffect(() => {
@@ -42,7 +51,7 @@ export const Profile = () => {
           ref={nameInputRef}
           type="text"
           className={cn({ 'profile-name_input': true, isVisHidden: !isEditName })}
-          placeholder={profileName || userName}
+          onFocus={onFocusInput}
           onBlur={onBlurInput}
         ></input>
         <div className="profile-login">{`@${userLogin}`}</div>

@@ -18,12 +18,12 @@
   font-size: 3rem;
   min-width: 300px;
   text-align: center;
-  font-size: 3rem;
   color: #ffffff;
   font-weight: 900;
 }
 
 .profile-name_input {
+  font-family: inherit;
   outline: none;
   background: transparent;
   border-left: none;
@@ -34,6 +34,7 @@
 .profile-name {
   display: inline-block;
   min-width: 300px;
+  min-height: 61px;
   padding: 1px 2px;
   border-bottom: 2px solid gray;
 }
@@ -86,5 +87,10 @@
   .profile-name,
   .profile-name_input {
     font-size: 1.5rem;
+    line-height: 3rem;
+  }
+
+  .profile-name {
+    min-height: 33px;
   }
 }
