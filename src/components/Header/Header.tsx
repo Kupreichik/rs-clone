@@ -2,10 +2,8 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import Media from 'react-media';
-
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
@@ -55,10 +53,12 @@ export const Header = () => {
           <div className={styles.header__buttons}>
             {isAuth ? (
               <>
-                <img className={styles.header__avatar} src={userAvatar} alt="avatar" />
                 <Link onClick={() => onClickLogout()} className="button" to="/">
                   Log Out
                 </Link>
+                <NavLink to="/profile">
+                  <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
+                </NavLink>
               </>
             ) : (
               <>
