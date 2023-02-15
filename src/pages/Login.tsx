@@ -102,7 +102,7 @@ export const Login = () => {
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Alert onClose={handleClose} severity="error" sx={{ width: 482 }}>
-              Failed to log in!
+              Failed to Log In!
             </Alert>
           </Snackbar>
         </div>
