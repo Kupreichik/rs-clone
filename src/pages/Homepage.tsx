@@ -33,8 +33,8 @@ export const Homepage = () => {
                   </div>
                   <div
                     className={styles['home__item-like']}
-                    onMouseOver={() => setHeartIcon(true)}
-                    onMouseOut={() => setHeartIcon(false)}
+                    onMouseEnter={() => setHeartIcon(true)}
+                    onMouseLeave={() => setHeartIcon(false)}
                   >
                     {heartIcon ? (
                       <IoMdHeart className={styles['home__item-icon']} />
@@ -45,8 +45,6 @@ export const Homepage = () => {
                 </div>
               </div>
             </div>
-            {/*  */}
-            {/*  */}
           </div>
         </div>
       </div>
