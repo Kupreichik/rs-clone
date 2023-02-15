@@ -1,18 +1,20 @@
 import './Profile.scss';
 
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { fetchAuthUpdate } from '../redux/slices/auth';
+import { fetchAuthAvatarDelete, fetchAuthAvatarUpdate, fetchAuthUpdate } from '../redux/slices/auth';
 import { RootState, useAppDispatch } from '../redux/store';
 
 export const Profile = () => {
   const userName = useSelector((state: RootState) => state.auth.data?.name);
   const userLogin = useSelector((state: RootState) => state.auth.data?.username);
   const userAvatarUrl = useSelector((state: RootState) => state.auth.data?.avatar);
+
   const nameInputRef = useRef<HTMLInputElement>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
+
   const [isEditName, useEditName] = useState(false);
   const [profileName, useProfileName] = useState(userName);
 
@@ -31,6 +33,22 @@ export const Profile = () => {
 
   const onFocusInput = () => {
     (nameInputRef.current as HTMLInputElement).value = userName as string;
+  };
+
+  const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const formData = new FormData();
+      const fileList = (event.target as HTMLInputElement).files as FileList;
+      formData.append('image', fileList[0]);
+      await dispatch(fetchAuthAvatarUpdate(formData));
+    } catch (err) {
+      console.warn(err);
+      alert('File upload error!');
+    }
+  };
+
+  const onRemoveAvatar = () => {
+    dispatch(fetchAuthAvatarDelete());
   };
 
   useEffect(() => {
@@ -55,16 +73,18 @@ export const Profile = () => {
           onBlur={onBlurInput}
         ></input>
         <div className="profile-login">{`@${userLogin}`}</div>
-        <img className="profile-avatar" src={userAvatarUrl} alt={`User Avatar of ${userName}`}></img>
+        <img className="profile-avatar" src={userAvatarUrl} alt={`User Avatar`}></img>
       </div>
       <div className="profile-manage-avatar">
-        <span className="profile-avatar_update" onClick={() => inputFileRef.current?.click()}>
+        <div className="profile-avatar_update" onClick={() => inputFileRef.current?.click()}>
           Upload Avatar
-        </span>
+        </div>
         <span>|</span>
-        <span className="profile-avatar_remove">Remove Avatar</span>
+        <div className="profile-avatar_remove" onClick={onRemoveAvatar}>
+          Remove Avatar
+        </div>
       </div>
-      <input ref={inputFileRef} type="file" /*onChange={handleChangeFile}*/ hidden />
+      <input ref={inputFileRef} type="file" onChange={handleChangeFile} hidden />
     </div>
   );
 };

@@ -114,6 +114,8 @@
 }
 
 .header__avatar {
+  object-fit: cover;
+  vertical-align: middle;
   width: 44px;
   height: 44px;
   border-radius: 5px;
