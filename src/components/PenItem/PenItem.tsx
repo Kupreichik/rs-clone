@@ -4,8 +4,9 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
 import styles from '../../pages/home.module.scss';
-import { updateData } from '../../redux/slices/editor';
+import { updateEditorData } from '../../redux/slices/editor';
 import { useAppDispatch } from '../../redux/store';
+import { getSrcDoc } from './util';
 
 export interface IPenData {
   _id: string;
@@ -25,20 +26,13 @@ interface IUser {
 }
 
 export const PenItem = (data: IPenData) => {
-  const srcDoc = `
-    <html>
-      <body>${data.html}</body>
-      <style>html{overflow: hidden;}</style>
-      <style>${data.css}</style>
-      <script>${data.js}</script>
-    </html>
-  `;
+  const srcDoc = getSrcDoc(data, 'html{overflow: hidden;}');
   const [heartIcon, setHeartIcon] = useState(false);
 
   const dispatch = useAppDispatch();
 
   const onLink = () => {
-    dispatch(updateData({ data }));
+    dispatch(updateEditorData({ data }));
   };
 
   return (

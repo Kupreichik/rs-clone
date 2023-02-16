@@ -2,14 +2,14 @@ import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
 import { PenList } from '../components/PenList/PenList';
-import { updateData } from '../redux/slices/editor';
+import { clearEditorData } from '../redux/slices/editor';
 import { useAppDispatch } from '../redux/store';
 import styles from './home.module.scss';
 
 export const Homepage = () => {
   const dispatch = useAppDispatch();
   const onLink = () => {
-    dispatch(updateData({ data: null }));
+    dispatch(clearEditorData());
   };
 
   return (

@@ -10,6 +10,7 @@ import { Notefoundpage } from './pages/Notefoundpage';
 import { Profile } from './pages/Profile';
 import { Registration } from './pages/Registration';
 import { fetchAuthMe, selectIsAuth } from './redux/slices/auth';
+import { fetchPens } from './redux/slices/pens';
 import { useAppDispatch } from './redux/store';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchAuthMe());
+    dispatch(fetchPens());
   }, []);
   return (
     <>
