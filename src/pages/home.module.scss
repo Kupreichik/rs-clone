@@ -57,9 +57,9 @@
   border-radius: 10px;
 }
 
-.home__item:hover {
-  cursor: pointer;
-}
+// .home__item:hover {
+//   cursor: pointer;
+// }
 
 .home__item:hover .home__item-background {
   width: 390px;
@@ -90,7 +90,18 @@
   width: 100%;
   margin-bottom: 20px;
   border-radius: 10px;
+  position: relative;
 }
+
+.home__item-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
 
 .home__item-info {
   display: flex;

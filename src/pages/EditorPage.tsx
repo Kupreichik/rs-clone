@@ -4,17 +4,25 @@ import './EditorsPage.scss';
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
+import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
 import { ReactComponent as ViewBtnIcon } from '../assets/svg/viewBtn.svg';
 import Editor from '../components/Editor/Editor';
-import useLocalStorage from '../hooks/useLocalStorage';
+// import useLocalStorage from '../hooks/useLocalStorage';
+import { RootState } from '../redux/store';
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
-  const [html, setHtml] = useLocalStorage('html', '');
-  const [css, setCss] = useLocalStorage('css', '');
-  const [js, setJS] = useLocalStorage('js', '');
+  const currentPenData = useSelector((state: RootState) => state.editor.currentPenDta);
+
+  // const [html, setHtml] = useLocalStorage('html', '');
+  // const [css, setCss] = useLocalStorage('css', '');
+  // const [js, setJS] = useLocalStorage('js', '');
+
+  const [html, setHtml] = useState(currentPenData?.html || '');
+  const [css, setCss] = useState(currentPenData?.css || '');
+  const [js, setJS] = useState(currentPenData?.js || '');
 
   const [srcDoc, setSrcDoc] = useState('');
 
@@ -54,7 +62,7 @@ export const EditorPage = () => {
     };
   }, [html, css, js]);
 
-  console.log('JSON.stringify(srcDoc)-->', JSON.stringify(srcDoc));
+  // console.log('JSON.stringify(srcDoc)-->', JSON.stringify(srcDoc));
 
   return (
     <div className="main-wrapper-editor">
