@@ -1,18 +1,14 @@
-import { Button, Snackbar, TextField } from '@mui/material';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { forwardRef, SyntheticEvent, useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 import axios from '../axios';
+import SnackbarComponent from '../components/Snackbar/Snackbar';
 import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
-
-const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export const Registration = () => {
   const [open, setOpen] = useState(false);
@@ -45,14 +41,6 @@ export const Registration = () => {
   if (isAuth) {
     return <Navigate to="/" />;
   }
-
-  const handleClose = (event?: SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   return (
     <section className={styles.auth}>
@@ -127,17 +115,7 @@ export const Registration = () => {
           >
             Sign Up with GitHub
           </Link>
-
-          <Snackbar
-            open={open}
-            autoHideDuration={3000}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          >
-            <Alert onClose={handleClose} severity="error" sx={{ width: 482 }}>
-              Failed to Sign Up!
-            </Alert>
-          </Snackbar>
+          <SnackbarComponent open={open} setOpen={setOpen} message="Failed to Log In!" />
         </div>
       </div>
     </section>

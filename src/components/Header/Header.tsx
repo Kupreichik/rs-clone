@@ -81,8 +81,12 @@ export const Header = () => {
         <DialogTitle>Confirm Logout</DialogTitle>
         <DialogContent>Are you sure you want to Log Out?</DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleConfirmLogout}>Logout</Button>
+          <Button onClick={() => setOpen(false)} sx={{ minWidth: '105px' }}>
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmLogout} sx={{ minWidth: '105px' }}>
+            Logout
+          </Button>
         </DialogActions>
       </Dialog>
     </header>
