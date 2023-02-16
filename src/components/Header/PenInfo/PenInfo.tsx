@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 
 export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) => {
-  const currentPenData = useSelector((state: RootState) => state.editor.currentPenDta);
+  const currentPenData = useSelector((state: RootState) => state.editor.currentPenData);
 
   const [penTitle, usePenTitle] = useState(currentPenData?.title || title);
   const [isEditTitle, useEditTitle] = useState(false);

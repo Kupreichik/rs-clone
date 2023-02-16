@@ -9,16 +9,12 @@ import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
 import { ReactComponent as ViewBtnIcon } from '../assets/svg/viewBtn.svg';
 import Editor from '../components/Editor/Editor';
-// import useLocalStorage from '../hooks/useLocalStorage';
+import { getSrcDoc } from '../components/PenItem/util';
 import { RootState } from '../redux/store';
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
-  const currentPenData = useSelector((state: RootState) => state.editor.currentPenDta);
-
-  // const [html, setHtml] = useLocalStorage('html', '');
-  // const [css, setCss] = useLocalStorage('css', '');
-  // const [js, setJS] = useLocalStorage('js', '');
+  const currentPenData = useSelector((state: RootState) => state.editor.currentPenData);
 
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');
@@ -39,30 +35,13 @@ export const EditorPage = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setSrcDoc(`
-      <html>
-        <body>${html}</body>
-        <style>
-          ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-            background-color: #3d4d56;
-          }
-          ::-webkit-scrollbar-thumb {
-            background-color: #666b7a;
-            border-radius: 6px;
-          }${css}</style>
-        <script>${js}</script>
-      </html>
-    `);
+      setSrcDoc(getSrcDoc({ html, css, js }));
     }, 250);
 
     return () => {
       clearTimeout(timeout);
     };
   }, [html, css, js]);
-
-  // console.log('JSON.stringify(srcDoc)-->', JSON.stringify(srcDoc));
 
   return (
     <div className="main-wrapper-editor">
