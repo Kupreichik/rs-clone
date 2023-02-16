@@ -2,10 +2,11 @@ import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import axios from '../axios';
 import Preloader from '../components/Preloader/Preloader';
+import { linkGithubAuth } from '../constants';
 import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
@@ -49,8 +50,7 @@ export const Registration = () => {
 
   const handleClickGithubAuth = () => {
     setIsLoading(true);
-    window.location.href =
-      'https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=https://rs-clone-api.onrender.com/users/github-auth?path=/&scope=user:email';
+    window.location.href = linkGithubAuth;
   };
 
   return isLoading ? (
