@@ -7,11 +7,13 @@ import { Navigate } from 'react-router-dom';
 import axios from '../axios';
 import Preloader from '../components/Preloader/Preloader';
 import { linkGithubAuth } from '../constants';
+import SnackbarComponent from '../components/Snackbar/Snackbar';
 import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
 export const Registration = () => {
+  const [open, setOpen] = useState(false);
   const isAuth = useSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
@@ -40,7 +42,7 @@ export const Registration = () => {
     setIsLoading(false);
 
     if (!data.payload) {
-      return alert('Failed to register');
+      setOpen(true);
     }
   };
 
@@ -125,6 +127,7 @@ export const Registration = () => {
           <button onClick={handleClickGithubAuth} className="button button-github">
             Sign Up with GitHub
           </button>
+          <SnackbarComponent open={open} setOpen={setOpen} message="Failed to Log In!" />
         </div>
       </div>
     </section>

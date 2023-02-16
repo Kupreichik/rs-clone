@@ -1,3 +1,4 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
@@ -12,11 +13,11 @@ import { RootState, useAppDispatch } from '../../redux/store';
 import styles from './header.module.scss';
 import { PenInfo } from './PenInfo/PenInfo';
 
-// const setActive = ({ isActive }: { isActive: boolean }): string => (isActive ? 'active-link' : '');
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
 
 export const Header = () => {
   const [burger, setBurger] = useState(false);
+  const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
   const [width, setWidth] = useState(window.innerWidth);
@@ -24,11 +25,12 @@ export const Header = () => {
   const handleWindowResize = () => setWidth(window.innerWidth);
   window.addEventListener('resize', handleWindowResize);
 
-  const onClickLogout = async () => {
-    if (window.confirm('Are you sure you want to log out?')) {
-      await dispatch(fetchAuthLogout());
-      dispatch(logout());
-    }
+  const onClickLogout = () => setOpen(true);
+
+  const handleConfirmLogout = async () => {
+    await dispatch(fetchAuthLogout());
+    dispatch(logout());
+    setOpen(false);
   };
 
   const userAvatar = useSelector((state: RootState) => state.auth.data?.avatar);
@@ -54,10 +56,12 @@ export const Header = () => {
           <div className={styles.header__buttons}>
             {isAuth ? (
               <>
-                <img className={styles.header__avatar} src={userAvatar} alt="avatar" />
                 <Link onClick={() => onClickLogout()} className="button" to="/">
                   Log Out
                 </Link>
+                <NavLink to="/profile">
+                  <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
+                </NavLink>
               </>
             ) : (
               <>
@@ -72,6 +76,22 @@ export const Header = () => {
           </div>
         </div>
       </div>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{ style: { backgroundColor: '#1e1f26', color: 'white', paddingBottom: '20px' } }}
+      >
+        <DialogTitle>Confirm Logout</DialogTitle>
+        <DialogContent>Are you sure you want to Log Out?</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} sx={{ minWidth: '105px' }}>
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmLogout} sx={{ minWidth: '105px' }}>
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
     </header>
   );
 };
