@@ -53,10 +53,12 @@ export const Header = () => {
           <div className={styles.header__buttons}>
             {isAuth ? (
               <>
-                <img className={styles.header__avatar} src={userAvatar} alt="avatar" />
                 <Link onClick={() => onClickLogout()} className="button" to="/">
                   Log Out
                 </Link>
+                <NavLink to="/profile">
+                  <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
+                </NavLink>
               </>
             ) : (
               <>
