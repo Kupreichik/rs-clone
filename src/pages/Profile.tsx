@@ -4,35 +4,44 @@ import cn from 'classnames';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { fetchAuthAvatarDelete, fetchAuthAvatarUpdate, fetchAuthUpdate } from '../redux/slices/auth';
-import { RootState, useAppDispatch } from '../redux/store';
+import {
+  fetchAuthAvatarDelete,
+  fetchAuthAvatarUpdate,
+  fetchAuthUpdate,
+  selectUserAvatarUrl,
+  selectUserLogin,
+  selectUserName,
+} from '../redux/slices/auth';
+import { useAppDispatch } from '../redux/store';
 
 export const Profile = () => {
-  const userName = useSelector((state: RootState) => state.auth.data?.name);
-  const userLogin = useSelector((state: RootState) => state.auth.data?.username);
-  const userAvatarUrl = useSelector((state: RootState) => state.auth.data?.avatar);
+  const userName = useSelector(selectUserName);
+  const userLogin = useSelector(selectUserLogin);
+  const userAvatarUrl = useSelector(selectUserAvatarUrl);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const [isEditName, useEditName] = useState(false);
-  const [profileName, useProfileName] = useState(userName);
+  const [isEditName, setEditName] = useState(false);
+  const [profileName, setProfileName] = useState(userName);
 
   const dispatch = useAppDispatch();
 
-  const onBtn = () => {
-    useEditName(!isEditName);
+  const editName = () => {
+    setEditName(true);
   };
 
   const onBlurInput = () => {
-    const newName = nameInputRef.current?.value as string;
-    useProfileName(newName);
-    useEditName(false);
-    dispatch(fetchAuthUpdate({ name: newName }));
-  };
+    setEditName(false);
 
-  const onFocusInput = () => {
-    (nameInputRef.current as HTMLInputElement).value = userName as string;
+    if (profileName === '') {
+      setProfileName(userName);
+      return;
+    }
+
+    if (userName === profileName) return;
+
+    dispatch(fetchAuthUpdate({ name: profileName }));
   };
 
   const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -52,14 +61,17 @@ export const Profile = () => {
   };
 
   useEffect(() => {
-    nameInputRef.current?.focus();
-  });
+    if (isEditName && nameInputRef.current) {
+      nameInputRef.current.focus();
+      nameInputRef.current.selectionStart = nameInputRef.current?.value.length;
+    }
+  }, [isEditName]);
 
   return (
     <div className="profile">
       <div className="profile-header">
         <span
-          onClick={onBtn}
+          onClick={editName}
           className={cn({ 'profile-name': true, isVisHidden: isEditName })}
           title="You can change name"
         >
@@ -69,7 +81,8 @@ export const Profile = () => {
           ref={nameInputRef}
           type="text"
           className={cn({ 'profile-name_input': true, isVisHidden: !isEditName })}
-          onFocus={onFocusInput}
+          defaultValue={userName}
+          onChange={(e) => setProfileName(e.target.value)}
           onBlur={onBlurInput}
         ></input>
         <div className="profile-login">{`@${userLogin}`}</div>
