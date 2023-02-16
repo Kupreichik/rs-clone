@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
+import { Link } from 'react-router-dom';
 
 import styles from '../../pages/home.module.scss';
+import { updateData } from '../../redux/slices/editor';
+import { useAppDispatch } from '../../redux/store';
 
 export interface IPenData {
   _id: string;
@@ -32,8 +35,14 @@ export const PenItem = (data: IPenData) => {
   `;
   const [heartIcon, setHeartIcon] = useState(false);
 
+  const dispatch = useAppDispatch();
+
+  const onLink = () => {
+    dispatch(updateData({ data }));
+  };
+
   return (
-    <div onClick={() => console.log('click pen item')} className={styles.home__item}>
+    <div className={styles.home__item}>
       <div className={styles['home__item-content']}>
         <div className={styles['home__item-background']}></div>
         <div className={styles['home__item-iframe-wrapper']}>
@@ -45,12 +54,15 @@ export const PenItem = (data: IPenData) => {
             width="100%"
             height="100%"
           />
+          <Link onClick={onLink} className={styles['home__item-link']} to="/editor">
+            <span hidden>Open Editor</span>
+          </Link>
         </div>
         <div className={styles['home__item-info']}>
           <img className={styles['home__item-avatar']} src={data.user.avatar} alt="avatar" />
           <div className={styles['home__item-description']}>
             <h4 className={styles['home__item-title']}>{data.title}</h4>
-            <p className={styles['home__item-author']}>{data.user.username}</p>
+            <p className={styles['home__item-author']}>{data.user.name}</p>
           </div>
           <div
             className={styles['home__item-like']}
