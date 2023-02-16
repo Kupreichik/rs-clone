@@ -1,13 +1,16 @@
 import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
+import SnackbarComponent from '../components/Snackbar/Snackbar';
 import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
 export const Login = () => {
+  const [open, setOpen] = useState(false);
   const isAuth = useSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
@@ -28,7 +31,7 @@ export const Login = () => {
     const data = await dispatch(fetchAuth(values));
 
     if (!data.payload) {
-      return alert('Failed to log in');
+      setOpen(true);
     }
   };
 
@@ -80,6 +83,7 @@ export const Login = () => {
           >
             Log In with GitHub
           </Link>
+          <SnackbarComponent open={open} setOpen={setOpen} message="Failed to Log In!" />
         </div>
       </div>
     </section>

@@ -1,14 +1,17 @@
 import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 import axios from '../axios';
+import SnackbarComponent from '../components/Snackbar/Snackbar';
 import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
 
 export const Registration = () => {
+  const [open, setOpen] = useState(false);
   const isAuth = useSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
@@ -31,7 +34,7 @@ export const Registration = () => {
     const data = await dispatch(fetchAuthRegister(values));
 
     if (!data.payload) {
-      return alert('Failed to register');
+      setOpen(true);
     }
   };
 
@@ -112,6 +115,7 @@ export const Registration = () => {
           >
             Sign Up with GitHub
           </Link>
+          <SnackbarComponent open={open} setOpen={setOpen} message="Failed to Log In!" />
         </div>
       </div>
     </section>
