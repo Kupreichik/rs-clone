@@ -2,7 +2,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import cn from 'classnames';
 import { useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
-import Media from 'react-media';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
@@ -21,6 +20,10 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  const handleWindowResize = () => setWidth(window.innerWidth);
+  window.addEventListener('resize', handleWindowResize);
 
   const onClickLogout = () => setOpen(true);
 
@@ -37,15 +40,13 @@ export const Header = () => {
     <header className={styles.header}>
       <div className="container">
         <div className={styles.header__inner}>
-          <Link to="/">
-            <Media query={{ maxWidth: 700 }}>{(matches) => (matches ? <LogoMobile /> : <LogoDesktop />)}</Media>
-          </Link>{' '}
+          <Link to="/">{width > 700 && locationRouter.pathname !== '/editor' ? <LogoDesktop /> : <LogoMobile />}</Link>
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
           {locationRouter.pathname === '/editor' && <PenInfo />}
           {locationRouter.pathname !== '/editor' && (
-            <form action="" className={styles.header__form}>
+            <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
                 <input className={styles.header__input} type="text" placeholder="Search CodePen..." />

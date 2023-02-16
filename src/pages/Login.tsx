@@ -2,8 +2,11 @@ import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
+
+import Preloader from '../components/Preloader/Preloader';
+import { linkGithubAuth } from '../constants';
 import SnackbarComponent from '../components/Snackbar/Snackbar';
 import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
@@ -14,6 +17,8 @@ export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -28,7 +33,11 @@ export const Login = () => {
   });
 
   const onSubmit = async (values: UserData) => {
+    setIsLoading(true);
+
     const data = await dispatch(fetchAuth(values));
+
+    setIsLoading(false);
 
     if (!data.payload) {
       setOpen(true);
@@ -39,7 +48,14 @@ export const Login = () => {
     return <Navigate to="/" />;
   }
 
-  return (
+  const handleClickGithubAuth = () => {
+    setIsLoading(true);
+    window.location.href = linkGithubAuth;
+  };
+
+  return isLoading ? (
+    <Preloader />
+  ) : (
     <section className={styles.auth}>
       <div className="container">
         <div className={styles.auth__inner}>
@@ -77,12 +93,9 @@ export const Login = () => {
             </Button>
           </form>
 
-          <Link
-            to="https://github.com/login/oauth/authorize?client_id=c7a99918604b2ae5c655&redirect_uri=https://rs-clone-api.onrender.com/users/github-auth?path=/&scope=user:email"
-            className="button button-github"
-          >
+          <button onClick={handleClickGithubAuth} className="button button-github">
             Log In with GitHub
-          </Link>
+          </button>
           <SnackbarComponent open={open} setOpen={setOpen} message="Failed to Log In!" />
         </div>
       </div>
