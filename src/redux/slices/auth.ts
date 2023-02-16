@@ -41,6 +41,21 @@ export const fetchAuthRegister = createAsyncThunk('auth/fetchAuthRegister', asyn
   return data as UserResponse;
 });
 
+export const fetchAuthUpdate = createAsyncThunk('auth/fetchAuthUpdate', async (params: Pick<UserResponse, 'name'>) => {
+  const { data } = await axios.patch('/users/me', params);
+  return data as UserResponse;
+});
+
+export const fetchAuthAvatarUpdate = createAsyncThunk('auth/fetchAuthAvatarUpdate', async (formData: FormData) => {
+  const { data } = await axios.post('/upload', formData);
+  return data as Pick<UserResponse, 'avatar'>;
+});
+
+export const fetchAuthAvatarDelete = createAsyncThunk('auth/fetchAuthAvatarUpdate', async () => {
+  const { data } = await axios.delete('/upload');
+  return data as Pick<UserResponse, 'avatar'>;
+});
+
 const initialState: InitialState = {
   data: null,
   status: 'loading',
@@ -103,11 +118,23 @@ const authSlice = createSlice({
       .addCase(fetchAuthRegister.rejected, (state) => {
         state.status = 'error';
         state.data = null;
+      })
+      .addCase(fetchAuthUpdate.fulfilled, (state, action) => {
+        state.status = 'loaded';
+        state.data = action.payload;
+      })
+      .addCase(fetchAuthAvatarUpdate.fulfilled, (state, action) => {
+        state.status = 'loaded';
+        (state.data as UserResponse).avatar = action.payload.avatar;
       });
   },
 });
 
 export const selectIsAuth = (state: RootState) => Boolean(state.auth.data);
+
+export const selectUserName = (state: RootState) => state.auth.data?.name as string;
+export const selectUserLogin = (state: RootState) => state.auth.data?.username;
+export const selectUserAvatarUrl = (state: RootState) => state.auth.data?.avatar;
 
 export const authReducer = authSlice.reducer;
 
