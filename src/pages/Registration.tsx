@@ -6,8 +6,8 @@ import { Navigate } from 'react-router-dom';
 
 import axios from '../axios';
 import Preloader from '../components/Preloader/Preloader';
-import { linkGithubAuth } from '../constants';
 import SnackbarComponent from '../components/Snackbar/Snackbar';
+import { linkGithubAuth } from '../constants';
 import { fetchAuthRegister, selectIsAuth, UserResponse } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';

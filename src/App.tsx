@@ -7,7 +7,7 @@ import { EditorPage } from './pages/EditorPage';
 import { Homepage } from './pages/Homepage';
 import { Login } from './pages/Login';
 import { Notefoundpage } from './pages/Notefoundpage';
-import { Profile } from './pages/Profile';
+import { Profile } from './pages/ProfilePage';
 import { Registration } from './pages/Registration';
 import { fetchAuthMe, selectIsAuth } from './redux/slices/auth';
 import { fetchPens } from './redux/slices/pens';

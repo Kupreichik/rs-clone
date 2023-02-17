@@ -1,9 +1,10 @@
-import './Profile.scss';
+import './ProfilePage';
 
 import cn from 'classnames';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import Preloader from '../components/Preloader/Preloader';
 import {
   fetchAuthAvatarDelete,
   fetchAuthAvatarUpdate,
@@ -24,6 +25,7 @@ export const Profile = () => {
 
   const [isEditName, setEditName] = useState(false);
   const [profileName, setProfileName] = useState(userName);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -46,10 +48,12 @@ export const Profile = () => {
 
   const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       const fileList = (event.target as HTMLInputElement).files as FileList;
       formData.append('image', fileList[0]);
       await dispatch(fetchAuthAvatarUpdate(formData));
+      setIsLoading(false);
     } catch (err) {
       console.warn(err);
       alert('File upload error!');
@@ -57,6 +61,7 @@ export const Profile = () => {
   };
 
   const onRemoveAvatar = () => {
+    (inputFileRef.current as HTMLInputElement).value = '';
     dispatch(fetchAuthAvatarDelete());
   };
 
@@ -67,7 +72,9 @@ export const Profile = () => {
     }
   }, [isEditName]);
 
-  return (
+  return isLoading ? (
+    <Preloader />
+  ) : (
     <div className="profile">
       <div className="profile-header">
         <span

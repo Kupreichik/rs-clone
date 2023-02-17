@@ -4,10 +4,9 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-
 import Preloader from '../components/Preloader/Preloader';
-import { linkGithubAuth } from '../constants';
 import SnackbarComponent from '../components/Snackbar/Snackbar';
+import { linkGithubAuth } from '../constants';
 import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
 import { useAppDispatch } from '../redux/store';
 import styles from './auth.module.scss';
