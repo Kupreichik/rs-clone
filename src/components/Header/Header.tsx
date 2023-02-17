@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import cn from 'classnames';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -22,6 +22,8 @@ export const Header = () => {
   const isAuth = useSelector(selectIsAuth);
   const [width, setWidth] = useState(window.innerWidth);
 
+  const homeLinkRef = useRef<HTMLAnchorElement>(null);
+
   const handleWindowResize = () => setWidth(window.innerWidth);
   window.addEventListener('resize', handleWindowResize);
 
@@ -29,6 +31,7 @@ export const Header = () => {
 
   const handleConfirmLogout = async () => {
     await dispatch(fetchAuthLogout());
+    homeLinkRef.current?.click();
     dispatch(logout());
     setOpen(false);
   };
@@ -56,9 +59,10 @@ export const Header = () => {
           <div className={styles.header__buttons}>
             {isAuth ? (
               <>
-                <Link onClick={() => onClickLogout()} className="button" to="/">
+                <div onClick={() => onClickLogout()} className="button">
                   Log Out
-                </Link>
+                </div>
+                <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
                 <NavLink to="/profile">
                   <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
                 </NavLink>
