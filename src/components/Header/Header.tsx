@@ -8,10 +8,10 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
-import { fetchAuthLogout, logout, selectIsAuth } from '../../redux/slices/auth';
-import { RootState, useAppDispatch } from '../../redux/store';
-import styles from './header.module.scss';
-import { PenInfo } from './PenInfo/PenInfo';
+import { PenInfo } from '../../components/index';
+import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
+import { useAppDispatch } from '../../redux/store';
+import styles from './Header.module.scss';
 
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
 
@@ -36,7 +36,7 @@ export const Header = () => {
     setOpen(false);
   };
 
-  const userAvatar = useSelector((state: RootState) => state.auth.data?.avatar);
+  const userAvatar = useSelector(selectUserAvatarUrl);
   const locationRouter = useLocation();
 
   return (

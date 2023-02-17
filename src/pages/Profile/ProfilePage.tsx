@@ -1,10 +1,10 @@
-import './ProfilePage';
+import './ProfilePage.scss';
 
 import cn from 'classnames';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import Preloader from '../components/Preloader/Preloader';
+import { Preloader } from '../../components/index';
 import {
   fetchAuthAvatarDelete,
   fetchAuthAvatarUpdate,
@@ -12,10 +12,10 @@ import {
   selectUserAvatarUrl,
   selectUserLogin,
   selectUserName,
-} from '../redux/slices/auth';
-import { useAppDispatch } from '../redux/store';
+} from '../../redux/slices/auth';
+import { useAppDispatch } from '../../redux/store';
 
-export const Profile = () => {
+export const ProfilePage = () => {
   const userName = useSelector(selectUserName);
   const userLogin = useSelector(selectUserLogin);
   const userAvatarUrl = useSelector(selectUserAvatarUrl);

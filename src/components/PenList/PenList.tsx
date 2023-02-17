@@ -1,13 +1,12 @@
 import { useSelector } from 'react-redux';
 
-import styles from '../../pages/home.module.scss';
-import { RootState } from '../../redux/store';
-import { PenItem } from '../PenItem/PenItem';
-import Preloader from '../Preloader/Preloader';
+import styles from '../../pages/Home/HomePage.module.scss';
+import { getPens, getPensStatus } from '../../redux/slices/pens';
+import { PenItem, Preloader } from '../index';
 
 export const PenList = () => {
-  const pens = useSelector((state: RootState) => state.pens.pens);
-  const status = useSelector((state: RootState) => state.pens.status);
+  const pens = useSelector(getPens);
+  const status = useSelector(getPensStatus);
 
   return status !== 'loaded' ? (
     <Preloader />

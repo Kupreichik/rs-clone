@@ -1,14 +1,14 @@
-import './penInfo.scss';
+import './PenInfo.scss';
 
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { BsPencil } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 
-import { RootState } from '../../../redux/store';
+import { getCurrentPenData } from '../../redux/slices/editor';
 
 export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) => {
-  const currentPenData = useSelector((state: RootState) => state.editor.currentPenData);
+  const currentPenData = useSelector(getCurrentPenData);
 
   const [penTitle, usePenTitle] = useState(currentPenData?.title || title);
   const [isEditTitle, useEditTitle] = useState(false);

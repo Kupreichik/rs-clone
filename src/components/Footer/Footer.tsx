@@ -2,7 +2,7 @@ import cn from 'classnames';
 
 import { ReactComponent as Github } from '../../assets/svg/github.svg';
 import { ReactComponent as RSS } from '../../assets/svg/rss.svg';
-import styles from './footer.module.scss';
+import styles from './Footer.module.scss';
 
 function getCurrentYear() {
   return new Date().getFullYear();

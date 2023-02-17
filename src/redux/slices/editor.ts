@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { IPenData } from '../../components/PenItem/PenItem';
+import { IPenData } from '../../components/index';
+import { RootState } from '../store';
 
 type InitialEditorState = {
   currentPenData: IPenData | null;
@@ -22,6 +23,8 @@ const editor = createSlice({
     },
   },
 });
+
+export const getCurrentPenData = (state: RootState) => state.editor.currentPenData;
 
 export const { updateEditorData, clearEditorData } = editor.actions;
 
