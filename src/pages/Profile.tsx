@@ -57,6 +57,7 @@ export const Profile = () => {
   };
 
   const onRemoveAvatar = () => {
+    (inputFileRef.current as HTMLInputElement).value = '';
     dispatch(fetchAuthAvatarDelete());
   };
 
