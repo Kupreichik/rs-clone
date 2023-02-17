@@ -57,10 +57,6 @@
   border-radius: 10px;
 }
 
-.home__item:hover {
-  cursor: pointer;
-}
-
 .home__item:hover .home__item-background {
   width: 390px;
   height: 110%;
@@ -84,12 +80,26 @@
   height: 110%;
 }
 
-.home__item-img {
+.home__item-iframe-wrapper {
+  display: flex;
   max-width: 350px;
   width: 100%;
   margin-bottom: 20px;
   border-radius: 10px;
+  position: relative;
+  border: 1px solid #383838;
+  overflow: hidden;
 }
+
+.home__item-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
 
 .home__item-info {
   display: flex;
@@ -131,6 +141,18 @@
 .home__item-icon {
   width: 30px;
   height: 30px;
+}
+
+.home__item-stats {
+  display: flex;
+  gap: 10px;
+  justify-content: end;
+}
+
+.home__item-stats-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 @media screen and (max-width: 700px) {
