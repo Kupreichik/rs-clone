@@ -1,4 +1,4 @@
-import './Profile.scss';
+import './ProfilePage';
 
 import cn from 'classnames';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
