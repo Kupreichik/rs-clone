@@ -60,8 +60,8 @@ export const PenItem = (data: IPenData) => {
           </div>
           <div
             className={styles['home__item-like']}
-            onMouseOver={() => setHeartIcon(true)}
-            onMouseOut={() => setHeartIcon(false)}
+            onMouseEnter={() => setHeartIcon(true)}
+            onMouseLeave={() => setHeartIcon(false)}
           >
             {heartIcon ? (
               <IoMdHeart className={styles['home__item-icon']} />
