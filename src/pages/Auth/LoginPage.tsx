@@ -4,14 +4,13 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import Preloader from '../components/Preloader/Preloader';
-import SnackbarComponent from '../components/Snackbar/Snackbar';
-import { linkGithubAuth } from '../constants';
-import { fetchAuth, selectIsAuth, UserData } from '../redux/slices/auth';
-import { useAppDispatch } from '../redux/store';
-import styles from './auth.module.scss';
+import { Preloader, SnackbarCustom } from '../../components/index';
+import { linkGithubAuth } from '../../constants';
+import { fetchAuth, selectIsAuth, UserData } from '../../redux/slices/auth';
+import { useAppDispatch } from '../../redux/store';
+import styles from './Auth.module.scss';
 
-export const Login = () => {
+export const LoginPage = () => {
   const [open, setOpen] = useState(false);
   const isAuth = useSelector(selectIsAuth);
 
@@ -95,7 +94,7 @@ export const Login = () => {
           <button onClick={handleClickGithubAuth} className="button button-github">
             Log In with GitHub
           </button>
-          <SnackbarComponent open={open} setOpen={setOpen} message="Failed to Log In!" />
+          <SnackbarCustom open={open} setOpen={setOpen} message="Failed to Log In!" />
         </div>
       </div>
     </section>

@@ -8,7 +8,7 @@ interface SnackbarComponentProps {
   message: string;
 }
 
-const SnackbarComponent: React.FC<SnackbarComponentProps> = ({ open, setOpen, message }) => {
+export const SnackbarCustom: React.FC<SnackbarComponentProps> = ({ open, setOpen, message }) => {
   const handleClose = (event?: SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -34,5 +34,3 @@ const SnackbarComponent: React.FC<SnackbarComponentProps> = ({ open, setOpen, me
     </Snackbar>
   );
 };
-
-export default SnackbarComponent;

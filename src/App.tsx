@@ -3,12 +3,7 @@ import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 import { Layout } from './components/Layout';
-import { EditorPage } from './pages/EditorPage';
-import { Homepage } from './pages/Homepage';
-import { Login } from './pages/Login';
-import { Notefoundpage } from './pages/Notefoundpage';
-import { Profile } from './pages/ProfilePage';
-import { Registration } from './pages/Registration';
+import { EditorPage, HomePage, LoginPage, NotFoundPage, ProfilePage, RegistrationPage } from './pages/index';
 import { fetchAuthMe, selectIsAuth } from './redux/slices/auth';
 import { fetchPens } from './redux/slices/pens';
 import { useAppDispatch } from './redux/store';
@@ -25,12 +20,12 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Homepage />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Registration />} />
+          <Route index element={<HomePage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegistrationPage />} />
           <Route path="editor" element={<EditorPage />} />
-          <Route path="*" element={<Notefoundpage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </>

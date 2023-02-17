@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axios from '../../axios';
-import { IPenData } from '../../components/PenItem/PenItem';
+import { IPenData } from '../../components/index';
+import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
@@ -36,5 +37,8 @@ const pens = createSlice({
       });
   },
 });
+
+export const getPens = (state: RootState) => state.pens.pens;
+export const getPensStatus = (state: RootState) => state.pens.status;
 
 export const pensReducer = pens.reducer;

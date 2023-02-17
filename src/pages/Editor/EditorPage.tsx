@@ -7,14 +7,14 @@ import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
-import { ReactComponent as ViewBtnIcon } from '../assets/svg/viewBtn.svg';
-import Editor from '../components/Editor/Editor';
-import { getSrcDoc } from '../components/PenItem/util';
-import { RootState } from '../redux/store';
+import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
+import { Editor, getSrcDoc } from '../../components/index';
+import { getCurrentPenData } from '../../redux/slices/editor';
+
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
-  const currentPenData = useSelector((state: RootState) => state.editor.currentPenData);
+  const currentPenData = useSelector(getCurrentPenData);
 
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');

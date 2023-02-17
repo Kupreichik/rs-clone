@@ -3,10 +3,10 @@ import { FaEye } from 'react-icons/fa';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-import styles from '../../pages/home.module.scss';
+import styles from '../../pages/Home/HomePage.module.scss';
 import { updateEditorData } from '../../redux/slices/editor';
 import { useAppDispatch } from '../../redux/store';
-import { getSrcDoc } from './util';
+import { getSrcDoc } from '../index';
 
 export interface IPenData {
   _id: string;

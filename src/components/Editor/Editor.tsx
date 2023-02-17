@@ -18,7 +18,7 @@ type EditorProps = {
   onChange: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Editor({ displayName, icon, language, value, onChange }: EditorProps) {
+export const Editor = ({ displayName, icon, language, value, onChange }: EditorProps) => {
   function handleChange(currentValue: string) {
     onChange(currentValue);
   }
@@ -45,6 +45,4 @@ function Editor({ displayName, icon, language, value, onChange }: EditorProps) {
       />
     </div>
   );
-}
-
-export default Editor;
+};

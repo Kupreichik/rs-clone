@@ -1,4 +1,4 @@
-import { IPenData } from './PenItem';
+import { IPenData } from '../index';
 
 export const getSrcDoc = (data: Pick<IPenData, 'html' | 'css' | 'js'>, extraStyles = '') => {
   const srcDoc = `

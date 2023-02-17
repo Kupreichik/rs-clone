@@ -119,13 +119,25 @@ const authSlice = createSlice({
         state.status = 'error';
         state.data = null;
       })
+      .addCase(fetchAuthUpdate.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(fetchAuthUpdate.fulfilled, (state, action) => {
         state.status = 'loaded';
         state.data = action.payload;
       })
+      .addCase(fetchAuthUpdate.rejected, (state) => {
+        state.status = 'error';
+      })
+      .addCase(fetchAuthAvatarUpdate.pending, (state) => {
+        state.status = 'loaded';
+      })
       .addCase(fetchAuthAvatarUpdate.fulfilled, (state, action) => {
         state.status = 'loaded';
         (state.data as UserResponse).avatar = action.payload.avatar;
+      })
+      .addCase(fetchAuthAvatarUpdate.rejected, (state) => {
+        state.status = 'loaded';
       });
   },
 });
