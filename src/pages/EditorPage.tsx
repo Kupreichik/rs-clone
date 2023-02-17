@@ -34,7 +34,16 @@ export const EditorPage = () => {
       setSrcDoc(`
       <html>
         <body>${html}</body>
-        <style>${css}</style>
+        <style>
+          ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+            background-color: #3d4d56;
+          }
+          ::-webkit-scrollbar-thumb {
+            background-color: #666b7a;
+            border-radius: 6px;
+          }${css}</style>
         <script>${js}</script>
       </html>
     `);

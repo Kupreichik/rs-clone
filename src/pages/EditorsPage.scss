@@ -13,6 +13,16 @@
   height: 100% !important;
 }
 
+.CodeMirror-vscrollbar::-webkit-scrollbar {
+  width: 7px;
+  background-color: #3d4d56;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
+  background-color: #666b7a;
+  border-radius: 3px;
+}
+
 .main-wrapper-editor {
   position: absolute;
   top: 0;
@@ -24,6 +34,16 @@
 .results-container {
   height: 100%;
   background: white;
+}
+
+.reflex-element::-webkit-scrollbar {
+  width: 9px;
+  background-color: #3d4d56;
+}
+
+.reflex-element::-webkit-scrollbar-thumb {
+  background-color: #666b7a;
+  border-radius: 5px;
 }
 
 .editor-container {
