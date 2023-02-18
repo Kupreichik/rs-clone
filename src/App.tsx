@@ -25,6 +25,7 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegistrationPage />} />
           <Route path="editor" element={<EditorPage />} />
+          <Route path="editor/:idPen" element={<EditorPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

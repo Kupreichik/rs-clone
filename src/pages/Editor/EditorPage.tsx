@@ -6,15 +6,25 @@ import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
+import { useParams } from 'react-router-dom';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
-import { getCurrentPenData } from '../../redux/slices/editor';
+import { fetchPen, getCurrentPen } from '../../redux/slices/pens';
+import { useAppDispatch } from '../../redux/store';
 
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
-  const currentPenData = useSelector(getCurrentPenData);
+  const dispatch = useAppDispatch();
+
+  const { idPen } = useParams();
+
+  dispatch(fetchPen(idPen));
+
+  const currentPenData = useSelector(getCurrentPen);
+
+  console.log(currentPenData);
 
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');

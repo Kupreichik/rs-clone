@@ -6,16 +6,23 @@ import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
+  currentPen: IPenData | null;
   status: 'loading' | 'loaded' | 'error';
 };
 
 const initialState: InitialPensState = {
   pens: [],
+  currentPen: null,
   status: 'loading',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
   const { data } = await axios.get<IPenData[]>('/pens');
+  return data;
+});
+
+export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string | undefined) => {
+  const { data } = await axios.get(`/pens/one/${idPen}`);
   return data;
 });
 
@@ -34,10 +41,21 @@ const pens = createSlice({
       })
       .addCase(fetchPens.rejected, (state) => {
         state.status = 'error';
+      })
+      .addCase(fetchPen.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPen.fulfilled, (state, action) => {
+        state.status = 'loaded';
+        state.currentPen = action.payload;
+      })
+      .addCase(fetchPen.rejected, (state) => {
+        state.status = 'error';
       });
   },
 });
 
+export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
 export const getPensStatus = (state: RootState) => state.pens.status;
 
