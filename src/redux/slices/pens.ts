@@ -7,11 +7,26 @@ import { updateEditorData } from './editor';
 
 type InitialPensState = {
   pens: IPenData[];
+  currentPen: IPenData;
   status: 'loading' | 'loaded' | 'error';
 };
 
 const initialState: InitialPensState = {
   pens: [],
+  currentPen: {
+    _id: '',
+    title: '',
+    html: '',
+    css: '',
+    js: '',
+    likesCount: 0,
+    viewsCount: 0,
+    user: {
+      name: '',
+      username: '',
+      avatar: '',
+    },
+  },
   status: 'loading',
 };
 
@@ -49,10 +64,36 @@ export const deletePen = createAsyncThunk('pens/deletePen', async (penId: string
   return { data, penId };
 });
 
+export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string | undefined) => {
+  const { data } = await axios.get(`/pens/one/${idPen}`);
+  return data;
+});
+
 const pens = createSlice({
   name: 'pens',
   initialState,
-  reducers: {},
+  reducers: {
+    updateEditorHTML(state, action) {
+      if (state.currentPen) {
+        state.currentPen.html = action.payload;
+      }
+    },
+    updateEditorCSS(state, action) {
+      if (state.currentPen) {
+        state.currentPen.css = action.payload;
+      }
+    },
+    updateEditorJS(state, action) {
+      if (state.currentPen) {
+        state.currentPen.js = action.payload;
+      }
+    },
+    clearEditor(state) {
+      state.currentPen.html = '';
+      state.currentPen.css = '';
+      state.currentPen.js = '';
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPens.pending, (state) => {
@@ -82,11 +123,24 @@ const pens = createSlice({
       .addCase(deletePen.fulfilled, (state, action) => {
         console.log('from delete action', action);
         state.pens = state.pens.filter((pen) => pen._id !== action.payload.penId);
+      })
+      .addCase(fetchPen.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPen.fulfilled, (state, action) => {
+        state.status = 'loaded';
+        state.currentPen = action.payload;
+      })
+      .addCase(fetchPen.rejected, (state) => {
+        state.status = 'error';
       });
   },
 });
 
+export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
 export const getPensStatus = (state: RootState) => state.pens.status;
+
+export const { updateEditorHTML, updateEditorCSS, updateEditorJS, clearEditor } = pens.actions;
 
 export const pensReducer = pens.reducer;

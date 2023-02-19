@@ -40,17 +40,19 @@ export const Header = () => {
   const userAvatar = useSelector(selectUserAvatarUrl);
   const locationRouter = useLocation();
 
+  const clearPath = locationRouter.pathname.slice(0, 7);
+
   return (
     <header className={styles.header}>
       <div className="container">
         <div className={styles.header__inner}>
-          <Link to="/">{width > 700 && locationRouter.pathname !== '/editor' ? <LogoDesktop /> : <LogoMobile />}</Link>
+          <Link to="/">{width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}</Link>
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
-          {locationRouter.pathname === '/editor' && <PenInfo />}
-          {locationRouter.pathname === '/editor' && <EditorControls />}
-          {locationRouter.pathname !== '/editor' && (
+          {clearPath === '/editor' && <PenInfo />}
+          {clearPath === '/editor' && <EditorControls />}
+          {clearPath !== '/editor' && (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
