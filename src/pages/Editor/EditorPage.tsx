@@ -9,12 +9,14 @@ import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
-import { getCurrentPenData } from '../../redux/slices/editor';
+import { getCurrentPenData, updateDatafromEditors } from '../../redux/slices/editor';
+import { useAppDispatch } from '../../redux/store';
 
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
   const currentPenData = useSelector(getCurrentPenData);
+  const dispatch = useAppDispatch();
 
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');
@@ -34,6 +36,8 @@ export const EditorPage = () => {
   };
 
   useEffect(() => {
+    dispatch(updateDatafromEditors({ html, css, js }));
+
     const timeout = setTimeout(() => {
       setSrcDoc(getSrcDoc({ html, css, js }));
     }, 250);

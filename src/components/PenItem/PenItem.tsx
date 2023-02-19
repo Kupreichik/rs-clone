@@ -4,7 +4,7 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
 import styles from '../../pages/Home/HomePage.module.scss';
-import { updateEditorData } from '../../redux/slices/editor';
+import { updateEditorData, updatePenData } from '../../redux/slices/editor';
 import { useAppDispatch } from '../../redux/store';
 import { getSrcDoc } from '../index';
 
@@ -32,7 +32,8 @@ export const PenItem = (data: IPenData) => {
   const dispatch = useAppDispatch();
 
   const onLink = () => {
-    dispatch(updateEditorData({ data }));
+    dispatch(updatePenData({ data }));
+    dispatch(updateEditorData({ ...data }));
   };
 
   return (

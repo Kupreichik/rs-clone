@@ -6,9 +6,12 @@ import { BsPencil } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 
 import { getCurrentPenData } from '../../redux/slices/editor';
+import { updateEditorTitle } from '../../redux/slices/editor';
+import { useAppDispatch } from '../../redux/store';
 
 export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) => {
   const currentPenData = useSelector(getCurrentPenData);
+  const dispatch = useAppDispatch();
 
   const [penTitle, usePenTitle] = useState(currentPenData?.title || title);
   const [isEditTitle, useEditTitle] = useState(false);
@@ -26,6 +29,10 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
   useEffect(() => {
     inputRef.current?.focus();
   });
+
+  useEffect(() => {
+    dispatch(updateEditorTitle({ title: penTitle }));
+  }, [penTitle]);
 
   return (
     <div className="pen-info">

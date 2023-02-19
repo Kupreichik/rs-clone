@@ -2,13 +2,14 @@ import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
 import { PenList } from '../../components/index';
-import { clearEditorData } from '../../redux/slices/editor';
+import { clearEditorData, clearPenData } from '../../redux/slices/editor';
 import { useAppDispatch } from '../../redux/store';
 import styles from './HomePage.module.scss';
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
   const onLink = () => {
+    dispatch(clearPenData());
     dispatch(clearEditorData());
   };
 

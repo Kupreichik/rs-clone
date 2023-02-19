@@ -11,6 +11,7 @@ import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
 import { useAppDispatch } from '../../redux/store';
+import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
 
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
@@ -48,6 +49,7 @@ export const Header = () => {
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
           {locationRouter.pathname === '/editor' && <PenInfo />}
+          {locationRouter.pathname === '/editor' && <EditorControls />}
           {locationRouter.pathname !== '/editor' && (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
