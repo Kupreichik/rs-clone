@@ -26,6 +26,7 @@
     "react-reflex": "^4.0.9",
     "react-router-dom": "^6.8.0",
     "sass": "^1.58.0",
+    "socket.io-client": "^4.6.0",
     "vite-plugin-svgr": "^2.4.0"
   },
   "devDependencies": {

@@ -2,16 +2,18 @@ import 'react-reflex/styles.css';
 import '../Editor/EditorsPage.scss';
 
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
+import io from 'socket.io-client';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
 import { getCurrentPenData } from '../../redux/slices/editor';
 
 type ViewMode = 'horizontal' | 'vertical';
+const baseURL = 'http://localhost:3033/';
 
 export const EditingRoom = () => {
   const currentPenData = useSelector(getCurrentPenData);
@@ -37,6 +39,21 @@ export const EditingRoom = () => {
     const timeout = setTimeout(() => {
       setSrcDoc(getSrcDoc({ html, css, js }));
     }, 250);
+
+    const socket = io(baseURL, {
+      transports: ['websocket'],
+    });
+
+    socket.on('CODE_CHANGED', (code) => {
+      console.log(code);
+      setHtml(code.html);
+      setCss(code.css);
+      setJS(code.js);
+    });
+
+    const sendCode = () => {
+      socket.emit('CODE_CHANGED', { html, css, js });
+    };
 
     return () => {
       clearTimeout(timeout);
