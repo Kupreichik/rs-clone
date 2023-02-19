@@ -6,19 +6,32 @@ import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
+import { useParams } from 'react-router-dom';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
-import { getCurrentPenData } from '../../redux/slices/editor';
+import { fetchPen, getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
+import { updateEditorHTML } from '../../redux/slices/pens';
+import { useAppDispatch } from '../../redux/store';
 
 type ViewMode = 'horizontal' | 'vertical';
 
 export const EditorPage = () => {
-  const currentPenData = useSelector(getCurrentPenData);
+  const dispatch = useAppDispatch();
 
-  const [html, setHtml] = useState(currentPenData?.html || '');
-  const [css, setCss] = useState(currentPenData?.css || '');
-  const [js, setJS] = useState(currentPenData?.js || '');
+  const { idPen } = useParams();
+
+  useEffect(() => {
+    dispatch(fetchPen(idPen));
+  }, []);
+
+  const currentPenData = useSelector(getCurrentPen);
+
+  // console.log(currentPenData);
+
+  // const [html, setHtml] = useState(currentPenData?.html || '');
+  // const [css, setCss] = useState(currentPenData?.css || '');
+  // const [js, setJS] = useState(currentPenData?.js || '');
 
   const [srcDoc, setSrcDoc] = useState('');
 
@@ -34,14 +47,17 @@ export const EditorPage = () => {
   };
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSrcDoc(getSrcDoc({ html, css, js }));
-    }, 250);
+    if (currentPenData) {
+      const timeout = setTimeout(() => {
+        const { html, css, js } = currentPenData;
+        setSrcDoc(getSrcDoc({ html, css, js }));
+      }, 250);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [html, css, js]);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [currentPenData]);
 
   return (
     <div className="main-wrapper-editor">
@@ -59,8 +75,10 @@ export const EditorPage = () => {
                       icon={<TbBrandHtml5 color="red" size={20} />}
                       language="xml"
                       displayName="HTML"
-                      onChange={setHtml}
-                      value={html}
+                      onChange={(value) => {
+                        dispatch(updateEditorHTML(value));
+                      }}
+                      value={currentPenData?.html || ''}
                     />
                   </div>
                 </ReflexElement>
@@ -73,8 +91,10 @@ export const EditorPage = () => {
                       icon={<TbBrandCss3 color="blue" size={20} />}
                       language="css"
                       displayName="CSS"
-                      onChange={setCss}
-                      value={css}
+                      onChange={(value) => {
+                        dispatch(updateEditorCSS(value));
+                      }}
+                      value={currentPenData?.css || ''}
                     />
                   </div>
                 </ReflexElement>
@@ -87,8 +107,10 @@ export const EditorPage = () => {
                       icon={<TbBrandJavascript color="yellow" size={20} />}
                       language="javascript"
                       displayName="JS"
-                      onChange={setJS}
-                      value={js}
+                      onChange={(value) => {
+                        dispatch(updateEditorJS(value));
+                      }}
+                      value={currentPenData?.js || ''}
                     />
                   </div>
                 </ReflexElement>

@@ -48,7 +48,7 @@ export const PenItem = (data: IPenData) => {
             width="100%"
             height="100%"
           />
-          <Link onClick={onLink} className={styles['home__item-link']} to="/editor">
+          <Link onClick={onLink} className={styles['home__item-link']} to={`/editor/${data._id}`}>
             <span hidden>Open Editor</span>
           </Link>
         </div>
