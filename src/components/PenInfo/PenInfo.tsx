@@ -13,7 +13,7 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
   const userLogin = useSelector(selectUserLogin);
 
   const currentPenData = useSelector(getCurrentPen);
-  const isPenOwner = currentPenData.user.username === userLogin;
+  const isPenOwner = currentPenData.user.username === userLogin || currentPenData._id === '';
 
   const dispatch = useAppDispatch();
 
@@ -27,7 +27,7 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onBlurInput = () => {
-    dispatch(updatePenTitle({ title: inputRef.current?.value }));
+    dispatch(updatePenTitle({ title: inputRef.current?.value || title }));
     useEditTitle(false);
   };
 
@@ -36,7 +36,7 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
   });
 
   useEffect(() => {
-    dispatch(updatePenTitle({ title: inputRef.current?.value }));
+    dispatch(updatePenTitle({ title: inputRef.current?.value || title }));
   }, [dispatch]);
 
   return (
