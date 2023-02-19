@@ -63,6 +63,7 @@ export const Header = () => {
               </label>
             </form>
           )}
+
           <div className={styles.header__buttons}>
             {isAuth ? (
               <>
