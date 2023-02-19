@@ -50,9 +50,12 @@ export const Header = () => {
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
-          {clearPath === '/editor' && <PenInfo />}
-          {clearPath === '/editor' && <EditorControls />}
-          {clearPath !== '/editor' && (
+          {clearPath === '/editor' ? (
+            <>
+              <PenInfo />
+              <EditorControls />
+            </>
+          ) : (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />

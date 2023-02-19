@@ -29,12 +29,6 @@ export const EditorPage = () => {
 
   const currentPenData = useSelector(getCurrentPen);
 
-  // console.log(currentPenData);
-
-  // const [html, setHtml] = useState(currentPenData?.html || '');
-  // const [css, setCss] = useState(currentPenData?.css || '');
-  // const [js, setJS] = useState(currentPenData?.js || '');
-
   const [srcDoc, setSrcDoc] = useState('');
 
   const [viewMode, setViewMode] = useState<ViewMode>('vertical');

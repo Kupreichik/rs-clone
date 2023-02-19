@@ -10,9 +10,14 @@ type InitialPensState = {
   status: 'loading' | 'loaded' | 'error';
 };
 
+type TUpdateParams = {
+  penId: string;
+  params: { title: string; html: string; css: string; js: string };
+};
+
 const emptyPen = {
   _id: '',
-  title: 'Untitled-test',
+  title: 'Untitled',
   html: '',
   css: '',
   js: '',
@@ -43,11 +48,6 @@ export const addPen = createAsyncThunk(
     return data;
   },
 );
-
-type TUpdateParams = {
-  penId: string;
-  params: { title: string; html: string; css: string; js: string };
-};
 
 export const updatePen = createAsyncThunk('pens/updatePen', async ({ penId, params }: TUpdateParams) => {
   const { data } = await axios.put<IPenData>(`/pens/${penId}`, params);
@@ -85,9 +85,6 @@ const pens = createSlice({
       }
     },
     clearEditor(state) {
-      // state.currentPen.html = '';
-      // state.currentPen.css = '';
-      // state.currentPen.js = '';
       state.currentPen = structuredClone(emptyPen);
     },
     updateAllCurrentPenData(state, action) {
@@ -110,22 +107,16 @@ const pens = createSlice({
         state.status = 'error';
       })
       .addCase(addPen.fulfilled, (state, action) => {
-        console.log('from addPen action', action);
         state.pens.push(action.payload);
         state.currentPen = action.payload;
       })
       .addCase(updatePen.fulfilled, (state, action) => {
-        console.log('from update action', action);
-        const penForUpdate = state.pens.find((pen) => pen._id === action.payload._id);
-        if (penForUpdate) {
-          penForUpdate.title = action.payload.title;
-          penForUpdate.html = action.payload.html;
-          penForUpdate.css = action.payload.css;
-          penForUpdate.js = action.payload.js;
+        const penIindex = state.pens.findIndex((pen) => pen._id === action.payload._id);
+        if (penIindex) {
+          state.pens[penIindex] = { ...state.pens[penIindex], ...action.payload };
         }
       })
       .addCase(deletePen.fulfilled, (state, action) => {
-        console.log('from delete action', action);
         state.pens = state.pens.filter((pen) => pen._id !== action.payload.penId);
       })
       .addCase(fetchPen.pending, (state) => {
