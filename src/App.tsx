@@ -5,7 +5,6 @@ import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { EditorPage, HomePage, LoginPage, NotFoundPage, ProfilePage, RegistrationPage } from './pages/index';
 import { fetchAuthMe, selectIsAuth } from './redux/slices/auth';
-import { fetchPens } from './redux/slices/pens';
 import { useAppDispatch } from './redux/store';
 
 function App() {
@@ -14,7 +13,6 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchAuthMe());
-    dispatch(fetchPens());
   }, []);
   return (
     <>

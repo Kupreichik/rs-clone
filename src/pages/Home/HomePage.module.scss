@@ -84,11 +84,13 @@
   display: flex;
   max-width: 350px;
   width: 100%;
+  height: 180px;
   margin-bottom: 20px;
   border-radius: 10px;
   position: relative;
   border: 1px solid #383838;
   overflow: hidden;
+  background: $gray;
 }
 
 .home__item-link {

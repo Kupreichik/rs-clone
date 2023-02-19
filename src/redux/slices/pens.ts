@@ -29,7 +29,26 @@ export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string |
 const pens = createSlice({
   name: 'pens',
   initialState,
-  reducers: {},
+  reducers: {
+    updateEditorHTML(state, action) {
+      if (state.currentPen) {
+        state.currentPen.html = action.payload;
+      }
+    },
+    updateEditorCSS(state, action) {
+      if (state.currentPen) {
+        state.currentPen.css = action.payload;
+      }
+    },
+    updateEditorJS(state, action) {
+      if (state.currentPen) {
+        state.currentPen.js = action.payload;
+      }
+    },
+    clearEditor(state) {
+      state.currentPen = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPens.pending, (state) => {
@@ -58,5 +77,7 @@ const pens = createSlice({
 export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
 export const getPensStatus = (state: RootState) => state.pens.status;
+
+export const { updateEditorHTML, updateEditorCSS, updateEditorJS, clearEditor } = pens.actions;
 
 export const pensReducer = pens.reducer;
