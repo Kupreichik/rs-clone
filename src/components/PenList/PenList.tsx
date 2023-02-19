@@ -1,12 +1,20 @@
 import { useSelector } from 'react-redux';
 
 import styles from '../../pages/Home/HomePage.module.scss';
-import { getPens, getPensStatus } from '../../redux/slices/pens';
+import { getPens, getPensQuery, getPensStatus } from '../../redux/slices/pens';
 import { PenItem, Preloader } from '../index';
 
 export const PenList = () => {
-  const pens = useSelector(getPens);
   const status = useSelector(getPensStatus);
+  const pensQuery = useSelector(getPensQuery);
+
+  const pens = useSelector(getPens).filter(
+    (pen) =>
+      pen.title.toLowerCase().includes(pensQuery.toLowerCase()) ||
+      pen.html.toLowerCase().includes(pensQuery.toLowerCase()) ||
+      pen.css.toLowerCase().includes(pensQuery.toLowerCase()) ||
+      pen.js.toLowerCase().includes(pensQuery.toLowerCase()),
+  );
 
   return status !== 'loaded' ? (
     <Preloader />

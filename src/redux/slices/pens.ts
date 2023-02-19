@@ -6,12 +6,14 @@ import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
-  currentPen: IPenData;
   status: 'loading' | 'loaded' | 'error';
+  currentPen: IPenData;
+  searchQuery: string;
 };
 
 const initialState: InitialPensState = {
   pens: [],
+  status: 'loading',
   currentPen: {
     _id: '',
     title: '',
@@ -26,7 +28,7 @@ const initialState: InitialPensState = {
       avatar: '',
     },
   },
-  status: 'loading',
+  searchQuery: '',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -63,6 +65,9 @@ const pens = createSlice({
       state.currentPen.css = '';
       state.currentPen.js = '';
     },
+    followSearchQuery(state, action) {
+      state.searchQuery = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -72,6 +77,7 @@ const pens = createSlice({
       .addCase(fetchPens.fulfilled, (state, action) => {
         state.status = 'loaded';
         state.pens = action.payload;
+        console.log(state.pens);
       })
       .addCase(fetchPens.rejected, (state) => {
         state.status = 'error';
@@ -93,6 +99,8 @@ export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
 export const getPensStatus = (state: RootState) => state.pens.status;
 
-export const { updateEditorHTML, updateEditorCSS, updateEditorJS, clearEditor } = pens.actions;
+export const getPensQuery = (state: RootState) => state.pens.searchQuery;
+
+export const { updateEditorHTML, updateEditorCSS, updateEditorJS, clearEditor, followSearchQuery } = pens.actions;
 
 export const pensReducer = pens.reducer;
