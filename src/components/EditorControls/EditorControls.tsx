@@ -1,34 +1,47 @@
 import { TbCloudUpload } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { selectIsAuth, selectUserLogin } from '../../redux/slices/auth';
-import { getEditorData } from '../../redux/slices/editor';
-import { addPen, deletePen, updatePen } from '../../redux/slices/pens';
+import { addPen, deletePen, getCurrentPen, updatePen } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { IPenData } from '../PenItem/PenItem';
 
 export const EditorControls = () => {
-  const editorData = useSelector(getEditorData);
+  const currentPenData = useSelector(getCurrentPen);
 
   const isAuth = useSelector(selectIsAuth);
   const userLogin = useSelector(selectUserLogin);
 
+  const isPenOwner = currentPenData.user.username === userLogin;
+
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+
   const onSave = async () => {
-    if (isAuth) {
-      editorData._id
-        ? editorData.user.username === userLogin
-          ? dispatch(updatePen({ penId: editorData._id, params: { ...editorData } }))
-          : console.log(
-              `can save only your own pen`,
-              'editorData.user.username-->',
-              editorData.user.username,
-              'userLogin-->',
-              userLogin,
-            )
-        : dispatch(addPen(editorData));
-    } else {
+    if (!isAuth) {
       console.log('log in or sign up to save pen');
+      return;
+    }
+
+    if (!currentPenData._id) {
+      const { title, html, css, js } = currentPenData;
+      const res = await dispatch(addPen({ title, html, css, js }));
+
+      if (res.payload) {
+        navigate(`/editor/${(res.payload as IPenData)._id}`);
+      }
+
+      console.log('pen saved');
+      return;
+    }
+
+    if (isPenOwner) {
+      await dispatch(updatePen({ penId: currentPenData._id, params: { ...currentPenData } }));
+      console.log('pen updated');
+    } else {
+      console.log(`error, you can save only your own pen`);
     }
   };
 

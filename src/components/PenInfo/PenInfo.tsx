@@ -5,24 +5,29 @@ import { useEffect, useRef, useState } from 'react';
 import { BsPencil } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 
-import { getCurrentPenData } from '../../redux/slices/editor';
-import { updateEditorTitle } from '../../redux/slices/editor';
+import { selectUserLogin } from '../../redux/slices/auth';
+import { getCurrentPen, updatePenTitle } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 
 export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) => {
-  const currentPenData = useSelector(getCurrentPenData);
+  const userLogin = useSelector(selectUserLogin);
+
+  const currentPenData = useSelector(getCurrentPen);
+  const isPenOwner = currentPenData.user.username === userLogin;
+
   const dispatch = useAppDispatch();
 
-  const [penTitle, usePenTitle] = useState(currentPenData?.title || title);
   const [isEditTitle, useEditTitle] = useState(false);
+
   const onBtn = () => {
+    if (!isPenOwner) return;
     useEditTitle(!isEditTitle);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onBlurInput = () => {
-    usePenTitle(inputRef.current?.value || title);
+    dispatch(updatePenTitle({ title: inputRef.current?.value }));
     useEditTitle(false);
   };
 
@@ -31,17 +36,17 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
   });
 
   useEffect(() => {
-    dispatch(updateEditorTitle({ title: penTitle }));
-  }, [penTitle]);
+    dispatch(updatePenTitle({ title: inputRef.current?.value }));
+  }, [dispatch]);
 
   return (
     <div className="pen-info">
       <div className="pen-info__title">
         <span onClick={onBtn} className={cn({ 'pen-info__title-text': true, isVisHidden: isEditTitle })}>
-          {penTitle}
+          {currentPenData.title || title}
         </span>
 
-        <div onClick={onBtn} className={cn({ 'pen-info__title-btn': true, isVisHidden: isEditTitle })}>
+        <div onClick={onBtn} className={cn({ 'pen-info__title-btn': true, isVisHidden: !isPenOwner || isEditTitle })}>
           <BsPencil />
         </div>
         <input
@@ -52,7 +57,7 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
           placeholder={title}
         />
       </div>
-      <div className="pen-info__author">{currentPenData?.user.name || author}</div>
+      <div className="pen-info__author">{currentPenData?.user.username || author}</div>
     </div>
   );
 };

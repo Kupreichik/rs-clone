@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../axios';
 import { IPenData } from '../../components/index';
 import { RootState } from '../store';
-import { updateEditorData } from './editor';
 
 type InitialPensState = {
   pens: IPenData[];
@@ -11,22 +10,24 @@ type InitialPensState = {
   status: 'loading' | 'loaded' | 'error';
 };
 
+const emptyPen = {
+  _id: '',
+  title: 'Untitled-test',
+  html: '',
+  css: '',
+  js: '',
+  likesCount: 0,
+  viewsCount: 0,
+  user: {
+    name: '',
+    username: '',
+    avatar: '',
+  },
+};
+
 const initialState: InitialPensState = {
   pens: [],
-  currentPen: {
-    _id: '',
-    title: '',
-    html: '',
-    css: '',
-    js: '',
-    likesCount: 0,
-    viewsCount: 0,
-    user: {
-      name: '',
-      username: '',
-      avatar: '',
-    },
-  },
+  currentPen: structuredClone(emptyPen),
   status: 'loading',
 };
 
@@ -37,11 +38,8 @@ export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
 
 export const addPen = createAsyncThunk(
   'pens/addPen',
-  async (params: Pick<IPenData, 'title' | 'html' | 'css' | 'js'>, { dispatch }) => {
+  async (params: Pick<IPenData, 'title' | 'html' | 'css' | 'js'>) => {
     const { data } = await axios.post<IPenData>('/pens', params);
-
-    dispatch(updateEditorData(data));
-
     return data;
   },
 );
@@ -51,10 +49,8 @@ type TUpdateParams = {
   params: { title: string; html: string; css: string; js: string };
 };
 
-export const updatePen = createAsyncThunk('pens/updatePen', async ({ penId, params }: TUpdateParams, { dispatch }) => {
+export const updatePen = createAsyncThunk('pens/updatePen', async ({ penId, params }: TUpdateParams) => {
   const { data } = await axios.put<IPenData>(`/pens/${penId}`, params);
-
-  dispatch(updateEditorData(data));
 
   return data;
 });
@@ -89,9 +85,16 @@ const pens = createSlice({
       }
     },
     clearEditor(state) {
-      state.currentPen.html = '';
-      state.currentPen.css = '';
-      state.currentPen.js = '';
+      // state.currentPen.html = '';
+      // state.currentPen.css = '';
+      // state.currentPen.js = '';
+      state.currentPen = structuredClone(emptyPen);
+    },
+    updateAllCurrentPenData(state, action) {
+      state.currentPen = action.payload;
+    },
+    updatePenTitle(state, action) {
+      state.currentPen.title = action.payload.title;
     },
   },
   extraReducers: (builder) => {
@@ -109,6 +112,7 @@ const pens = createSlice({
       .addCase(addPen.fulfilled, (state, action) => {
         console.log('from addPen action', action);
         state.pens.push(action.payload);
+        state.currentPen = action.payload;
       })
       .addCase(updatePen.fulfilled, (state, action) => {
         console.log('from update action', action);
@@ -141,6 +145,13 @@ export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
 export const getPensStatus = (state: RootState) => state.pens.status;
 
-export const { updateEditorHTML, updateEditorCSS, updateEditorJS, clearEditor } = pens.actions;
+export const {
+  updateEditorHTML,
+  updateEditorCSS,
+  updateEditorJS,
+  clearEditor,
+  updateAllCurrentPenData,
+  updatePenTitle,
+} = pens.actions;
 
 export const pensReducer = pens.reducer;

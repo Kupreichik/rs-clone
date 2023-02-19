@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
-import { getCurrentPenData, updateDatafromEditors } from '../../redux/slices/editor';
 import { fetchPen, getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
 import { updateEditorHTML } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
@@ -23,7 +22,9 @@ export const EditorPage = () => {
   const { idPen } = useParams();
 
   useEffect(() => {
-    dispatch(fetchPen(idPen));
+    if (idPen) {
+      dispatch(fetchPen(idPen));
+    }
   }, []);
 
   const currentPenData = useSelector(getCurrentPen);
