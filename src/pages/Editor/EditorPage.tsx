@@ -23,7 +23,7 @@ export const EditorPage = () => {
 
   useEffect(() => {
     dispatch(fetchPen(idPen));
-  }, [idPen]);
+  }, []);
 
   const currentPenData = useSelector(getCurrentPen);
 

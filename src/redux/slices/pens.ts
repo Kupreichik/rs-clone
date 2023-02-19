@@ -6,13 +6,26 @@ import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
-  currentPen: IPenData | null;
+  currentPen: IPenData;
   status: 'loading' | 'loaded' | 'error';
 };
 
 const initialState: InitialPensState = {
   pens: [],
-  currentPen: null,
+  currentPen: {
+    _id: '',
+    title: '',
+    html: '',
+    css: '',
+    js: '',
+    likesCount: 0,
+    viewsCount: 0,
+    user: {
+      name: '',
+      username: '',
+      avatar: '',
+    },
+  },
   status: 'loading',
 };
 
@@ -46,7 +59,9 @@ const pens = createSlice({
       }
     },
     clearEditor(state) {
-      state.currentPen = null;
+      state.currentPen.html = '';
+      state.currentPen.css = '';
+      state.currentPen.js = '';
     },
   },
   extraReducers: (builder) => {
