@@ -1,11 +1,21 @@
+import './EditorControls.scss';
+
+import cn from 'classnames';
 import { TbCloudUpload } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { selectIsAuth, selectUserLogin } from '../../redux/slices/auth';
+import { getEditorData, updateViewMode, ViewMode } from '../../redux/slices/editor';
 import { addPen, deletePen, getCurrentPen, updatePen } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { IPenData } from '../PenItem/PenItem';
+
+export const oppositeViewMode = (viewMode: ViewMode) => {
+  const oppositeViewMode = viewMode === 'horizontal' ? 'vertical' : 'horizontal';
+  return oppositeViewMode;
+};
 
 export const EditorControls = () => {
   const currentPenData = useSelector(getCurrentPen);
@@ -18,6 +28,7 @@ export const EditorControls = () => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+  const editorData = useSelector(getEditorData);
 
   const onSave = async () => {
     if (!isAuth) {
@@ -70,6 +81,12 @@ export const EditorControls = () => {
         Save
       </div>
       <button onClick={onDelete}>TEST Delete pen by id</button>
+      <div
+        onClick={() => dispatch(updateViewMode(oppositeViewMode(editorData.viewMode)))}
+        className={cn({ 'view-btn': true, rotate: editorData.viewMode === 'vertical' })}
+      >
+        <ViewBtnIcon />
+      </div>
     </div>
   );
 };

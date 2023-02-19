@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '../store';
 
+export type ViewMode = 'horizontal' | 'vertical';
+
 type InitialEditorState = {
-  viewMode: string;
+  viewMode: ViewMode;
 };
 
 const initialState: InitialEditorState = {
-  viewMode: '',
+  viewMode: 'vertical',
 };
 
 const editor = createSlice({
