@@ -1,31 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { IPenData } from '../../components/index';
 import { RootState } from '../store';
 
+export type ViewMode = 'horizontal' | 'vertical';
+
 type InitialEditorState = {
-  currentPenData: IPenData | null;
+  viewMode: ViewMode;
 };
 
 const initialState: InitialEditorState = {
-  currentPenData: null,
+  viewMode: 'vertical',
 };
 
 const editor = createSlice({
   name: 'editor',
   initialState,
   reducers: {
-    updateEditorData(state, action) {
-      state.currentPenData = action.payload.data;
-    },
-    clearEditorData(state) {
-      state.currentPenData = null;
+    updateViewMode(state, action) {
+      state.viewMode = action.payload;
     },
   },
 });
 
-export const getCurrentPenData = (state: RootState) => state.editor.currentPenData;
+export const getEditorData = (state: RootState) => state.editor;
 
-export const { updateEditorData, clearEditorData } = editor.actions;
+export const { updateViewMode } = editor.actions;
 
 export const editorReducer = editor.reducer;

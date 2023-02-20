@@ -11,29 +11,55 @@ type InitialPensState = {
   searchQuery: string;
 };
 
+type TUpdateParams = {
+  penId: string;
+  params: { title: string; html: string; css: string; js: string };
+};
+
+const emptyPen = {
+  _id: '',
+  title: 'Untitled',
+  html: '',
+  css: '',
+  js: '',
+  likesCount: 0,
+  viewsCount: 0,
+  user: {
+    name: '',
+    username: '',
+    avatar: '',
+  },
+};
+
 const initialState: InitialPensState = {
   pens: [],
+  currentPen: structuredClone(emptyPen),
   status: 'loading',
-  currentPen: {
-    _id: '',
-    title: '',
-    html: '',
-    css: '',
-    js: '',
-    likesCount: 0,
-    viewsCount: 0,
-    user: {
-      name: '',
-      username: '',
-      avatar: '',
-    },
-  },
   searchQuery: '',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
   const { data } = await axios.get<IPenData[]>('/pens');
   return data;
+});
+
+export const addPen = createAsyncThunk(
+  'pens/addPen',
+  async (params: Pick<IPenData, 'title' | 'html' | 'css' | 'js'>) => {
+    const { data } = await axios.post<IPenData>('/pens', params);
+    return data;
+  },
+);
+
+export const updatePen = createAsyncThunk('pens/updatePen', async ({ penId, params }: TUpdateParams) => {
+  const { data } = await axios.put<IPenData>(`/pens/${penId}`, params);
+
+  return data;
+});
+
+export const deletePen = createAsyncThunk('pens/deletePen', async (penId: string) => {
+  const { data } = await axios.delete(`/pens/${penId}`);
+  return { data, penId };
 });
 
 export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string | undefined) => {
@@ -61,9 +87,13 @@ const pens = createSlice({
       }
     },
     clearEditor(state) {
-      state.currentPen.html = '';
-      state.currentPen.css = '';
-      state.currentPen.js = '';
+      state.currentPen = structuredClone(emptyPen);
+    },
+    updateAllCurrentPenData(state, action) {
+      state.currentPen = action.payload;
+    },
+    updatePenTitle(state, action) {
+      state.currentPen.title = action.payload.title;
     },
     followSearchQuery(state, action) {
       state.searchQuery = action.payload;
@@ -81,6 +111,19 @@ const pens = createSlice({
       })
       .addCase(fetchPens.rejected, (state) => {
         state.status = 'error';
+      })
+      .addCase(addPen.fulfilled, (state, action) => {
+        state.pens.push(action.payload);
+        state.currentPen = action.payload;
+      })
+      .addCase(updatePen.fulfilled, (state, action) => {
+        const penIindex = state.pens.findIndex((pen) => pen._id === action.payload._id);
+        if (penIindex) {
+          state.pens[penIindex] = { ...state.pens[penIindex], ...action.payload };
+        }
+      })
+      .addCase(deletePen.fulfilled, (state, action) => {
+        state.pens = state.pens.filter((pen) => pen._id !== action.payload.penId);
       })
       .addCase(fetchPen.pending, (state) => {
         state.status = 'loading';
@@ -101,6 +144,14 @@ export const getPensStatus = (state: RootState) => state.pens.status;
 
 export const getPensQuery = (state: RootState) => state.pens.searchQuery;
 
-export const { updateEditorHTML, updateEditorCSS, updateEditorJS, clearEditor, followSearchQuery } = pens.actions;
+export const {
+  updateEditorHTML,
+  updateEditorCSS,
+  updateEditorJS,
+  clearEditor,
+  updateAllCurrentPenData,
+  updatePenTitle,
+  followSearchQuery,
+} = pens.actions;
 
 export const pensReducer = pens.reducer;

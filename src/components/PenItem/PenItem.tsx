@@ -4,7 +4,7 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
 import styles from '../../pages/Home/HomePage.module.scss';
-import { updateEditorData } from '../../redux/slices/editor';
+import { updateAllCurrentPenData } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { getSrcDoc } from '../index';
 
@@ -32,7 +32,7 @@ export const PenItem = (data: IPenData) => {
   const dispatch = useAppDispatch();
 
   const onLink = () => {
-    dispatch(updateEditorData({ data }));
+    dispatch(updateAllCurrentPenData({ ...data }));
   };
 
   return (
@@ -77,7 +77,7 @@ export const PenItem = (data: IPenData) => {
           </div>
           <div className={styles['home__item-stats-content']}>
             <FaEye />
-            <span>{data.likesCount}</span>
+            <span>{data.viewsCount}</span>
           </div>
         </div>
       </div>
