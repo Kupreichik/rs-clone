@@ -11,6 +11,7 @@ import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
 import { useAppDispatch } from '../../redux/store';
+import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
 
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
@@ -49,8 +50,12 @@ export const Header = () => {
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
-          {clearPath === '/editor' && <PenInfo />}
-          {clearPath !== '/editor' && (
+          {clearPath === '/editor' ? (
+            <>
+              <PenInfo />
+              <EditorControls />
+            </>
+          ) : (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
