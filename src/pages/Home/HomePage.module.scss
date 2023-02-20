@@ -49,6 +49,7 @@
   grid-gap: 50px 60px;
   align-items: center;
   justify-content: center;
+  margin-bottom: 120px;
 }
 
 .home__item {
@@ -112,6 +113,8 @@
   width: 40px;
   height: 40px;
   border-radius: 5px;
+  object-fit: cover;
+  vertical-align: middle;
 }
 
 .home__item-description {
@@ -148,13 +151,36 @@
   display: flex;
   gap: 10px;
   margin-top: 20px;
-  // justify-content: end;
+  justify-content: end;
 }
 
 .home__item-stats-content {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.home__btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.home__btn-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #444857;
+}
+
+.home__btn-pagination:hover {
+  background: #5a5f73;
 }
 
 @media screen and (max-width: 700px) {
