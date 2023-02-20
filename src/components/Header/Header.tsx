@@ -10,7 +10,6 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { fetchEditingRoom, RoomData } from '../../redux/slices/editingRoom';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -23,12 +22,8 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
   const [width, setWidth] = useState(window.innerWidth);
-  const [path, setPath] = useState('/editor');
-  const [coEditingStyle, setCoEditingStyle] = useState({});
-  const [copyLinkBtnText, setCopyLinkBtnText] = useState('Copy Link');
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
-  const editingRoomLinkRef = useRef<HTMLAnchorElement>(null);
 
   const handleWindowResize = () => setWidth(window.innerWidth);
   window.addEventListener('resize', handleWindowResize);
@@ -40,22 +35,6 @@ export const Header = () => {
     homeLinkRef.current?.click();
     dispatch(logout());
     setOpen(false);
-  };
-
-  const handleCoEditingClick = async () => {
-    setCoEditingStyle({ pointerEvents: 'none' });
-    const { payload } = await dispatch(fetchEditingRoom());
-    if (payload) setPath(`editing-room/${(payload as RoomData).roomId}`);
-    setCoEditingStyle({});
-    editingRoomLinkRef.current?.click();
-  };
-
-  const handleCopyLinkClick = () => {
-    const milliseconds = 700;
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopyLinkBtnText('Copied!');
-      setTimeout(() => setCopyLinkBtnText('Copy Link'), milliseconds);
-    });
   };
 
   const userAvatar = useSelector(selectUserAvatarUrl);
@@ -77,12 +56,9 @@ export const Header = () => {
             <>
               <PenInfo />
               <EditorControls />
-              <div className="button" style={coEditingStyle} onClick={handleCoEditingClick}>
-                Start Co-Editing
-              </div>
-              <NavLink ref={editingRoomLinkRef} to={path} hidden></NavLink>
             </>
           )}
+          {clearPath === '/editin' && <EditorControls />}
           {clearPath !== '/editor' && clearPath !== '/editin' && (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
@@ -113,11 +89,6 @@ export const Header = () => {
                   </NavLink>
                 </>
               )}
-            </div>
-          )}
-          {clearPath === '/editin' && (
-            <div className="button" onClick={handleCopyLinkClick} title="Invite a friend to co-edit">
-              {copyLinkBtnText}
             </div>
           )}
         </div>

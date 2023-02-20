@@ -1,7 +1,6 @@
 import 'react-reflex/styles.css';
 import '../Editor/EditorsPage.scss';
 
-import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
@@ -9,8 +8,8 @@ import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
-import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
+import { getEditorData } from '../../redux/slices/editor';
 import { getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
 import { updateEditorHTML } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
@@ -44,6 +43,7 @@ export const EditingRoom = () => {
   }, []);
 
   const currentPenData = useSelector(getCurrentPen);
+  const editorData = useSelector(getEditorData);
 
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');
@@ -51,15 +51,9 @@ export const EditingRoom = () => {
 
   const [srcDoc, setSrcDoc] = useState('');
 
-  const [viewMode, setViewMode] = useState<ViewMode>('vertical');
-
   const oppositeViewMode = (viewMode: ViewMode) => {
     const oppositeViewMode = viewMode === 'horizontal' ? 'vertical' : 'horizontal';
     return oppositeViewMode;
-  };
-
-  const onChangeMode = () => {
-    setViewMode(oppositeViewMode(viewMode));
   };
 
   const onHtmlChange = (value: string, data: CodeMirror.EditorChange) => {
@@ -117,14 +111,11 @@ export const EditingRoom = () => {
 
   return (
     <div className="main-wrapper-editor">
-      <div onClick={onChangeMode} className={cn({ 'view-button': true, rotate: viewMode === 'vertical' })}>
-        <ViewBtnIcon />
-      </div>
-      <ReflexContainer orientation={viewMode}>
+      <ReflexContainer orientation={editorData.viewMode}>
         <ReflexElement flex={0.25} minSize={30}>
           <div className="div-absolute">
             <div className="editors-container">
-              <ReflexContainer orientation={oppositeViewMode(viewMode)}>
+              <ReflexContainer orientation={oppositeViewMode(editorData.viewMode)}>
                 <ReflexElement minSize={30}>
                   <div className="div-absolute">
                     <Editor
