@@ -56,7 +56,7 @@ export const Header = () => {
           </div>
           {clearPath === '/editor' && <PenInfo />}
           {clearPath !== '/editor' && (
-            <form className={styles.header__form}>
+            <form className={styles.header__form} onSubmit={(e) => e.preventDefault()}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
                 <input
