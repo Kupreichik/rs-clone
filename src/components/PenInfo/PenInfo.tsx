@@ -54,7 +54,8 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
           onBlur={onBlurInput}
           type="text"
           className={cn({ 'pen-info__input': true, isVisHidden: !isEditTitle })}
-          placeholder={title}
+          placeholder={currentPenData.title || title}
+          defaultValue={currentPenData.title || title}
         />
       </div>
       <div className="pen-info__author">{currentPenData?.user.username || author}</div>

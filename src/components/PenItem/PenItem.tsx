@@ -77,7 +77,7 @@ export const PenItem = (data: IPenData) => {
           </div>
           <div className={styles['home__item-stats-content']}>
             <FaEye />
-            <span>{data.likesCount}</span>
+            <span>{data.viewsCount}</span>
           </div>
         </div>
       </div>
