@@ -78,19 +78,19 @@ export const EditorControls = () => {
 
   return (
     <div className="editor-controls">
-      {isPenOwner ? (
+      {isPenOwner && (
         <div className="editor-controls__btn button save-btn" onClick={onSave}>
           <TbCloudUpload size={30} />
           Save
         </div>
-      ) : (
-        <div
-          onClick={() => dispatch(updateViewMode(oppositeViewMode(editorData.viewMode)))}
-          className={cn({ 'editor-controls__btn view-btn': true, rotate: editorData.viewMode === 'vertical' })}
-        >
-          <ViewBtnIcon />
-        </div>
       )}
+      <div
+        onClick={() => dispatch(updateViewMode(oppositeViewMode(editorData.viewMode)))}
+        className={cn({ 'editor-controls__btn view-btn': true, rotate: editorData.viewMode === 'vertical' })}
+      >
+        <ViewBtnIcon />
+      </div>
+
       <SnackbarCustom open={open} setOpen={setOpen} severity={messageMode} customWidth={250} message={text} />
     </div>
   );
