@@ -32,6 +32,7 @@ function App() {
           <Route path="register" element={<RegistrationPage />} />
           <Route path="editor" element={<EditorPage />} />
           <Route path="editor/:idPen" element={<EditorPage />} />
+          <Route path="editing-room/:roomId" element={<EditingRoom />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

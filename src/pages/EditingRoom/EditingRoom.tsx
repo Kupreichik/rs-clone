@@ -2,21 +2,48 @@ import 'react-reflex/styles.css';
 import '../Editor/EditorsPage.scss';
 
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
+import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { Editor, getSrcDoc } from '../../components/index';
-import { getCurrentPenData } from '../../redux/slices/editor';
+import { getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
+import { updateEditorHTML } from '../../redux/slices/pens';
+import { useAppDispatch } from '../../redux/store';
 
 type ViewMode = 'horizontal' | 'vertical';
-const baseURL = 'http://localhost:3033/';
+const baseURL = 'localhost:3033';
 
 export const EditingRoom = () => {
-  const currentPenData = useSelector(getCurrentPenData);
+  const dispatch = useAppDispatch();
+
+  const { roomId } = useParams();
+  const socket = io(baseURL, {
+    transports: ['websocket'],
+  });
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      socket.emit('CONNECTED_TO_ROOM', { roomId });
+    });
+
+    socket.on('CODE_CHANGED', (code) => {
+      setHtml(code.html);
+      setCss(code.css);
+      setJS(code.js);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('CODE_CHANGED');
+    };
+  }, []);
+
+  const currentPenData = useSelector(getCurrentPen);
 
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');
@@ -35,25 +62,53 @@ export const EditingRoom = () => {
     setViewMode(oppositeViewMode(viewMode));
   };
 
+  const onHtmlChange = (value: string, data: CodeMirror.EditorChange) => {
+    dispatch(updateEditorHTML(value));
+
+    if (data.origin !== '+insert') {
+      socket.emit('CODE_CHANGED', {
+        roomId,
+        code: {
+          html: value,
+          css: currentPenData?.css,
+          js: currentPenData?.js,
+        },
+      });
+    }
+  };
+
+  const onCssChange = (value: string, data: CodeMirror.EditorChange) => {
+    dispatch(updateEditorCSS(value));
+    if (data.origin !== '+insert') {
+      socket.emit('CODE_CHANGED', {
+        roomId,
+        code: {
+          html: currentPenData?.html,
+          css: value,
+          js: currentPenData?.js,
+        },
+      });
+    }
+  };
+
+  const onJsChange = (value: string, data: CodeMirror.EditorChange) => {
+    dispatch(updateEditorJS(value));
+    if (data.origin !== '+insert') {
+      socket.emit('CODE_CHANGED', {
+        roomId,
+        code: {
+          html: currentPenData?.html,
+          css: currentPenData?.css,
+          js: value,
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(getSrcDoc({ html, css, js }));
     }, 250);
-
-    const socket = io(baseURL, {
-      transports: ['websocket'],
-    });
-
-    socket.on('CODE_CHANGED', (code) => {
-      console.log(code);
-      setHtml(code.html);
-      setCss(code.css);
-      setJS(code.js);
-    });
-
-    const sendCode = () => {
-      socket.emit('CODE_CHANGED', { html, css, js });
-    };
 
     return () => {
       clearTimeout(timeout);
@@ -76,7 +131,7 @@ export const EditingRoom = () => {
                       icon={<TbBrandHtml5 color="red" size={20} />}
                       language="xml"
                       displayName="HTML"
-                      onChange={setHtml}
+                      onChange={onHtmlChange}
                       value={html}
                     />
                   </div>
@@ -90,7 +145,7 @@ export const EditingRoom = () => {
                       icon={<TbBrandCss3 color="blue" size={20} />}
                       language="css"
                       displayName="CSS"
-                      onChange={setCss}
+                      onChange={onCssChange}
                       value={css}
                     />
                   </div>
@@ -104,7 +159,7 @@ export const EditingRoom = () => {
                       icon={<TbBrandJavascript color="yellow" size={20} />}
                       language="javascript"
                       displayName="JS"
-                      onChange={setJS}
+                      onChange={onJsChange}
                       value={js}
                     />
                   </div>

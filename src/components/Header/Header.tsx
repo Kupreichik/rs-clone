@@ -10,6 +10,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
+import { fetchEditingRoom, RoomData } from '../../redux/slices/editingRoom';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -22,8 +23,12 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
   const [width, setWidth] = useState(window.innerWidth);
+  const [path, setPath] = useState('/editor');
+  const [coEditingStyle, setCoEditingStyle] = useState({});
+  const [copyLinkBtnText, setCopyLinkBtnText] = useState('Copy Link');
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
+  const editingRoomLinkRef = useRef<HTMLAnchorElement>(null);
 
   const handleWindowResize = () => setWidth(window.innerWidth);
   window.addEventListener('resize', handleWindowResize);
@@ -37,6 +42,22 @@ export const Header = () => {
     setOpen(false);
   };
 
+  const handleCoEditingClick = async () => {
+    setCoEditingStyle({ pointerEvents: 'none' });
+    const { payload } = await dispatch(fetchEditingRoom());
+    if (payload) setPath(`editing-room/${(payload as RoomData).roomId}`);
+    setCoEditingStyle({});
+    editingRoomLinkRef.current?.click();
+  };
+
+  const handleCopyLinkClick = () => {
+    const milliseconds = 700;
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopyLinkBtnText('Copied!');
+      setTimeout(() => setCopyLinkBtnText('Copy Link'), milliseconds);
+    });
+  };
+
   const userAvatar = useSelector(selectUserAvatarUrl);
   const locationRouter = useLocation();
 
@@ -46,16 +67,23 @@ export const Header = () => {
     <header className={styles.header}>
       <div className="container">
         <div className={styles.header__inner}>
-          <Link to="/">{width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}</Link>
+          <Link to={clearPath !== '/editin' ? '/' : '/editor'}>
+            {width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}
+          </Link>
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
-          {clearPath === '/editor' ? (
+          {clearPath === '/editor' && (
             <>
               <PenInfo />
               <EditorControls />
+              <div className="button" style={coEditingStyle} onClick={handleCoEditingClick}>
+                Start Co-Editing
+              </div>
+              <NavLink ref={editingRoomLinkRef} to={path} hidden></NavLink>
             </>
-          ) : (
+          )}
+          {clearPath !== '/editor' && clearPath !== '/editin' && (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
@@ -63,29 +91,35 @@ export const Header = () => {
               </label>
             </form>
           )}
-
-          <div className={styles.header__buttons}>
-            {isAuth ? (
-              <>
-                <div onClick={() => onClickLogout()} className="button">
-                  Log Out
-                </div>
-                <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
-                <NavLink to="/profile">
-                  <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
-                </NavLink>
-              </>
-            ) : (
-              <>
-                <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
-                  Sign Up
-                </NavLink>
-                <NavLink className="button" style={setLoginButton} to="/login">
-                  Log In
-                </NavLink>
-              </>
-            )}
-          </div>
+          {clearPath !== '/editin' && (
+            <div className={styles.header__buttons}>
+              {isAuth ? (
+                <>
+                  <div onClick={() => onClickLogout()} className="button">
+                    Log Out
+                  </div>
+                  <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
+                  <NavLink to="/profile">
+                    <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
+                  </NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
+                    Sign Up
+                  </NavLink>
+                  <NavLink className="button" style={setLoginButton} to="/login">
+                    Log In
+                  </NavLink>
+                </>
+              )}
+            </div>
+          )}
+          {clearPath === '/editin' && (
+            <div className="button" onClick={handleCopyLinkClick} title="Invite a friend to co-edit">
+              {copyLinkBtnText}
+            </div>
+          )}
         </div>
       </div>
       <Dialog
