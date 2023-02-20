@@ -20,7 +20,8 @@ export const PenList = () => {
       pen.title.toLowerCase().includes(pensQuery.toLowerCase()) ||
       pen.html.toLowerCase().includes(pensQuery.toLowerCase()) ||
       pen.css.toLowerCase().includes(pensQuery.toLowerCase()) ||
-      pen.js.toLowerCase().includes(pensQuery.toLowerCase()),
+      pen.js.toLowerCase().includes(pensQuery.toLowerCase()) ||
+      pen.user.username.toLowerCase().includes(pensQuery.toLowerCase()),
   );
 
   const pensPagination = pensSearchFIlter.filter((_, i) => i >= (count - 1) * itemInPage && i < itemInPage * count);

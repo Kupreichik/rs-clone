@@ -117,9 +117,9 @@ const pens = createSlice({
         state.currentPen = action.payload;
       })
       .addCase(updatePen.fulfilled, (state, action) => {
-        const penIindex = state.pens.findIndex((pen) => pen._id === action.payload._id);
-        if (penIindex) {
-          state.pens[penIindex] = { ...state.pens[penIindex], ...action.payload };
+        const penIndex = state.pens.findIndex((pen) => pen._id === action.payload._id);
+        if (penIndex) {
+          state.pens[penIndex] = { ...state.pens[penIndex], ...action.payload };
         }
       })
       .addCase(deletePen.fulfilled, (state, action) => {
