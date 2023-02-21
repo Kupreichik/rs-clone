@@ -1,4 +1,4 @@
-import '../styles/global.scss';
+import '../styles/main.scss';
 import '../styles/vars.scss';
 import '../styles/form.scss';
 

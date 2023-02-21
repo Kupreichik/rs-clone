@@ -3,7 +3,15 @@ import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 import { Layout } from './components/Layout';
-import { EditorPage, HomePage, LoginPage, NotFoundPage, ProfilePage, RegistrationPage } from './pages/index';
+import {
+  EditingRoom,
+  EditorPage,
+  HomePage,
+  LoginPage,
+  NotFoundPage,
+  ProfilePage,
+  RegistrationPage,
+} from './pages/index';
 import { fetchAuthMe, selectIsAuth } from './redux/slices/auth';
 import { useAppDispatch } from './redux/store';
 
@@ -24,6 +32,7 @@ function App() {
           <Route path="register" element={<RegistrationPage />} />
           <Route path="editor" element={<EditorPage />} />
           <Route path="editor/:idPen" element={<EditorPage />} />
+          <Route path="editing-room/:roomId" element={<EditingRoom />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

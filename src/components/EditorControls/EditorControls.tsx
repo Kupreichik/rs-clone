@@ -2,13 +2,14 @@ import './EditorControls.scss';
 
 import { AlertColor } from '@mui/material';
 import cn from 'classnames';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { TbCloudUpload } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { selectIsAuth, selectUserLogin } from '../../redux/slices/auth';
+import { fetchEditingRoom, RoomData } from '../../redux/slices/editingRoom';
 import { getEditorData, updateViewMode, ViewMode } from '../../redux/slices/editor';
 import { addPen, getCurrentPen, updatePen } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
@@ -26,6 +27,9 @@ export const EditorControls = () => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const [messageMode, setMessageMode] = useState<AlertColor>('success');
+  const [path, setPath] = useState('/editor');
+  const [coEditingStyle, setCoEditingStyle] = useState({});
+  const [copyLinkBtnText, setCopyLinkBtnText] = useState('Copy Link');
 
   const isAuth = useSelector(selectIsAuth);
   const userLogin = useSelector(selectUserLogin);
@@ -76,13 +80,42 @@ export const EditorControls = () => {
     }
   };
 
+  const editingRoomLinkRef = useRef<HTMLAnchorElement>(null);
+
+  const handleCoEditingClick = async () => {
+    setCoEditingStyle({ pointerEvents: 'none' });
+    const { payload } = await dispatch(fetchEditingRoom(currentPenData));
+    if (payload) setPath(`editing-room/${(payload as RoomData).roomId}`);
+    setCoEditingStyle({});
+    editingRoomLinkRef.current?.click();
+  };
+
+  const handleCopyLinkClick = () => {
+    const milliseconds = 700;
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopyLinkBtnText('Copied!');
+      setTimeout(() => setCopyLinkBtnText('Copy Link'), milliseconds);
+    });
+  };
+
+  const locationRouter = useLocation();
+  const clearPath = locationRouter.pathname.slice(0, 7);
+
   return (
     <div className="editor-controls">
-      {isPenOwner && (
+      {isPenOwner && clearPath === '/editor' && (
         <div className="editor-controls__btn button save-btn" onClick={onSave}>
           <TbCloudUpload size={30} />
           Save
         </div>
+      )}
+      {clearPath === '/editor' && (
+        <>
+          <div className="button" style={coEditingStyle} onClick={handleCoEditingClick}>
+            Start Co-Editing
+          </div>
+          <NavLink ref={editingRoomLinkRef} to={path} hidden></NavLink>
+        </>
       )}
       <div
         onClick={() => dispatch(updateViewMode(oppositeViewMode(editorData.viewMode)))}
@@ -90,7 +123,11 @@ export const EditorControls = () => {
       >
         <ViewBtnIcon />
       </div>
-
+      {clearPath === '/editin' && (
+        <div className="button" onClick={handleCopyLinkClick} title="Invite a friend to co-edit">
+          {copyLinkBtnText}
+        </div>
+      )}
       <SnackbarCustom open={open} setOpen={setOpen} severity={messageMode} customWidth={250} message={text} />
     </div>
   );

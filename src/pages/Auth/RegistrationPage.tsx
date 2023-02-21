@@ -126,7 +126,13 @@ export const RegistrationPage = () => {
           <button onClick={handleClickGithubAuth} className="button button-github">
             Sign Up with GitHub
           </button>
-          <SnackbarCustom open={open} setOpen={setOpen} message="Failed to Log In!" />
+          <SnackbarCustom
+            open={open}
+            setOpen={setOpen}
+            message="Failed to Log In!"
+            severity="error"
+            customWidth={250}
+          />
         </div>
       </div>
     </section>
