@@ -98,6 +98,9 @@ const pens = createSlice({
     followSearchQuery(state, action) {
       state.searchQuery = action.payload;
     },
+    clearSearchQuery(state) {
+      state.searchQuery = '';
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -152,6 +155,7 @@ export const {
   updateAllCurrentPenData,
   updatePenTitle,
   followSearchQuery,
+  clearSearchQuery,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;

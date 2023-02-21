@@ -10,7 +10,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { followSearchQuery } from '../../redux/slices/pens';
+import { clearSearchQuery, followSearchQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -40,7 +40,10 @@ export const Header = () => {
     homeLinkRef.current?.click();
     dispatch(logout());
     setOpen(false);
+    dispatch(clearSearchQuery());
   };
+
+  const onClickLoginSignup = () => dispatch(clearSearchQuery());
 
   const userAvatar = useSelector(selectUserAvatarUrl);
   const locationRouter = useLocation();
@@ -91,10 +94,15 @@ export const Header = () => {
                 </>
               ) : (
                 <>
-                  <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
+                  <NavLink
+                    className={cn(styles.header__button, 'button')}
+                    style={setLoginButton}
+                    to="/register"
+                    onClick={onClickLoginSignup}
+                  >
                     Sign Up
                   </NavLink>
-                  <NavLink className="button" style={setLoginButton} to="/login">
+                  <NavLink className="button" style={setLoginButton} to="/login" onClick={onClickLoginSignup}>
                     Log In
                   </NavLink>
                 </>
