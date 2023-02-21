@@ -58,7 +58,7 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
           defaultValue={currentPenData.title || title}
         />
       </div>
-      <div className="pen-info__author">{currentPenData?.user.username || author}</div>
+      <div className="pen-info__author">{currentPenData?.user.username || userLogin || author}</div>
     </div>
   );
 };

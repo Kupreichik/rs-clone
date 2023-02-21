@@ -10,7 +10,13 @@ import { useParams } from 'react-router-dom';
 import { oppositeViewMode } from '../../components/EditorControls/EditorControls';
 import { Editor, getSrcDoc } from '../../components/index';
 import { getEditorData } from '../../redux/slices/editor';
-import { fetchPen, getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
+import {
+  fetchPen,
+  getCurrentPen,
+  setPenDataToLocalStorage,
+  updateEditorCSS,
+  updateEditorJS,
+} from '../../redux/slices/pens';
 import { updateEditorHTML } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 
@@ -34,6 +40,11 @@ export const EditorPage = () => {
     if (currentPenData) {
       const timeout = setTimeout(() => {
         const { html, css, js } = currentPenData;
+
+        if (!currentPenData._id) {
+          setPenDataToLocalStorage(html, css, js);
+        }
+
         setSrcDoc(getSrcDoc({ html, css, js }));
       }, 250);
 

@@ -3,7 +3,14 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PenList } from '../../components/index';
-import { clearEditor, fetchPens } from '../../redux/slices/pens';
+import {
+  clearEditor,
+  fetchPens,
+  getPenDataFromLocaStorage,
+  updateEditorCSS,
+  updateEditorHTML,
+  updateEditorJS,
+} from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import styles from './HomePage.module.scss';
 
@@ -12,6 +19,18 @@ export const HomePage = () => {
 
   const onLink = () => {
     dispatch(clearEditor());
+
+    const penDataFromLocalStorage = getPenDataFromLocaStorage();
+
+    if (penDataFromLocalStorage.htmlLS !== null) {
+      dispatch(updateEditorHTML(JSON.parse(penDataFromLocalStorage.htmlLS)));
+    }
+    if (penDataFromLocalStorage.cssLS !== null) {
+      dispatch(updateEditorCSS(JSON.parse(penDataFromLocalStorage.cssLS)));
+    }
+    if (penDataFromLocalStorage.jsLS !== null) {
+      dispatch(updateEditorJS(JSON.parse(penDataFromLocalStorage.jsLS)));
+    }
   };
 
   useEffect(() => {
