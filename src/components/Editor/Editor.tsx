@@ -15,12 +15,12 @@ type EditorProps = {
   icon: ReactNode;
   language: string;
   value: string;
-  onChange: React.Dispatch<React.SetStateAction<string>>;
+  onChange: (currentValue: string, _data: CodeMirror.EditorChange) => void;
 };
 
 export const Editor = ({ displayName, icon, language, value, onChange }: EditorProps) => {
-  function handleChange(currentValue: string) {
-    onChange(currentValue);
+  function handleChange(currentValue: string, _data: CodeMirror.EditorChange) {
+    onChange(currentValue, _data);
   }
 
   return (
@@ -30,7 +30,7 @@ export const Editor = ({ displayName, icon, language, value, onChange }: EditorP
         <h3>{displayName}</h3>
       </div>
       <ControlledEditor
-        onBeforeChange={(_editor, _data, currentValue) => handleChange(currentValue)}
+        onBeforeChange={(_editor, _data, currentValue) => handleChange(currentValue, _data)}
         value={value}
         className="editor"
         options={{

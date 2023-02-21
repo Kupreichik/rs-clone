@@ -51,16 +51,20 @@ export const Header = () => {
     <header className={styles.header}>
       <div className="container">
         <div className={styles.header__inner}>
-          <Link to="/">{width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}</Link>
+          <Link to={clearPath !== '/editin' ? '/' : '/editor'}>
+            {width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}
+          </Link>
           <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
             {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
           </div>
-          {clearPath === '/editor' ? (
+          {clearPath === '/editor' && (
             <>
               <PenInfo />
               <EditorControls />
             </>
-          ) : (
+          )}
+          {clearPath === '/editin' && <EditorControls />}
+          {locationRouter.pathname === '/' && (
             <form className={styles.header__form} onSubmit={(e) => e.preventDefault()}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
@@ -73,28 +77,30 @@ export const Header = () => {
               </label>
             </form>
           )}
-          <div className={styles.header__buttons}>
-            {isAuth ? (
-              <>
-                <div onClick={() => onClickLogout()} className="button">
-                  Log Out
-                </div>
-                <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
-                <NavLink to="/profile">
-                  <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
-                </NavLink>
-              </>
-            ) : (
-              <>
-                <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
-                  Sign Up
-                </NavLink>
-                <NavLink className="button" style={setLoginButton} to="/login">
-                  Log In
-                </NavLink>
-              </>
-            )}
-          </div>
+          {clearPath !== '/editin' && (
+            <div className={styles.header__buttons}>
+              {isAuth ? (
+                <>
+                  <div onClick={() => onClickLogout()} className="button">
+                    Log Out
+                  </div>
+                  <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
+                  <NavLink to="/profile">
+                    <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
+                  </NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink className={cn(styles.header__button, 'button')} style={setLoginButton} to="/register">
+                    Sign Up
+                  </NavLink>
+                  <NavLink className="button" style={setLoginButton} to="/login">
+                    Log In
+                  </NavLink>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <Dialog

@@ -130,14 +130,14 @@ const authSlice = createSlice({
         state.status = 'error';
       })
       .addCase(fetchAuthAvatarUpdate.pending, (state) => {
-        state.status = 'loaded';
+        state.status = 'loading';
       })
       .addCase(fetchAuthAvatarUpdate.fulfilled, (state, action) => {
         state.status = 'loaded';
         (state.data as UserResponse).avatar = action.payload.avatar;
       })
       .addCase(fetchAuthAvatarUpdate.rejected, (state) => {
-        state.status = 'loaded';
+        state.status = 'error';
       });
   },
 });
