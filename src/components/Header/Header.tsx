@@ -10,6 +10,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
+import { followSearchQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -22,6 +23,10 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
   const [width, setWidth] = useState(window.innerWidth);
+
+  const changeSearchInput = ({ target }: { target: HTMLInputElement }) => {
+    dispatch(followSearchQuery(target.value));
+  };
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
 
@@ -60,10 +65,15 @@ export const Header = () => {
           )}
           {clearPath === '/editin' && <EditorControls />}
           {locationRouter.pathname === '/' && (
-            <form className={styles.header__form}>
+            <form className={styles.header__form} onSubmit={(e) => e.preventDefault()}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />
-                <input className={styles.header__input} type="text" placeholder="Search CodePen..." />
+                <input
+                  className={styles.header__input}
+                  onChange={changeSearchInput}
+                  type="text"
+                  placeholder="Search CodePen..."
+                />
               </label>
             </form>
           )}

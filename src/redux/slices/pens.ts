@@ -6,8 +6,9 @@ import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
-  currentPen: IPenData;
   status: 'loading' | 'loaded' | 'error';
+  currentPen: IPenData;
+  searchQuery: string;
 };
 
 type TUpdateParams = {
@@ -34,6 +35,7 @@ const initialState: InitialPensState = {
   pens: [],
   currentPen: structuredClone(emptyPen),
   status: 'loading',
+  searchQuery: '',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -93,6 +95,9 @@ const pens = createSlice({
     updatePenTitle(state, action) {
       state.currentPen.title = action.payload.title;
     },
+    followSearchQuery(state, action) {
+      state.searchQuery = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -102,6 +107,7 @@ const pens = createSlice({
       .addCase(fetchPens.fulfilled, (state, action) => {
         state.status = 'loaded';
         state.pens = action.payload;
+        console.log(state.pens);
       })
       .addCase(fetchPens.rejected, (state) => {
         state.status = 'error';
@@ -111,9 +117,9 @@ const pens = createSlice({
         state.currentPen = action.payload;
       })
       .addCase(updatePen.fulfilled, (state, action) => {
-        const penIindex = state.pens.findIndex((pen) => pen._id === action.payload._id);
-        if (penIindex) {
-          state.pens[penIindex] = { ...state.pens[penIindex], ...action.payload };
+        const penIndex = state.pens.findIndex((pen) => pen._id === action.payload._id);
+        if (penIndex) {
+          state.pens[penIndex] = { ...state.pens[penIndex], ...action.payload };
         }
       })
       .addCase(deletePen.fulfilled, (state, action) => {
@@ -136,6 +142,8 @@ export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
 export const getPensStatus = (state: RootState) => state.pens.status;
 
+export const getPensQuery = (state: RootState) => state.pens.searchQuery;
+
 export const {
   updateEditorHTML,
   updateEditorCSS,
@@ -143,6 +151,7 @@ export const {
   clearEditor,
   updateAllCurrentPenData,
   updatePenTitle,
+  followSearchQuery,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;

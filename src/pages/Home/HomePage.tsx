@@ -9,6 +9,7 @@ import styles from './HomePage.module.scss';
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
+
   const onLink = () => {
     dispatch(clearEditor());
   };
