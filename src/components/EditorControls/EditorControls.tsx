@@ -123,7 +123,7 @@ export const EditorControls = () => {
       >
         <ViewBtnIcon />
       </div>
-      {clearPath === '/editin' && (
+      {clearPath === '/editing' && (
         <div className="button" onClick={handleCopyLinkClick} title="Invite a friend to co-edit">
           {copyLinkBtnText}
         </div>
