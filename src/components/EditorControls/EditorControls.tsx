@@ -84,7 +84,7 @@ export const EditorControls = () => {
 
   const handleCoEditingClick = async () => {
     setCoEditingStyle({ pointerEvents: 'none' });
-    const { payload } = await dispatch(fetchEditingRoom());
+    const { payload } = await dispatch(fetchEditingRoom(currentPenData));
     if (payload) setPath(`editing-room/${(payload as RoomData).roomId}`);
     setCoEditingStyle({});
     editingRoomLinkRef.current?.click();

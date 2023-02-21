@@ -59,7 +59,7 @@ export const Header = () => {
             </>
           )}
           {clearPath === '/editin' && <EditorControls />}
-          {clearPath !== '/editor' && clearPath !== '/editin' && (
+          {locationRouter.pathname === '/' && (
             <form className={styles.header__form}>
               <label className={styles['header__form-label']}>
                 <Magnifier className={styles['header__form-icon']} />

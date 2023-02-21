@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axios from '../../axios';
+import { IPenData } from '../../components';
 import { RootState } from '../store';
 
 export type RoomData = {
@@ -19,8 +20,8 @@ const initialState: InitialRoomState = {
   status: 'loading',
 };
 
-export const fetchEditingRoom = createAsyncThunk('editingRoom/fetchEditingRoom', async () => {
-  const { data } = await axios.get('/create-room');
+export const fetchEditingRoom = createAsyncThunk('editingRoom/fetchEditingRoom', async (currentPenData: IPenData) => {
+  const { data } = await axios.post('/create-room', currentPenData);
   return data as RoomData;
 });
 

@@ -1,39 +1,50 @@
 import 'react-reflex/styles.css';
 import '../Editor/EditorsPage.scss';
 
+import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Editor, getSrcDoc } from '../../components/index';
 import { getEditorData } from '../../redux/slices/editor';
-import { getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
-import { updateEditorHTML } from '../../redux/slices/pens';
+import { getCurrentPen, updateEditorCSS, updateEditorHTML, updateEditorJS } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 
 type ViewMode = 'horizontal' | 'vertical';
-const baseURL = 'localhost:3033';
+const baseURL = 'rs-clone-api.onrender.com';
+const roomUserIdLength = 5;
+const roomUserId = nanoid(roomUserIdLength);
+const socket = io(baseURL, {
+  transports: ['websocket'],
+});
 
 export const EditingRoom = () => {
   const dispatch = useAppDispatch();
 
   const { roomId } = useParams();
-  const socket = io(baseURL, {
-    transports: ['websocket'],
-  });
 
   useEffect(() => {
-    socket.on('connect', () => {
-      socket.emit('CONNECTED_TO_ROOM', { roomId });
+    socket.emit('CONNECTED_TO_ROOM', { roomId, roomUserId });
+
+    socket.on('START_CODE', ({ senderId, code }) => {
+      if (senderId === roomUserId) {
+        setHtml(code.html);
+        setCss(code.css);
+        setJS(code.js);
+      }
     });
 
-    socket.on('CODE_CHANGED', (code) => {
-      setHtml(code.html);
-      setCss(code.css);
-      setJS(code.js);
+    socket.on('CODE_CHANGED', ({ code, senderId }) => {
+      if (senderId !== roomUserId) {
+        setHtml(code.html);
+        setCss(code.css);
+        setJS(code.js);
+      }
     });
 
     return () => {
@@ -48,6 +59,7 @@ export const EditingRoom = () => {
   const [html, setHtml] = useState(currentPenData?.html || '');
   const [css, setCss] = useState(currentPenData?.css || '');
   const [js, setJS] = useState(currentPenData?.js || '');
+  const [iframeKey, setIframeKey] = useState(uuidv4());
 
   const [srcDoc, setSrcDoc] = useState('');
 
@@ -57,42 +69,44 @@ export const EditingRoom = () => {
   };
 
   const onHtmlChange = (value: string, data: CodeMirror.EditorChange) => {
-    dispatch(updateEditorHTML(value));
-
+    setHtml(value);
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
+        senderId: roomUserId,
         code: {
           html: value,
-          css: currentPenData?.css,
-          js: currentPenData?.js,
+          css,
+          js,
         },
       });
     }
   };
 
   const onCssChange = (value: string, data: CodeMirror.EditorChange) => {
-    dispatch(updateEditorCSS(value));
+    setCss(value);
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
+        senderId: roomUserId,
         code: {
-          html: currentPenData?.html,
+          html,
           css: value,
-          js: currentPenData?.js,
+          js,
         },
       });
     }
   };
 
   const onJsChange = (value: string, data: CodeMirror.EditorChange) => {
-    dispatch(updateEditorJS(value));
+    setJS(value);
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
+        senderId: roomUserId,
         code: {
-          html: currentPenData?.html,
-          css: currentPenData?.css,
+          html,
+          css,
           js: value,
         },
       });
@@ -100,7 +114,11 @@ export const EditingRoom = () => {
   };
 
   useEffect(() => {
+    dispatch(updateEditorHTML(html));
+    dispatch(updateEditorCSS(css));
+    dispatch(updateEditorJS(js));
     const timeout = setTimeout(() => {
+      setIframeKey(uuidv4());
       setSrcDoc(getSrcDoc({ html, css, js }));
     }, 250);
 
@@ -164,7 +182,14 @@ export const EditingRoom = () => {
 
         <ReflexElement>
           <div className="results-container">
-            <iframe srcDoc={srcDoc} title="results" sandbox="allow-scripts" width="100%" height="100%" />
+            <iframe
+              key={iframeKey}
+              srcDoc={srcDoc}
+              title="results"
+              sandbox="allow-scripts"
+              width="100%"
+              height="100%"
+            />
           </div>
         </ReflexElement>
       </ReflexContainer>

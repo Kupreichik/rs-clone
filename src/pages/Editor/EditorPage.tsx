@@ -6,6 +6,7 @@ import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { oppositeViewMode } from '../../components/EditorControls/EditorControls';
 import { Editor, getSrcDoc } from '../../components/index';
@@ -18,7 +19,6 @@ export const EditorPage = () => {
   const dispatch = useAppDispatch();
 
   const { idPen } = useParams();
-
   useEffect(() => {
     if (idPen) {
       dispatch(fetchPen(idPen));
@@ -29,10 +29,12 @@ export const EditorPage = () => {
   const editorData = useSelector(getEditorData);
 
   const [srcDoc, setSrcDoc] = useState('');
+  const [iframeKey, setIframeKey] = useState(uuidv4());
 
   useEffect(() => {
     if (currentPenData) {
       const timeout = setTimeout(() => {
+        setIframeKey(uuidv4());
         const { html, css, js } = currentPenData;
         setSrcDoc(getSrcDoc({ html, css, js }));
       }, 250);
@@ -104,7 +106,14 @@ export const EditorPage = () => {
 
         <ReflexElement>
           <div className="results-container">
-            <iframe srcDoc={srcDoc} title="results" sandbox="allow-scripts" width="100%" height="100%" />
+            <iframe
+              key={iframeKey}
+              srcDoc={srcDoc}
+              title="results"
+              sandbox="allow-scripts"
+              width="100%"
+              height="100%"
+            />
           </div>
         </ReflexElement>
       </ReflexContainer>
