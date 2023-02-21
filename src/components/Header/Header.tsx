@@ -12,7 +12,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { followSearchQuery } from '../../redux/slices/pens';
+import { clearSearchQuery, followSearchQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -36,11 +36,14 @@ export const Header = () => {
 
   const onClickLogout = () => setOpen(true);
 
+  const onClickClearSearchQuery = () => dispatch(clearSearchQuery());
+
   const handleConfirmLogout = async () => {
     await dispatch(fetchAuthLogout());
-    homeLinkRef.current?.click();
     dispatch(logout());
+    homeLinkRef.current?.click();
     setOpen(false);
+    onClickClearSearchQuery();
     setAnchorEl(null);
   };
 
@@ -52,12 +55,13 @@ export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openUserMenu = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleCloseMenuItem = () => {
     setAnchorEl(null);
+    onClickClearSearchQuery();
   };
 
   return (
@@ -65,7 +69,11 @@ export const Header = () => {
       <div className="container">
         <div className={styles.header__inner}>
           <Link to={clearPath !== '/editing' ? '/' : '/editor'}>
-            {width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}
+            {width > 700 && clearPath !== '/editor' ? (
+              <LogoDesktop onClick={onClickClearSearchQuery} />
+            ) : (
+              <LogoMobile onClick={onClickClearSearchQuery} />
+            )}
           </Link>
           {clearPath === '/editor' && (
             <>
@@ -91,13 +99,13 @@ export const Header = () => {
             <div className={styles.header__buttons}>
               {isAuth ? (
                 <>
-                  <span onClick={handleClick}>
+                  <span onClick={handleClickMenu}>
                     <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
                   </span>
                   <Menu
                     anchorEl={anchorEl}
                     open={openUserMenu}
-                    onClose={handleClose}
+                    onClose={handleCloseMenuItem}
                     transformOrigin={{
                       vertical: 'top',
                       horizontal: 'center',
@@ -111,13 +119,13 @@ export const Header = () => {
                     }}
                   >
                     <MenuItem>
-                      <NavLink to="/" onClick={handleClose} className={styles['header__menu-item']}>
+                      <NavLink to="/" onClick={handleCloseMenuItem} className={styles['header__menu-item']}>
                         <Work style={{ marginRight: '5px', color: 'white' }} />
                         You Work
                       </NavLink>
                     </MenuItem>
                     <MenuItem>
-                      <NavLink to="/profile" onClick={handleClose} className={styles['header__menu-item']}>
+                      <NavLink to="/profile" onClick={handleCloseMenuItem} className={styles['header__menu-item']}>
                         <Person style={{ marginRight: '5px', color: 'white' }} />
                         Profile
                       </NavLink>
