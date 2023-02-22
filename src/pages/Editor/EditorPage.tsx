@@ -14,6 +14,7 @@ import { getEditorData } from '../../redux/slices/editor';
 import { fetchPen, getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
 import { updateEditorHTML } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { storePenData } from '../../utils/localstorage';
 
 export const EditorPage = () => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,11 @@ export const EditorPage = () => {
       const timeout = setTimeout(() => {
         setIframeKey(uuidv4());
         const { html, css, js } = currentPenData;
+
+        if (!currentPenData._id) {
+          storePenData({ html, css, js });
+        }
+
         setSrcDoc(getSrcDoc({ html, css, js }));
       }, 250);
 
