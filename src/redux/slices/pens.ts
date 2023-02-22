@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axios from '../../axios';
 import { IPenData } from '../../components/index';
+import { getPenData } from '../../utils/localstorage';
 import { RootState } from '../store';
 
 type InitialPensState = {
@@ -16,33 +17,14 @@ type TUpdateParams = {
   params: { title: string; html: string; css: string; js: string };
 };
 
-export const setPenDataToLocalStorage = (html: string, css: string, js: string) => {
-  localStorage.setItem('rs-clone-html', JSON.stringify(html));
-  localStorage.setItem('rs-clone-css', JSON.stringify(css));
-  localStorage.setItem('rs-clone-js', JSON.stringify(js));
-};
-
-export const getPenDataFromLocaStorage = () => {
-  const htmlLS = localStorage.getItem('rs-clone-html');
-  const cssLS = localStorage.getItem('rs-clone-css');
-  const jsLS = localStorage.getItem('rs-clone-js');
-  return { htmlLS, cssLS, jsLS };
-};
-
-export const removePenDataFromLocalStorage = () => {
-  localStorage.removeItem('rs-clone-html');
-  localStorage.removeItem('rs-clone-css');
-  localStorage.removeItem('rs-clone-js');
-};
-
-const penDataFromLocalStorage = getPenDataFromLocaStorage();
+const { html, css, js } = getPenData();
 
 const emptyPen = {
   _id: '',
   title: 'Untitled',
-  html: penDataFromLocalStorage.htmlLS ? JSON.parse(penDataFromLocalStorage.htmlLS) : '',
-  css: penDataFromLocalStorage.cssLS ? JSON.parse(penDataFromLocalStorage.cssLS) : '',
-  js: penDataFromLocalStorage.jsLS ? JSON.parse(penDataFromLocalStorage.jsLS) : '',
+  html,
+  css,
+  js,
   likesCount: 0,
   viewsCount: 0,
   user: {

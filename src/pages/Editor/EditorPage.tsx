@@ -11,15 +11,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { oppositeViewMode } from '../../components/EditorControls/EditorControls';
 import { Editor, getSrcDoc } from '../../components/index';
 import { getEditorData } from '../../redux/slices/editor';
-import {
-  fetchPen,
-  getCurrentPen,
-  setPenDataToLocalStorage,
-  updateEditorCSS,
-  updateEditorJS,
-} from '../../redux/slices/pens';
+import { fetchPen, getCurrentPen, updateEditorCSS, updateEditorJS } from '../../redux/slices/pens';
 import { updateEditorHTML } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { storePenData } from '../../utils/localstorage';
 
 export const EditorPage = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +39,7 @@ export const EditorPage = () => {
         const { html, css, js } = currentPenData;
 
         if (!currentPenData._id) {
-          setPenDataToLocalStorage(html, css, js);
+          storePenData({ html, css, js });
         }
 
         setSrcDoc(getSrcDoc({ html, css, js }));

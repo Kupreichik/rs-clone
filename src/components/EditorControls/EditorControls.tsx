@@ -11,8 +11,9 @@ import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { selectIsAuth, selectUserLogin } from '../../redux/slices/auth';
 import { fetchEditingRoom, RoomData } from '../../redux/slices/editingRoom';
 import { getEditorData, updateViewMode, ViewMode } from '../../redux/slices/editor';
-import { addPen, getCurrentPen, removePenDataFromLocalStorage, updatePen } from '../../redux/slices/pens';
+import { addPen, getCurrentPen, updatePen } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { clearPenData } from '../../utils/localstorage';
 import { IPenData } from '../PenItem/PenItem';
 import { SnackbarCustom } from '../Snackbar/Snackbar';
 
@@ -57,7 +58,7 @@ export const EditorControls = () => {
         setText('pen saved');
         setMessageMode('success');
         setOpen(true);
-        removePenDataFromLocalStorage();
+        clearPenData();
         navigate(`/editor/${(res.payload as IPenData)._id}`);
       } else {
         console.log(`error, can't save`);
