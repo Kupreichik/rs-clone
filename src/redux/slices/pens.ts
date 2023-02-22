@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axios from '../../axios';
 import { IPenData } from '../../components/index';
+import { getPenData } from '../../utils/localstorage';
 import { RootState } from '../store';
 
 type InitialPensState = {
@@ -17,12 +18,14 @@ type TUpdateParams = {
   params: { title: string; html: string; css: string; js: string };
 };
 
+const { html, css, js } = getPenData();
+
 const emptyPen = {
   _id: '',
   title: 'Untitled',
-  html: '',
-  css: '',
-  js: '',
+  html,
+  css,
+  js,
   likesCount: 0,
   viewsCount: 0,
   user: {
