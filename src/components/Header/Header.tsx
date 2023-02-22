@@ -10,7 +10,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { followSearchQuery } from '../../redux/slices/pens';
+import { fetchPensLoved, followSearchQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -38,6 +38,7 @@ export const Header = () => {
   const handleConfirmLogout = async () => {
     await dispatch(fetchAuthLogout());
     homeLinkRef.current?.click();
+    await dispatch(fetchPensLoved());
     dispatch(logout());
     setOpen(false);
   };

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import styles from '../../pages/Home/HomePage.module.scss';
-import { updateAllCurrentPenData } from '../../redux/slices/pens';
+import { selectIsAuth } from '../../redux/slices/auth';
+import { addPenToLoved, fetchPensLoved, getPensLoved, updateAllCurrentPenData } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { getSrcDoc } from '../index';
 
@@ -25,14 +27,33 @@ interface IUser {
   avatar: string;
 }
 
+const isLikedPen = (pens: IPenData[], id: string) => {
+  const ind = pens.findIndex((pen) => pen._id === id);
+  return ind !== -1;
+};
+
 export const PenItem = (data: IPenData) => {
   const srcDoc = getSrcDoc(data, 'html{overflow: hidden;}');
-  const [heartIcon, setHeartIcon] = useState(false);
+  const penLoved = useSelector(getPensLoved);
+
+  const [heartIcon, setHeartIcon] = useState(isLikedPen(penLoved, data._id));
 
   const dispatch = useAppDispatch();
 
+  const isAuth = useSelector(selectIsAuth);
+
   const onLink = () => {
     dispatch(updateAllCurrentPenData({ ...data }));
+  };
+
+  const onClickLike = async () => {
+    if (isAuth) {
+      await dispatch(addPenToLoved(data._id));
+      const newLoved = await dispatch(fetchPensLoved());
+      setHeartIcon(isLikedPen(newLoved.payload as IPenData[], data._id));
+    } else {
+      alert('log in to like');
+    }
   };
 
   return (
@@ -60,8 +81,9 @@ export const PenItem = (data: IPenData) => {
           </div>
           <div
             className={styles['home__item-like']}
-            onMouseEnter={() => setHeartIcon(true)}
-            onMouseLeave={() => setHeartIcon(false)}
+            // onMouseEnter={() => setHeartIcon(true)}
+            // onMouseLeave={() => setHeartIcon(false)}
+            onClick={onClickLike}
           >
             {heartIcon ? (
               <IoMdHeart className={styles['home__item-icon']} />

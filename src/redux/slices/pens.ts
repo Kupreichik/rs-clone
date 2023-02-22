@@ -9,6 +9,7 @@ type InitialPensState = {
   status: 'loading' | 'loaded' | 'error';
   currentPen: IPenData;
   searchQuery: string;
+  pensLoved: IPenData[];
 };
 
 type TUpdateParams = {
@@ -36,6 +37,7 @@ const initialState: InitialPensState = {
   currentPen: structuredClone(emptyPen),
   status: 'loading',
   searchQuery: '',
+  pensLoved: [],
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -64,6 +66,17 @@ export const deletePen = createAsyncThunk('pens/deletePen', async (penId: string
 
 export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string | undefined) => {
   const { data } = await axios.get(`/pens/one/${idPen}`);
+  return data;
+});
+
+export const addPenToLoved = createAsyncThunk('pens/addPenToLoved', async (penId: string) => {
+  const { data } = await axios.patch<IPenData>(`/pens/${penId}`);
+
+  return data;
+});
+
+export const fetchPensLoved = createAsyncThunk('pens/fetchPensLoved', async () => {
+  const { data } = await axios.get<IPenData[]>('/pens/loved');
   return data;
 });
 
@@ -118,7 +131,7 @@ const pens = createSlice({
       })
       .addCase(updatePen.fulfilled, (state, action) => {
         const penIndex = state.pens.findIndex((pen) => pen._id === action.payload._id);
-        if (penIndex) {
+        if (penIndex !== -1) {
           state.pens[penIndex] = { ...state.pens[penIndex], ...action.payload };
         }
       })
@@ -134,12 +147,25 @@ const pens = createSlice({
       })
       .addCase(fetchPen.rejected, (state) => {
         state.status = 'error';
+      })
+      .addCase(addPenToLoved.fulfilled, (state, action) => {
+        const penIndex = state.pens.findIndex((pen) => pen._id === action.payload._id);
+        if (penIndex !== -1) {
+          state.pens[penIndex] = action.payload;
+        }
+        state.status = 'loaded';
+      })
+      .addCase(fetchPensLoved.fulfilled, (state, action) => {
+        console.log('fetchPensLoved action-->', action);
+        // TO DO: discuss logic for this action (if not auth..)
+        state.pensLoved = action.payload;
       });
   },
 });
 
 export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
+export const getPensLoved = (state: RootState) => state.pens.pensLoved;
 export const getPensStatus = (state: RootState) => state.pens.status;
 
 export const getPensQuery = (state: RootState) => state.pens.searchQuery;
