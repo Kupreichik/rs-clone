@@ -114,6 +114,9 @@ const pens = createSlice({
     followSearchQuery(state, action) {
       state.searchQuery = action.payload;
     },
+    clearPenLoved(state) {
+      state.pensLoved = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -156,12 +159,17 @@ const pens = createSlice({
         if (penIndex !== -1) {
           state.pens[penIndex] = action.payload;
         }
+
+        const penIndexInLoved = state.pensLoved.findIndex((pen) => pen._id === action.payload._id);
+        penIndexInLoved !== -1 ? state.pensLoved.splice(penIndexInLoved, 1) : state.pensLoved.push(action.payload);
+
         state.status = 'loaded';
       })
       .addCase(fetchPensLoved.fulfilled, (state, action) => {
-        console.log('fetchPensLoved action-->', action);
-        // TO DO: discuss logic for this action (if not auth..)
         state.pensLoved = action.payload;
+      })
+      .addCase(fetchPensLoved.rejected, (state) => {
+        state.pensLoved = [];
       });
   },
 });
@@ -181,6 +189,7 @@ export const {
   updateAllCurrentPenData,
   updatePenTitle,
   followSearchQuery,
+  clearPenLoved,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;

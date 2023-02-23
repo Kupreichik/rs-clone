@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { useSelector } from 'react-redux';
@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 
 import styles from '../../pages/Home/HomePage.module.scss';
 import { selectIsAuth } from '../../redux/slices/auth';
-import { addPenToLoved, fetchPensLoved, getPensLoved, updateAllCurrentPenData } from '../../redux/slices/pens';
+import { addPenToLoved, getPensLoved, updateAllCurrentPenData } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { getSrcDoc } from '../index';
+import { SnackbarCustom } from '../Snackbar/Snackbar';
 
 export interface IPenData {
   _id: string;
@@ -35,6 +36,7 @@ const isLikedPen = (pens: IPenData[], id: string) => {
 export const PenItem = (data: IPenData) => {
   const srcDoc = getSrcDoc(data, 'html{overflow: hidden;}');
   const penLoved = useSelector(getPensLoved);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [heartIcon, setHeartIcon] = useState(isLikedPen(penLoved, data._id));
 
@@ -49,12 +51,14 @@ export const PenItem = (data: IPenData) => {
   const onClickLike = async () => {
     if (isAuth) {
       await dispatch(addPenToLoved(data._id));
-      const newLoved = await dispatch(fetchPensLoved());
-      setHeartIcon(isLikedPen(newLoved.payload as IPenData[], data._id));
     } else {
-      alert('log in to like');
+      setOpenSnackbar(true);
     }
   };
+
+  useEffect(() => {
+    setHeartIcon(isLikedPen(penLoved, data._id));
+  }, [penLoved]);
 
   return (
     <div className={styles.home__item}>
@@ -79,12 +83,7 @@ export const PenItem = (data: IPenData) => {
             <h4 className={styles['home__item-title']}>{data.title}</h4>
             <p className={styles['home__item-author']}>{data.user.name}</p>
           </div>
-          <div
-            className={styles['home__item-like']}
-            // onMouseEnter={() => setHeartIcon(true)}
-            // onMouseLeave={() => setHeartIcon(false)}
-            onClick={onClickLike}
-          >
+          <div className={styles['home__item-like']} onClick={onClickLike}>
             {heartIcon ? (
               <IoMdHeart className={styles['home__item-icon']} />
             ) : (
@@ -103,6 +102,13 @@ export const PenItem = (data: IPenData) => {
           </div>
         </div>
       </div>
+      <SnackbarCustom
+        open={openSnackbar}
+        setOpen={setOpenSnackbar}
+        severity="error"
+        customWidth={200}
+        message="LOG IN to like"
+      />
     </div>
   );
 };
