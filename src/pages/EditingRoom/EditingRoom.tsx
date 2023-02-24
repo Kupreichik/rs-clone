@@ -1,6 +1,7 @@
 import 'react-reflex/styles.css';
 import '../Editor/EditorsPage.scss';
 
+import CodeMirror from 'codemirror';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
@@ -12,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Editor, getSrcDoc } from '../../components/index';
 import { getEditorData } from '../../redux/slices/editor';
-import { getCurrentPen, updateEditorCSS, updateEditorHTML, updateEditorJS } from '../../redux/slices/pens';
+import { clearEditor, getCurrentPen, updateEditorCSS, updateEditorHTML, updateEditorJS } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 
 type ViewMode = 'horizontal' | 'vertical';
@@ -23,12 +24,21 @@ const socket = io(baseURL, {
   transports: ['websocket'],
 });
 
+let htmlEditor: CodeMirror.Editor;
+let cssEditor: CodeMirror.Editor;
+let jsEditor: CodeMirror.Editor;
+
 export const EditingRoom = () => {
   const dispatch = useAppDispatch();
 
   const { roomId } = useParams();
 
+  const widget = document.createElement('span');
+  widget.style.cssText = 'background: #73f37d; padding: 0px 1px;';
+
   useEffect(() => {
+    dispatch(clearEditor());
+
     socket.emit('CONNECTED_TO_ROOM', { roomId, roomUserId });
 
     socket.on('START_CODE', ({ senderId, code }) => {
@@ -39,17 +49,21 @@ export const EditingRoom = () => {
       }
     });
 
-    socket.on('CODE_CHANGED', ({ code, senderId }) => {
+    socket.on('CODE_CHANGED', ({ code, senderId, editor, pos }) => {
       if (senderId !== roomUserId) {
         setHtml(code.html);
         setCss(code.css);
         setJS(code.js);
+        if (editor === 'html') htmlEditor.setBookmark(pos, { widget });
+        if (editor === 'css') cssEditor.setBookmark(pos, { widget });
+        if (editor === 'js') jsEditor.setBookmark(pos, { widget });
       }
     });
 
     return () => {
       socket.off('connect');
       socket.off('CODE_CHANGED');
+      socket.off('START_CODE');
     };
   }, []);
 
@@ -68,8 +82,9 @@ export const EditingRoom = () => {
     return oppositeViewMode;
   };
 
-  const onHtmlChange = (value: string, data: CodeMirror.EditorChange) => {
+  const onHtmlChange = (value: string, data: CodeMirror.EditorChange, editor: CodeMirror.Editor) => {
     setHtml(value);
+    const { line, ch } = editor.getCursor('end');
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
@@ -79,12 +94,15 @@ export const EditingRoom = () => {
           css,
           js,
         },
+        editor: 'html',
+        pos: { line, ch },
       });
     }
   };
 
-  const onCssChange = (value: string, data: CodeMirror.EditorChange) => {
+  const onCssChange = (value: string, data: CodeMirror.EditorChange, editor: CodeMirror.Editor) => {
     setCss(value);
+    const { line, ch } = editor.getCursor('end');
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
@@ -94,12 +112,15 @@ export const EditingRoom = () => {
           css: value,
           js,
         },
+        editor: 'css',
+        pos: { line, ch },
       });
     }
   };
 
-  const onJsChange = (value: string, data: CodeMirror.EditorChange) => {
+  const onJsChange = (value: string, data: CodeMirror.EditorChange, editor: CodeMirror.Editor) => {
     setJS(value);
+    const { line, ch } = editor.getCursor('end');
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
@@ -109,6 +130,8 @@ export const EditingRoom = () => {
           css,
           js: value,
         },
+        editor: 'js',
+        pos: { line, ch },
       });
     }
   };
@@ -117,6 +140,7 @@ export const EditingRoom = () => {
     dispatch(updateEditorHTML(html));
     dispatch(updateEditorCSS(css));
     dispatch(updateEditorJS(js));
+
     const timeout = setTimeout(() => {
       setIframeKey(uuidv4());
       setSrcDoc(getSrcDoc({ html, css, js }));
@@ -141,6 +165,7 @@ export const EditingRoom = () => {
                       language="xml"
                       displayName="HTML"
                       onChange={onHtmlChange}
+                      onRender={(editor) => (htmlEditor = editor)}
                       value={html}
                     />
                   </div>
@@ -155,6 +180,7 @@ export const EditingRoom = () => {
                       language="css"
                       displayName="CSS"
                       onChange={onCssChange}
+                      onRender={(editor) => (cssEditor = editor)}
                       value={css}
                     />
                   </div>
@@ -169,6 +195,7 @@ export const EditingRoom = () => {
                       language="javascript"
                       displayName="JS"
                       onChange={onJsChange}
+                      onRender={(editor) => (jsEditor = editor)}
                       value={js}
                     />
                   </div>
