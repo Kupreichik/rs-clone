@@ -110,7 +110,6 @@ const pens = createSlice({
       .addCase(fetchPens.fulfilled, (state, action) => {
         state.status = 'loaded';
         state.pens = action.payload;
-        console.log(state.pens);
       })
       .addCase(fetchPens.rejected, (state) => {
         state.status = 'error';

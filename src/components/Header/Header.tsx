@@ -6,6 +6,7 @@ import cn from 'classnames';
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useMediaQuery } from 'usehooks-ts';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
@@ -23,16 +24,13 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
-  const [width, setWidth] = useState(window.innerWidth);
+  const isMobile = useMediaQuery('(min-width: 700px)');
 
   const changeSearchInput = ({ target }: { target: HTMLInputElement }) => {
     dispatch(followSearchQuery(target.value));
   };
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
-
-  const handleWindowResize = () => setWidth(window.innerWidth);
-  window.addEventListener('resize', handleWindowResize);
 
   const onClickLogout = () => setOpen(true);
 
@@ -41,16 +39,18 @@ export const Header = () => {
   const handleConfirmLogout = async () => {
     await dispatch(fetchAuthLogout());
     dispatch(logout());
-    homeLinkRef.current?.click();
     setOpen(false);
     onClickClearSearchQuery();
     setAnchorEl(null);
+    homeLinkRef.current?.click();
   };
 
   const userAvatar = useSelector(selectUserAvatarUrl);
   const locationRouter = useLocation();
 
   const clearPath = locationRouter.pathname.slice(0, 7);
+  const isEditorMode = clearPath === '/editor';
+  const isEditingRoomMode = clearPath === '/editin';
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openUserMenu = Boolean(anchorEl);
@@ -64,24 +64,26 @@ export const Header = () => {
     onClickClearSearchQuery();
   };
 
+  const menuItemStyle = { marginRight: '5px', color: 'white' };
+
   return (
     <header className={styles.header}>
       <div className="container">
         <div className={styles.header__inner}>
-          <Link to={clearPath !== '/editing' ? '/' : '/editor'}>
-            {width > 700 && clearPath !== '/editor' ? (
+          <Link to={!isEditingRoomMode ? '/' : '/editor'}>
+            {isMobile && !isEditorMode ? (
               <LogoDesktop onClick={onClickClearSearchQuery} />
             ) : (
               <LogoMobile onClick={onClickClearSearchQuery} />
             )}
           </Link>
-          {clearPath === '/editor' && (
+          {isEditorMode && (
             <>
               <PenInfo />
               <EditorControls />
             </>
           )}
-          {clearPath === '/editing' && <EditorControls />}
+          {isEditingRoomMode && <EditorControls />}
           {locationRouter.pathname === '/' && (
             <form className={styles.header__form} onSubmit={(e) => e.preventDefault()}>
               <label className={styles['header__form-label']}>
@@ -95,7 +97,7 @@ export const Header = () => {
               </label>
             </form>
           )}
-          {clearPath !== '/editing' && (
+          {!isEditingRoomMode && (
             <div className={styles.header__buttons}>
               {isAuth ? (
                 <>
@@ -120,19 +122,19 @@ export const Header = () => {
                   >
                     <MenuItem>
                       <NavLink to="/" onClick={handleCloseMenuItem} className={styles['header__menu-item']}>
-                        <Work style={{ marginRight: '5px', color: 'white' }} />
+                        <Work style={menuItemStyle} />
                         You Work
                       </NavLink>
                     </MenuItem>
                     <MenuItem>
                       <NavLink to="/profile" onClick={handleCloseMenuItem} className={styles['header__menu-item']}>
-                        <Person style={{ marginRight: '5px', color: 'white' }} />
+                        <Person style={menuItemStyle} />
                         Profile
                       </NavLink>
                     </MenuItem>
                     <MenuItem>
                       <span onClick={onClickLogout} className={styles['header__menu-item']}>
-                        <ExitToApp style={{ marginRight: '5px', color: 'white' }} />
+                        <ExitToApp style={menuItemStyle} />
                         Log Out
                       </span>
                       <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
