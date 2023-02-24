@@ -4,17 +4,20 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import styles from '../../pages/Home/HomePage.module.scss';
+import { selectIsAuth } from '../../redux/slices/auth';
 import { getPens, getPensQuery, getPensStatus } from '../../redux/slices/pens';
-import { PenItem, Preloader } from '../index';
+import { IPenData, PenItem, Preloader } from '../index';
 
-export const PenList = () => {
+export const PenList = ({ getTabsPens }: { getTabsPens: () => IPenData[] }) => {
   const [count, setCount] = useState(1);
   const status = useSelector(getPensStatus);
   const pensQuery = useSelector(getPensQuery);
 
   const itemInPage = 6;
 
-  const pens = useSelector(getPens);
+  const isAuth = useSelector(selectIsAuth);
+
+  const pens = isAuth ? getTabsPens() : useSelector(getPens);
   const pensSearchFIlter = pens.filter(
     (pen) =>
       pen.title.toLowerCase().includes(pensQuery.toLowerCase()) ||

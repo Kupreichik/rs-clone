@@ -10,6 +10,7 @@ type InitialPensState = {
   status: 'loading' | 'loaded' | 'error';
   currentPen: IPenData;
   searchQuery: string;
+  likesUserPens: IPenData[];
 };
 
 type TUpdateParams = {
@@ -39,6 +40,7 @@ const initialState: InitialPensState = {
   currentPen: structuredClone(emptyPen),
   status: 'loading',
   searchQuery: '',
+  likesUserPens: [],
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -67,6 +69,11 @@ export const deletePen = createAsyncThunk('pens/deletePen', async (penId: string
 
 export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string | undefined) => {
   const { data } = await axios.get(`/pens/one/${idPen}`);
+  return data;
+});
+
+export const fetchLikesUserPens = createAsyncThunk('pens/fetchLikesUserPens', async () => {
+  const { data } = await axios.get<IPenData[]>('/pens/loved');
   return data;
 });
 
@@ -104,6 +111,9 @@ const pens = createSlice({
     clearSearchQuery(state) {
       state.searchQuery = '';
     },
+    clearLikesUserPens(state) {
+      state.likesUserPens = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -139,6 +149,16 @@ const pens = createSlice({
       })
       .addCase(fetchPen.rejected, (state) => {
         state.status = 'error';
+      })
+      .addCase(fetchLikesUserPens.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchLikesUserPens.fulfilled, (state, action) => {
+        state.status = 'loaded';
+        state.pens = action.payload;
+      })
+      .addCase(fetchLikesUserPens.rejected, (state) => {
+        state.status = 'error';
       });
   },
 });
@@ -149,6 +169,8 @@ export const getPensStatus = (state: RootState) => state.pens.status;
 
 export const getPensQuery = (state: RootState) => state.pens.searchQuery;
 
+export const getLikesUserPens = (state: RootState) => state.pens.likesUserPens;
+
 export const {
   updateEditorHTML,
   updateEditorCSS,
@@ -158,6 +180,7 @@ export const {
   updatePenTitle,
   followSearchQuery,
   clearSearchQuery,
+  clearLikesUserPens,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;
