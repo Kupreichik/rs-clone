@@ -3,8 +3,9 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PenList } from '../../components/index';
-import { clearEditor, clearSearchQuery, fetchPens } from '../../redux/slices/pens';
+import { clearEditor, clearSearchQuery, fetchPens, updateEditorCSS, updateEditorHTML, updateEditorJS } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { getPenData } from '../../utils/localstorage';
 import styles from './HomePage.module.scss';
 
 export const HomePage = () => {
@@ -13,6 +14,12 @@ export const HomePage = () => {
   const onLink = () => {
     dispatch(clearEditor());
     dispatch(clearSearchQuery());
+
+    const { html, css, js } = getPenData();
+
+    dispatch(updateEditorHTML(html));
+    dispatch(updateEditorCSS(css));
+    dispatch(updateEditorJS(js));
   };
 
   useEffect(() => {
