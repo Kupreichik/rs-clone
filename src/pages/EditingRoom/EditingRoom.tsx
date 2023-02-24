@@ -1,7 +1,7 @@
 import 'react-reflex/styles.css';
 import '../Editor/EditorsPage.scss';
 
-import CodeMirror from 'codemirror';
+import CodeMirror, { Position } from 'codemirror';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { TbBrandCss3, TbBrandHtml5, TbBrandJavascript } from 'react-icons/tb';
@@ -12,29 +12,37 @@ import io from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Editor, getSrcDoc } from '../../components/index';
+import { Code } from '../../redux/slices/editingRoom';
 import { getEditorData } from '../../redux/slices/editor';
 import { clearEditor, getCurrentPen, updateEditorCSS, updateEditorHTML, updateEditorJS } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { setCssEditor, setHtmlEditor, setJsEditor, setWidget } from './widget';
 
 type ViewMode = 'horizontal' | 'vertical';
+type Properties = {
+  code: Code;
+  editor: string;
+  pos: Position;
+};
+
 const baseURL = 'rs-clone-api.onrender.com';
 const roomUserIdLength = 5;
 const roomUserId = nanoid(roomUserIdLength);
+
 const socket = io(baseURL, {
   transports: ['websocket'],
 });
 
-let htmlEditor: CodeMirror.Editor;
-let cssEditor: CodeMirror.Editor;
-let jsEditor: CodeMirror.Editor;
-
 export const EditingRoom = () => {
-  const dispatch = useAppDispatch();
-
   const { roomId } = useParams();
 
-  const widget = document.createElement('span');
-  widget.style.cssText = 'background: #73f37d; padding: 0px 1px;';
+  const dispatch = useAppDispatch();
+
+  const updateEditor = ({ html, css, js }: Code) => {
+    dispatch(updateEditorHTML(html));
+    dispatch(updateEditorCSS(css));
+    dispatch(updateEditorJS(js));
+  };
 
   useEffect(() => {
     dispatch(clearEditor());
@@ -43,20 +51,14 @@ export const EditingRoom = () => {
 
     socket.on('START_CODE', ({ senderId, code }) => {
       if (senderId === roomUserId) {
-        setHtml(code.html);
-        setCss(code.css);
-        setJS(code.js);
+        updateEditor(code);
       }
     });
 
     socket.on('CODE_CHANGED', ({ code, senderId, editor, pos }) => {
       if (senderId !== roomUserId) {
-        setHtml(code.html);
-        setCss(code.css);
-        setJS(code.js);
-        if (editor === 'html') htmlEditor.setBookmark(pos, { widget });
-        if (editor === 'css') cssEditor.setBookmark(pos, { widget });
-        if (editor === 'js') jsEditor.setBookmark(pos, { widget });
+        updateEditor(code);
+        setWidget(editor, pos);
       }
     });
 
@@ -67,14 +69,10 @@ export const EditingRoom = () => {
     };
   }, []);
 
-  const currentPenData = useSelector(getCurrentPen);
+  const { html, css, js } = useSelector(getCurrentPen);
   const editorData = useSelector(getEditorData);
 
-  const [html, setHtml] = useState(currentPenData?.html || '');
-  const [css, setCss] = useState(currentPenData?.css || '');
-  const [js, setJS] = useState(currentPenData?.js || '');
   const [iframeKey, setIframeKey] = useState(uuidv4());
-
   const [srcDoc, setSrcDoc] = useState('');
 
   const oppositeViewMode = (viewMode: ViewMode) => {
@@ -82,67 +80,56 @@ export const EditingRoom = () => {
     return oppositeViewMode;
   };
 
-  const onHtmlChange = (value: string, data: CodeMirror.EditorChange, editor: CodeMirror.Editor) => {
-    setHtml(value);
-    const { line, ch } = editor.getCursor('end');
+  const sendEditorData = (data: CodeMirror.EditorChange, properties: Properties) => {
     if (data.origin !== '+insert') {
       socket.emit('CODE_CHANGED', {
         roomId,
         senderId: roomUserId,
-        code: {
-          html: value,
-          css,
-          js,
-        },
-        editor: 'html',
-        pos: { line, ch },
+        ...properties,
       });
     }
   };
 
-  const onCssChange = (value: string, data: CodeMirror.EditorChange, editor: CodeMirror.Editor) => {
-    setCss(value);
-    const { line, ch } = editor.getCursor('end');
-    if (data.origin !== '+insert') {
-      socket.emit('CODE_CHANGED', {
-        roomId,
-        senderId: roomUserId,
-        code: {
-          html,
-          css: value,
-          js,
-        },
-        editor: 'css',
-        pos: { line, ch },
-      });
-    }
+  const onHtmlChange = (editor: CodeMirror.Editor, data: CodeMirror.EditorChange, value: string) => {
+    dispatch(updateEditorHTML(value));
+    const pos = editor.getCursor('end');
+    const properties = {
+      code: { html: value, css, js },
+      editor: 'html',
+      pos,
+    };
+
+    sendEditorData(data, properties);
   };
 
-  const onJsChange = (value: string, data: CodeMirror.EditorChange, editor: CodeMirror.Editor) => {
-    setJS(value);
-    const { line, ch } = editor.getCursor('end');
-    if (data.origin !== '+insert') {
-      socket.emit('CODE_CHANGED', {
-        roomId,
-        senderId: roomUserId,
-        code: {
-          html,
-          css,
-          js: value,
-        },
-        editor: 'js',
-        pos: { line, ch },
-      });
-    }
+  function onCssChange(editor: CodeMirror.Editor, data: CodeMirror.EditorChange, value: string) {
+    dispatch(updateEditorCSS(value));
+    const pos = editor.getCursor('end');
+    const properties = {
+      code: { html, css: value, js },
+      editor: 'css',
+      pos,
+    };
+
+    sendEditorData(data, properties);
+  }
+
+  const onJsChange = (editor: CodeMirror.Editor, data: CodeMirror.EditorChange, value: string) => {
+    dispatch(updateEditorJS(value));
+    const pos = editor.getCursor('end');
+    const properties = {
+      code: { html, css, js: value },
+      editor: 'js',
+      pos,
+    };
+
+    sendEditorData(data, properties);
   };
 
   useEffect(() => {
-    dispatch(updateEditorHTML(html));
-    dispatch(updateEditorCSS(css));
-    dispatch(updateEditorJS(js));
-
     const timeout = setTimeout(() => {
       setIframeKey(uuidv4());
+
       setSrcDoc(getSrcDoc({ html, css, js }));
     }, 250);
 
@@ -164,9 +151,9 @@ export const EditingRoom = () => {
                       icon={<TbBrandHtml5 color="red" size={20} />}
                       language="xml"
                       displayName="HTML"
-                      onChange={onHtmlChange}
-                      onRender={(editor) => (htmlEditor = editor)}
-                      value={html}
+                      onBeforeChange={onHtmlChange}
+                      onRender={setHtmlEditor}
+                      value={html || ''}
                     />
                   </div>
                 </ReflexElement>
@@ -179,9 +166,9 @@ export const EditingRoom = () => {
                       icon={<TbBrandCss3 color="blue" size={20} />}
                       language="css"
                       displayName="CSS"
-                      onChange={onCssChange}
-                      onRender={(editor) => (cssEditor = editor)}
-                      value={css}
+                      onBeforeChange={onCssChange}
+                      onRender={setCssEditor}
+                      value={css || ''}
                     />
                   </div>
                 </ReflexElement>
@@ -194,9 +181,9 @@ export const EditingRoom = () => {
                       icon={<TbBrandJavascript color="yellow" size={20} />}
                       language="javascript"
                       displayName="JS"
-                      onChange={onJsChange}
-                      onRender={(editor) => (jsEditor = editor)}
-                      value={js}
+                      onBeforeChange={onJsChange}
+                      onRender={setJsEditor}
+                      value={js || ''}
                     />
                   </div>
                 </ReflexElement>
