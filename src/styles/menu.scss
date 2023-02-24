@@ -1,0 +1,20 @@
+@import './vars.scss';
+
+.MuiPaper-root {
+  border-radius: 5px !important;
+  background: $btnBackground !important;
+}
+
+.MuiList-root {
+  border-radius: 5px !important;
+  background: $btnBackground !important;
+  color: white !important;
+}
+
+.MuiButtonBase-root {
+  transition: 0.3s !important;
+}
+.MuiButtonBase-root:hover {
+  border-radius: 5px !important;
+  background: $gray !important;
+}
