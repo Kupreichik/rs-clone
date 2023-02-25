@@ -4,10 +4,14 @@ import axios from '../../axios';
 import { IPenData } from '../../components';
 import { RootState } from '../store';
 
+export type Code = {
+  html: string;
+  css: string;
+  js: string;
+};
+
 export type RoomData = {
   roomId: string;
-  username?: string;
-  usersCount?: number;
 };
 
 type InitialRoomState = {

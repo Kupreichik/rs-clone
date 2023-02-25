@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import styles from '../../pages/Home/HomePage.module.scss';
 import { selectIsAuth } from '../../redux/slices/auth';
-import { addPenToLoved, getPensLoved, updateAllCurrentPenData } from '../../redux/slices/pens';
+import { addPenToLoved, clearSearchQuery, getPensLoved, updateAllCurrentPenData } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { getSrcDoc } from '../index';
 import { SnackbarCustom } from '../Snackbar/Snackbar';
@@ -46,6 +46,7 @@ export const PenItem = (data: IPenData) => {
 
   const onLink = () => {
     dispatch(updateAllCurrentPenData({ ...data }));
+    dispatch(clearSearchQuery());
   };
 
   const onClickLike = async () => {

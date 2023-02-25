@@ -117,6 +117,9 @@ const pens = createSlice({
     clearPenLoved(state) {
       state.pensLoved = [];
     },
+    clearSearchQuery(state) {
+      state.searchQuery = '';
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -126,7 +129,6 @@ const pens = createSlice({
       .addCase(fetchPens.fulfilled, (state, action) => {
         state.status = 'loaded';
         state.pens = action.payload;
-        console.log(state.pens);
       })
       .addCase(fetchPens.rejected, (state) => {
         state.status = 'error';
@@ -190,6 +192,7 @@ export const {
   updatePenTitle,
   followSearchQuery,
   clearPenLoved,
+  clearSearchQuery,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;

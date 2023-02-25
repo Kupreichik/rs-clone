@@ -1,16 +1,19 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import '../../styles/menu.scss';
+
+import { ExitToApp, Person, Work } from '@mui/icons-material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem } from '@mui/material';
 import cn from 'classnames';
 import { useRef, useState } from 'react';
-import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useMediaQuery } from 'usehooks-ts';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
 import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { clearPenLoved, followSearchQuery } from '../../redux/slices/pens';
+import { clearPenLoved, clearSearchQuery, followSearchQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -18,11 +21,10 @@ import styles from './Header.module.scss';
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
 
 export const Header = () => {
-  const [burger, setBurger] = useState(false);
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
-  const [width, setWidth] = useState(window.innerWidth);
+  const isMobile = useMediaQuery('(min-width: 700px)');
 
   const changeSearchInput = ({ target }: { target: HTMLInputElement }) => {
     dispatch(followSearchQuery(target.value));
@@ -30,41 +32,59 @@ export const Header = () => {
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
 
-  const handleWindowResize = () => setWidth(window.innerWidth);
-  window.addEventListener('resize', handleWindowResize);
-
   const onClickLogout = () => setOpen(true);
+
+  const onClickClearSearchQuery = () => dispatch(clearSearchQuery());
 
   const handleConfirmLogout = async () => {
     await dispatch(fetchAuthLogout());
-    homeLinkRef.current?.click();
-    dispatch(clearPenLoved());
     dispatch(logout());
+    dispatch(clearPenLoved());
     setOpen(false);
+    onClickClearSearchQuery();
+    setAnchorEl(null);
+    homeLinkRef.current?.click();
   };
 
   const userAvatar = useSelector(selectUserAvatarUrl);
   const locationRouter = useLocation();
 
   const clearPath = locationRouter.pathname.slice(0, 7);
+  const isEditorMode = clearPath === '/editor';
+  const isEditingRoomMode = clearPath === '/editin';
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openUserMenu = Boolean(anchorEl);
+
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenuItem = () => {
+    setAnchorEl(null);
+    onClickClearSearchQuery();
+  };
+
+  const menuItemStyle = { marginRight: '5px', color: 'white' };
 
   return (
     <header className={styles.header}>
       <div className="container">
         <div className={styles.header__inner}>
-          <Link to={clearPath !== '/editin' ? '/' : '/editor'}>
-            {width > 700 && clearPath !== '/editor' ? <LogoDesktop /> : <LogoMobile />}
+          <Link to={!isEditingRoomMode ? '/' : '/editor'}>
+            {isMobile && !isEditorMode ? (
+              <LogoDesktop onClick={onClickClearSearchQuery} />
+            ) : (
+              <LogoMobile onClick={onClickClearSearchQuery} />
+            )}
           </Link>
-          <div onClick={() => setBurger(!burger)} className={styles.header__burger}>
-            {burger ? <MdMenuOpen size={22} /> : <MdMenu size={22} />}
-          </div>
-          {clearPath === '/editor' && (
+          {isEditorMode && (
             <>
               <PenInfo />
               <EditorControls />
             </>
           )}
-          {clearPath === '/editin' && <EditorControls />}
+          {isEditingRoomMode && <EditorControls />}
           {locationRouter.pathname === '/' && (
             <form className={styles.header__form} onSubmit={(e) => e.preventDefault()}>
               <label className={styles['header__form-label']}>
@@ -78,17 +98,49 @@ export const Header = () => {
               </label>
             </form>
           )}
-          {clearPath !== '/editin' && (
+          {!isEditingRoomMode && (
             <div className={styles.header__buttons}>
               {isAuth ? (
                 <>
-                  <div onClick={() => onClickLogout()} className="button">
-                    Log Out
-                  </div>
-                  <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
-                  <NavLink to="/profile">
+                  <span onClick={handleClickMenu}>
                     <img className={styles.header__avatar} src={userAvatar} title="Profile" alt="avatar" />
-                  </NavLink>
+                  </span>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={openUserMenu}
+                    onClose={handleCloseMenuItem}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                    autoFocus={false}
+                    PaperProps={{
+                      style: {
+                        marginTop: '5px',
+                        marginRight: '50px',
+                      },
+                    }}
+                  >
+                    <MenuItem>
+                      <NavLink to="/" onClick={handleCloseMenuItem} className={styles['header__menu-item']}>
+                        <Work style={menuItemStyle} />
+                        You Work
+                      </NavLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <NavLink to="/profile" onClick={handleCloseMenuItem} className={styles['header__menu-item']}>
+                        <Person style={menuItemStyle} />
+                        Profile
+                      </NavLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <span onClick={onClickLogout} className={styles['header__menu-item']}>
+                        <ExitToApp style={menuItemStyle} />
+                        Log Out
+                      </span>
+                      <NavLink ref={homeLinkRef} to="/" hidden></NavLink>
+                    </MenuItem>
+                  </Menu>
                 </>
               ) : (
                 <>

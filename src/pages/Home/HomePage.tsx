@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { PenList } from '../../components/index';
 import {
   clearEditor,
+  clearSearchQuery,
   fetchPens,
   fetchPensLoved,
   updateEditorCSS,
@@ -20,6 +21,7 @@ export const HomePage = () => {
 
   const onLink = () => {
     dispatch(clearEditor());
+    dispatch(clearSearchQuery());
 
     const { html, css, js } = getPenData();
 
