@@ -13,7 +13,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { clearLikesUserPens, clearSearchQuery, followSearchQuery } from '../../redux/slices/pens';
+import { clearLikesUserPens, clearSearchQuery, followSearchQuery, getPensQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -21,38 +21,43 @@ import styles from './Header.module.scss';
 const setLoginButton = ({ isActive }: { isActive: boolean }) => ({ display: isActive ? 'none' : 'block' });
 
 export const Header = () => {
-  const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const isAuth = useSelector(selectIsAuth);
   const isMobile = useMediaQuery('(min-width: 700px)');
+  const userAvatar = useSelector(selectUserAvatarUrl);
+  const locationRouter = useLocation();
+
+  //* input
+  const pensQuery = useSelector(getPensQuery);
 
   const changeSearchInput = ({ target }: { target: HTMLInputElement }) => {
     dispatch(followSearchQuery(target.value));
   };
 
-  const homeLinkRef = useRef<HTMLAnchorElement>(null);
-
-  const onClickLogout = () => setOpen(true);
-
   const onClickClearSearchQuery = () => dispatch(clearSearchQuery());
+
+  //* logout
+
+  const onClickLogout = () => setOpenDialog(true);
 
   const handleConfirmLogout = async () => {
     await dispatch(fetchAuthLogout());
-    dispatch(logout());
-    setOpen(false);
-    onClickClearSearchQuery();
+    setOpenDialog(false);
     setAnchorEl(null);
+    dispatch(logout());
     homeLinkRef.current?.click();
+    onClickClearSearchQuery();
     dispatch(clearLikesUserPens());
   };
 
-  const userAvatar = useSelector(selectUserAvatarUrl);
-  const locationRouter = useLocation();
+  const homeLinkRef = useRef<HTMLAnchorElement>(null);
 
   const clearPath = locationRouter.pathname.slice(0, 7);
   const isEditorMode = clearPath === '/editor';
   const isEditingRoomMode = clearPath === '/editin';
 
+  //* dialog
+  const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openUserMenu = Boolean(anchorEl);
 
@@ -73,9 +78,13 @@ export const Header = () => {
         <div className={styles.header__inner}>
           <Link to={!isEditingRoomMode ? '/' : '/editor'}>
             {isMobile && !isEditorMode ? (
-              <LogoDesktop onClick={onClickClearSearchQuery} />
+              <Link to="/">
+                <LogoDesktop onClick={onClickClearSearchQuery} />
+              </Link>
             ) : (
-              <LogoMobile onClick={onClickClearSearchQuery} />
+              <Link to="/">
+                <LogoMobile onClick={onClickClearSearchQuery} />
+              </Link>
             )}
           </Link>
           {isEditorMode && (
@@ -94,6 +103,7 @@ export const Header = () => {
                   onChange={changeSearchInput}
                   type="text"
                   placeholder="Search CodePen..."
+                  value={pensQuery}
                 />
               </label>
             </form>
@@ -157,14 +167,14 @@ export const Header = () => {
         </div>
       </div>
       <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
         PaperProps={{ style: { backgroundColor: '#1e1f26', color: 'white', paddingBottom: '20px' } }}
       >
         <DialogTitle>Confirm Logout</DialogTitle>
         <DialogContent>Are you sure you want to Log Out?</DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} sx={{ minWidth: '105px' }}>
+          <Button onClick={() => setOpenDialog(false)} sx={{ minWidth: '105px' }}>
             Cancel
           </Button>
           <Button onClick={handleConfirmLogout} sx={{ minWidth: '105px' }}>

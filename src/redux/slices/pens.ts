@@ -155,7 +155,7 @@ const pens = createSlice({
       })
       .addCase(fetchLikesUserPens.fulfilled, (state, action) => {
         state.status = 'loaded';
-        state.pens = action.payload;
+        state.likesUserPens = action.payload;
       })
       .addCase(fetchLikesUserPens.rejected, (state) => {
         state.status = 'error';

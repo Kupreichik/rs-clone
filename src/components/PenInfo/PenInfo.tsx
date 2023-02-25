@@ -17,18 +17,18 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
 
   const dispatch = useAppDispatch();
 
-  const [isEditTitle, useEditTitle] = useState(false);
+  const [isEditTitle, setEditTitle] = useState(false);
 
   const onBtn = () => {
     if (!isPenOwner) return;
-    useEditTitle(!isEditTitle);
+    setEditTitle(!isEditTitle);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onBlurInput = () => {
     dispatch(updatePenTitle({ title: inputRef.current?.value || title }));
-    useEditTitle(false);
+    setEditTitle(false);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export const PenInfo = ({ title = 'Untitled', author = 'Captain Anonymous' }) =>
 
   useEffect(() => {
     dispatch(updatePenTitle({ title: inputRef.current?.value || title }));
-  }, [dispatch]);
+  }, [dispatch, title]);
 
   return (
     <div className="pen-info">
