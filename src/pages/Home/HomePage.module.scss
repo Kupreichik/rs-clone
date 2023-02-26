@@ -189,10 +189,49 @@
   background: #5a5f73;
 }
 
+.home__login {
+  margin-bottom: 40px;
+}
+
+.home__login-list {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid $text;
+}
+
+.home__login-item {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text;
+  padding: 20px;
+  margin-bottom: -2px;
+  cursor: pointer;
+}
+
+.home__login-item:hover {
+  color: $textHover;
+}
+
+.home__login-active {
+  color: white;
+  border-bottom: 2px solid $green;
+}
+
+.home__login-active:hover {
+  color: white;
+}
+
 @media screen and (max-width: 700px) {
   .home__item-avatar {
     width: 30px;
     height: 30px;
+  }
+  .home__login-list {
+    justify-content: center;
+  }
+
+  .home__login-item {
+    font-size: 16px;
   }
 }
 
@@ -204,5 +243,12 @@
   .home__item:hover .home__item-background {
     right: -10px;
     width: 370px;
+  }
+
+  .home__item-info {
+    padding: 0 10px;
+  }
+  .home__item-stats {
+    padding-right: 10px;
   }
 }
