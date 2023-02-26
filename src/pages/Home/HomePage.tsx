@@ -53,6 +53,7 @@ export const HomePage = () => {
   const tabs = useSelector(getTabs);
 
   const getTabsPens = () => {
+    console.log('2');
     if (tabs === 'trending') {
       return pens.slice().sort((pen1, pen2) => pen2.viewsCount - pen1.viewsCount);
     } else if (tabs === 'youWork') {

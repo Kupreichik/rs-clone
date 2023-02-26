@@ -42,7 +42,7 @@ const initialState: InitialPensState = {
   status: 'loading',
   searchQuery: '',
   pensLoved: [],
-  tabs: 'youWork',
+  tabs: 'trending',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -114,9 +114,6 @@ const pens = createSlice({
     followSearchQuery(state, action) {
       state.searchQuery = action.payload;
     },
-    clearPenLoved(state) {
-      state.pensLoved = [];
-    },
     clearSearchQuery(state) {
       state.searchQuery = '';
     },
@@ -125,9 +122,6 @@ const pens = createSlice({
     },
     changeTabs(state, action) {
       state.tabs = action.payload;
-    },
-    selectYouWorkTab(state) {
-      state.tabs = 'youWork';
     },
   },
   extraReducers: (builder) => {
@@ -161,7 +155,7 @@ const pens = createSlice({
       })
       .addCase(fetchPen.fulfilled, (state, action) => {
         state.status = 'loaded';
-        state.currentPen = action.payload;
+        state.currentPen = action.payload ?? emptyPen;
       })
       .addCase(fetchPen.rejected, (state) => {
         state.status = 'error';
@@ -209,11 +203,9 @@ export const {
   updateAllCurrentPenData,
   updatePenTitle,
   followSearchQuery,
-  clearPenLoved,
   clearSearchQuery,
   clearPensLoved,
   changeTabs,
-  selectYouWorkTab,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;
