@@ -152,6 +152,7 @@ const pens = createSlice({
       })
       .addCase(deletePen.fulfilled, (state, action) => {
         state.pens = state.pens.filter((pen) => pen._id !== action.payload.penId);
+        state.pensLoved = state.pensLoved.filter((pen) => pen._id !== action.payload.penId);
       })
       .addCase(fetchPen.pending, (state) => {
         state.status = 'loading';
