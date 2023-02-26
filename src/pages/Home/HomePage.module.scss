@@ -138,7 +138,12 @@
   font-weight: 300;
 }
 
-.home__item-like {
+.home__item-controls {
+  display: flex;
+}
+
+.home__item-like
+.home__item-delete {
   padding: 2px;
 }
 
