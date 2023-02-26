@@ -3,9 +3,11 @@ import '../../styles/menu.scss';
 import { ExitToApp, Person, Work } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem } from '@mui/material';
 import cn from 'classnames';
+import { MouseEventHandler } from 'react';
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
@@ -35,13 +37,14 @@ export const Header = () => {
   };
 
   const onClickClearSearchQuery = () => {
-    dispatch(changeTabs('trending'));
+    dispatch(changeTabs('youWork'));
     dispatch(clearSearchQuery());
   };
 
   //* logout
 
   const onClickLogout = () => setOpenDialog(true);
+  const navigate = useNavigate();
 
   const handleConfirmLogout = async () => {
     setOpenDialog(false);
@@ -51,6 +54,8 @@ export const Header = () => {
     homeLinkRef.current?.click();
     onClickClearSearchQuery();
     dispatch(clearPensLoved());
+    dispatch(changeTabs('trending'));
+    navigate('/');
   };
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
@@ -68,9 +73,13 @@ export const Header = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseMenuItem = () => {
+  const handleCloseMenuItem: MouseEventHandler<HTMLAnchorElement> = (event) => {
+    const { target } = event;
     setAnchorEl(null);
     onClickClearSearchQuery();
+    if ((target as HTMLLIElement).textContent === 'You Work') {
+      dispatch(changeTabs('youWork'));
+    }
   };
 
   const menuItemStyle = { marginRight: '5px', color: 'white' };
