@@ -3,9 +3,11 @@ import './EditorControls.scss';
 import { AlertColor } from '@mui/material';
 import cn from 'classnames';
 import { useRef, useState } from 'react';
+import { AiOutlineTeam } from 'react-icons/ai';
 import { TbCloudUpload } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useMediaQuery } from 'usehooks-ts';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { selectIsAuth, selectUserLogin } from '../../redux/slices/auth';
@@ -24,6 +26,7 @@ export const oppositeViewMode = (viewMode: ViewMode) => {
 
 export const EditorControls = () => {
   const currentPenData = useSelector(getCurrentPen);
+  const isMobile = useMediaQuery('(min-width: 700px)');
 
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
@@ -107,14 +110,14 @@ export const EditorControls = () => {
     <div className="editor-controls">
       {isPenOwner && clearPath === '/editor' && (
         <div className="editor-controls__btn button save-btn" onClick={onSave}>
-          <TbCloudUpload size={30} />
-          Save
+          <TbCloudUpload size={isMobile ? 27 : 20} />
+          {isMobile && <span>Save</span>}
         </div>
       )}
       {clearPath === '/editor' && (
         <>
           <div className="button" style={coEditingStyle} onClick={handleCoEditingClick}>
-            Start Co-Editing
+            {isMobile ? <span>Start Co-Editing</span> : <AiOutlineTeam size={20} />}
           </div>
           <NavLink ref={editingRoomLinkRef} to={path} hidden></NavLink>
         </>
