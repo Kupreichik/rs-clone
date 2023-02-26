@@ -41,8 +41,10 @@ export const HomePage = () => {
 
   useEffect(() => {
     dispatch(fetchPens());
-    dispatch(fetchPensLoved());
-  }, [dispatch]);
+    if (isAuth) {
+      dispatch(fetchPensLoved());
+    }
+  }, [dispatch, isAuth]);
 
   const pens = useSelector(getPens);
   const name = useSelector(selectUserName);

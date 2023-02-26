@@ -42,7 +42,7 @@ const initialState: InitialPensState = {
   status: 'loading',
   searchQuery: '',
   pensLoved: [],
-  tabs: 'trending',
+  tabs: 'youWork',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -60,7 +60,6 @@ export const addPen = createAsyncThunk(
 
 export const updatePen = createAsyncThunk('pens/updatePen', async ({ penId, params }: TUpdateParams) => {
   const { data } = await axios.put<IPenData>(`/pens/${penId}`, params);
-
   return data;
 });
 
@@ -126,6 +125,9 @@ const pens = createSlice({
     },
     changeTabs(state, action) {
       state.tabs = action.payload;
+    },
+    selectYouWorkTab(state) {
+      state.tabs = 'youWork';
     },
   },
   extraReducers: (builder) => {
@@ -211,6 +213,7 @@ export const {
   clearSearchQuery,
   clearPensLoved,
   changeTabs,
+  selectYouWorkTab,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;

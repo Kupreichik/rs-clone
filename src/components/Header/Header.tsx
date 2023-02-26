@@ -3,9 +3,11 @@ import '../../styles/menu.scss';
 import { ExitToApp, Person, Work } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem } from '@mui/material';
 import cn from 'classnames';
+import { MouseEventHandler } from 'react';
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
 
 import { ReactComponent as LogoDesktop } from '../../assets/svg/logoDesktop.svg';
@@ -13,7 +15,14 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { changeTabs, clearPensLoved, clearSearchQuery, followSearchQuery, getPensQuery } from '../../redux/slices/pens';
+import {
+  changeTabs,
+  clearPensLoved,
+  clearSearchQuery,
+  followSearchQuery,
+  getPensQuery,
+  selectYouWorkTab,
+} from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -42,6 +51,7 @@ export const Header = () => {
   //* logout
 
   const onClickLogout = () => setOpenDialog(true);
+  const navigate = useNavigate();
 
   const handleConfirmLogout = async () => {
     setOpenDialog(false);
@@ -51,6 +61,8 @@ export const Header = () => {
     homeLinkRef.current?.click();
     onClickClearSearchQuery();
     dispatch(clearPensLoved());
+    dispatch(selectYouWorkTab());
+    navigate('/');
   };
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);
@@ -68,9 +80,13 @@ export const Header = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseMenuItem = () => {
+  const handleCloseMenuItem: MouseEventHandler<HTMLAnchorElement> = (event) => {
+    const { target } = event;
     setAnchorEl(null);
     onClickClearSearchQuery();
+    if ((target as HTMLLIElement).textContent === 'You Work') {
+      dispatch(selectYouWorkTab());
+    }
   };
 
   const menuItemStyle = { marginRight: '5px', color: 'white' };
