@@ -60,7 +60,6 @@ export const addPen = createAsyncThunk(
 
 export const updatePen = createAsyncThunk('pens/updatePen', async ({ penId, params }: TUpdateParams) => {
   const { data } = await axios.put<IPenData>(`/pens/${penId}`, params);
-
   return data;
 });
 
@@ -115,9 +114,6 @@ const pens = createSlice({
     followSearchQuery(state, action) {
       state.searchQuery = action.payload;
     },
-    clearPenLoved(state) {
-      state.pensLoved = [];
-    },
     clearSearchQuery(state) {
       state.searchQuery = '';
     },
@@ -159,7 +155,7 @@ const pens = createSlice({
       })
       .addCase(fetchPen.fulfilled, (state, action) => {
         state.status = 'loaded';
-        state.currentPen = action.payload;
+        state.currentPen = action.payload ?? emptyPen;
       })
       .addCase(fetchPen.rejected, (state) => {
         state.status = 'error';
@@ -207,7 +203,6 @@ export const {
   updateAllCurrentPenData,
   updatePenTitle,
   followSearchQuery,
-  clearPenLoved,
   clearSearchQuery,
   clearPensLoved,
   changeTabs,

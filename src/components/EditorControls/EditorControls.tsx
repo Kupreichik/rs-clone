@@ -117,7 +117,7 @@ export const EditorControls = () => {
       {clearPath === '/editor' && (
         <>
           <div className="button" style={coEditingStyle} onClick={handleCoEditingClick}>
-            {isMobile ? <span>Start Co-Editing</span> : <AiOutlineTeam size={20} />}
+            {isMobile ? <span>Co-Editing</span> : <AiOutlineTeam size={20} />}
           </div>
           <NavLink ref={editingRoomLinkRef} to={path} hidden></NavLink>
         </>

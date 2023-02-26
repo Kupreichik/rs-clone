@@ -24,7 +24,7 @@ export const EditorPage = () => {
     if (idPen) {
       dispatch(fetchPen(idPen));
     }
-  }, []);
+  }, [dispatch, idPen]);
 
   const currentPenData = useSelector(getCurrentPen);
   const editorData = useSelector(getEditorData);
@@ -41,7 +41,6 @@ export const EditorPage = () => {
         if (!currentPenData._id) {
           storePenData({ html, css, js });
         }
-
         setSrcDoc(getSrcDoc({ html, css, js }));
       }, 250);
 
