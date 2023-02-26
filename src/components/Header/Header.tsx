@@ -13,7 +13,13 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import { clearLikesUserPens, clearSearchQuery, followSearchQuery, getPensQuery } from '../../redux/slices/pens';
+import {
+  changeTabs,
+  clearLikesUserPens,
+  clearSearchQuery,
+  followSearchQuery,
+  getPensQuery,
+} from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -34,16 +40,19 @@ export const Header = () => {
     dispatch(followSearchQuery(target.value));
   };
 
-  const onClickClearSearchQuery = () => dispatch(clearSearchQuery());
+  const onClickClearSearchQuery = () => {
+    dispatch(changeTabs('trending'));
+    dispatch(clearSearchQuery());
+  };
 
   //* logout
 
   const onClickLogout = () => setOpenDialog(true);
 
   const handleConfirmLogout = async () => {
-    await dispatch(fetchAuthLogout());
     setOpenDialog(false);
     setAnchorEl(null);
+    await dispatch(fetchAuthLogout());
     dispatch(logout());
     homeLinkRef.current?.click();
     onClickClearSearchQuery();
@@ -58,7 +67,7 @@ export const Header = () => {
 
   //* dialog
   const [openDialog, setOpenDialog] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openUserMenu = Boolean(anchorEl);
 
   const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -78,13 +87,9 @@ export const Header = () => {
         <div className={styles.header__inner}>
           <Link to={!isEditingRoomMode ? '/' : '/editor'}>
             {isMobile && !isEditorMode ? (
-              <Link to="/">
-                <LogoDesktop onClick={onClickClearSearchQuery} />
-              </Link>
+              <LogoDesktop onClick={onClickClearSearchQuery} />
             ) : (
-              <Link to="/">
-                <LogoMobile onClick={onClickClearSearchQuery} />
-              </Link>
+              <LogoMobile onClick={onClickClearSearchQuery} />
             )}
           </Link>
           {isEditorMode && (

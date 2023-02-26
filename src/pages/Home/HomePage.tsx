@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom';
 import { PenList } from '../../components/index';
 import { selectIsAuth, selectUserName } from '../../redux/slices/auth';
 import {
+  changeTabs,
   clearEditor,
   clearSearchQuery,
   fetchLikesUserPens,
   fetchPens,
   getLikesUserPens,
   getPens,
+  getTabs,
   updateEditorCSS,
   updateEditorHTML,
   updateEditorJS,
@@ -21,7 +23,6 @@ import { getPenData } from '../../utils/localstorage';
 import styles from './HomePage.module.scss';
 
 export const HomePage = () => {
-  const [activeTab, setActiveTab] = useState('allPens');
   const [pageNumber, setPageNumber] = useState(1);
   const dispatch = useAppDispatch();
 
@@ -43,29 +44,31 @@ export const HomePage = () => {
     dispatch(fetchLikesUserPens());
   }, [dispatch]);
 
-  useEffect(() => {
-    setPageNumber(1);
-  }, [activeTab]);
-
   const pens = useSelector(getPens);
   const name = useSelector(selectUserName);
   const likes = useSelector(getLikesUserPens);
 
+  const tabs = useSelector(getTabs);
+
   const getTabsPens = () => {
-    if (activeTab === 'allPens') {
-      return pens;
-    } else if (activeTab === 'youWork') {
+    if (tabs === 'trending') {
+      return pens.slice().sort((pen1, pen2) => pen2.viewsCount - pen1.viewsCount);
+    } else if (tabs === 'youWork') {
       return pens.filter((pen) => pen.user.name === name);
-    } else if (activeTab === 'likes') {
+    } else if (tabs === 'likes') {
       return likes;
     }
     return [];
   };
 
   const handleTabClick = (tab: SetStateAction<string>) => {
-    setActiveTab(tab);
+    dispatch(changeTabs(tab));
     getTabsPens();
   };
+
+  useEffect(() => {
+    setPageNumber(1);
+  }, [tabs]);
 
   return (
     <section className="home">
@@ -81,15 +84,15 @@ export const HomePage = () => {
                 <ul className={styles['home__login-list']}>
                   <li
                     className={cn(styles['home__login-item'], {
-                      [styles['home__login-active']]: activeTab === 'allPens',
+                      [styles['home__login-active']]: tabs === 'trending',
                     })}
-                    onClick={() => handleTabClick('allPens')}
+                    onClick={() => handleTabClick('trending')}
                   >
-                    All Pens
+                    Trending
                   </li>
                   <li
                     className={cn(styles['home__login-item'], {
-                      [styles['home__login-active']]: activeTab === 'youWork',
+                      [styles['home__login-active']]: tabs === 'youWork',
                     })}
                     onClick={() => handleTabClick('youWork')}
                   >
@@ -97,7 +100,7 @@ export const HomePage = () => {
                   </li>
                   <li
                     className={cn(styles['home__login-item'], {
-                      [styles['home__login-active']]: activeTab === 'likes',
+                      [styles['home__login-active']]: tabs === 'likes',
                     })}
                     onClick={() => handleTabClick('likes')}
                   >

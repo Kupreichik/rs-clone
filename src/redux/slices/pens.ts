@@ -11,6 +11,7 @@ type InitialPensState = {
   currentPen: IPenData;
   searchQuery: string;
   likesUserPens: IPenData[];
+  tabs: 'trending' | 'youWork' | 'likes';
 };
 
 type TUpdateParams = {
@@ -41,6 +42,7 @@ const initialState: InitialPensState = {
   status: 'loading',
   searchQuery: '',
   likesUserPens: [],
+  tabs: 'trending',
 };
 
 export const fetchPens = createAsyncThunk('pens/fetchPens', async () => {
@@ -114,6 +116,9 @@ const pens = createSlice({
     clearLikesUserPens(state) {
       state.likesUserPens = [];
     },
+    changeTabs(state, action) {
+      state.tabs = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -171,6 +176,8 @@ export const getPensQuery = (state: RootState) => state.pens.searchQuery;
 
 export const getLikesUserPens = (state: RootState) => state.pens.likesUserPens;
 
+export const getTabs = (state: RootState) => state.pens.tabs;
+
 export const {
   updateEditorHTML,
   updateEditorCSS,
@@ -181,6 +188,7 @@ export const {
   followSearchQuery,
   clearSearchQuery,
   clearLikesUserPens,
+  changeTabs,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;
