@@ -13,13 +13,7 @@ import { ReactComponent as LogoMobile } from '../../assets/svg/logoMobile.svg';
 import { ReactComponent as Magnifier } from '../../assets/svg/magnifier.svg';
 import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
-import {
-  changeTabs,
-  clearLikesUserPens,
-  clearSearchQuery,
-  followSearchQuery,
-  getPensQuery,
-} from '../../redux/slices/pens';
+import { changeTabs, clearPensLoved, clearSearchQuery, followSearchQuery, getPensQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
@@ -56,7 +50,7 @@ export const Header = () => {
     dispatch(logout());
     homeLinkRef.current?.click();
     onClickClearSearchQuery();
-    dispatch(clearLikesUserPens());
+    dispatch(clearPensLoved());
   };
 
   const homeLinkRef = useRef<HTMLAnchorElement>(null);

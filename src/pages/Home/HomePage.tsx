@@ -9,10 +9,10 @@ import {
   changeTabs,
   clearEditor,
   clearSearchQuery,
-  fetchLikesUserPens,
   fetchPens,
-  getLikesUserPens,
+  fetchPensLoved,
   getPens,
+  getPensLoved,
   getTabs,
   updateEditorCSS,
   updateEditorHTML,
@@ -41,12 +41,12 @@ export const HomePage = () => {
 
   useEffect(() => {
     dispatch(fetchPens());
-    dispatch(fetchLikesUserPens());
+    dispatch(fetchPensLoved());
   }, [dispatch]);
 
   const pens = useSelector(getPens);
   const name = useSelector(selectUserName);
-  const likes = useSelector(getLikesUserPens);
+  const likes = useSelector(getPensLoved);
 
   const tabs = useSelector(getTabs);
 

@@ -10,8 +10,8 @@ type InitialPensState = {
   status: 'loading' | 'loaded' | 'error';
   currentPen: IPenData;
   searchQuery: string;
-  likesUserPens: IPenData[];
   tabs: 'trending' | 'youWork' | 'likes';
+  pensLoved: IPenData[];
 };
 
 type TUpdateParams = {
@@ -41,7 +41,7 @@ const initialState: InitialPensState = {
   currentPen: structuredClone(emptyPen),
   status: 'loading',
   searchQuery: '',
-  likesUserPens: [],
+  pensLoved: [],
   tabs: 'trending',
 };
 
@@ -74,7 +74,12 @@ export const fetchPen = createAsyncThunk('pens/fetchPen', async (idPen: string |
   return data;
 });
 
-export const fetchLikesUserPens = createAsyncThunk('pens/fetchLikesUserPens', async () => {
+export const addPenToLoved = createAsyncThunk('pens/addPenToLoved', async (penId: string) => {
+  const { data } = await axios.patch<IPenData>(`/pens/${penId}`);
+  return data;
+});
+
+export const fetchPensLoved = createAsyncThunk('pens/fetchPensLoved', async () => {
   const { data } = await axios.get<IPenData[]>('/pens/loved');
   return data;
 });
@@ -110,11 +115,14 @@ const pens = createSlice({
     followSearchQuery(state, action) {
       state.searchQuery = action.payload;
     },
+    clearPenLoved(state) {
+      state.pensLoved = [];
+    },
     clearSearchQuery(state) {
       state.searchQuery = '';
     },
-    clearLikesUserPens(state) {
-      state.likesUserPens = [];
+    clearPensLoved(state) {
+      state.pensLoved = [];
     },
     changeTabs(state, action) {
       state.tabs = action.payload;
@@ -138,7 +146,7 @@ const pens = createSlice({
       })
       .addCase(updatePen.fulfilled, (state, action) => {
         const penIndex = state.pens.findIndex((pen) => pen._id === action.payload._id);
-        if (penIndex) {
+        if (penIndex !== -1) {
           state.pens[penIndex] = { ...state.pens[penIndex], ...action.payload };
         }
       })
@@ -155,26 +163,38 @@ const pens = createSlice({
       .addCase(fetchPen.rejected, (state) => {
         state.status = 'error';
       })
-      .addCase(fetchLikesUserPens.pending, (state) => {
+      .addCase(fetchPensLoved.pending, (state) => {
         state.status = 'loading';
+        state.pensLoved = [];
       })
-      .addCase(fetchLikesUserPens.fulfilled, (state, action) => {
+      .addCase(fetchPensLoved.fulfilled, (state, action) => {
         state.status = 'loaded';
-        state.likesUserPens = action.payload;
+        state.pensLoved = action.payload;
       })
-      .addCase(fetchLikesUserPens.rejected, (state) => {
+      .addCase(fetchPensLoved.rejected, (state) => {
         state.status = 'error';
+        state.pensLoved = [];
+      })
+      .addCase(addPenToLoved.fulfilled, (state, action) => {
+        const penIndex = state.pens.findIndex((pen) => pen._id === action.payload._id);
+        if (penIndex !== -1) {
+          state.pens[penIndex] = action.payload;
+        }
+
+        const penIndexInLoved = state.pensLoved.findIndex((pen) => pen._id === action.payload._id);
+        penIndexInLoved !== -1 ? state.pensLoved.splice(penIndexInLoved, 1) : state.pensLoved.push(action.payload);
+
+        state.status = 'loaded';
       });
   },
 });
 
 export const getCurrentPen = (state: RootState) => state.pens.currentPen;
 export const getPens = (state: RootState) => state.pens.pens;
+export const getPensLoved = (state: RootState) => state.pens.pensLoved;
 export const getPensStatus = (state: RootState) => state.pens.status;
 
 export const getPensQuery = (state: RootState) => state.pens.searchQuery;
-
-export const getLikesUserPens = (state: RootState) => state.pens.likesUserPens;
 
 export const getTabs = (state: RootState) => state.pens.tabs;
 
@@ -186,8 +206,9 @@ export const {
   updateAllCurrentPenData,
   updatePenTitle,
   followSearchQuery,
+  clearPenLoved,
   clearSearchQuery,
-  clearLikesUserPens,
+  clearPensLoved,
   changeTabs,
 } = pens.actions;
 

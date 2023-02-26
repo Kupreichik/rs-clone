@@ -64,7 +64,7 @@ export const EditorPage = () => {
                       icon={<TbBrandHtml5 color="red" size={20} />}
                       language="xml"
                       displayName="HTML"
-                      onChange={(value) => {
+                      onBeforeChange={(_editor, _data, value) => {
                         dispatch(updateEditorHTML(value));
                       }}
                       value={currentPenData?.html || ''}
@@ -80,7 +80,7 @@ export const EditorPage = () => {
                       icon={<TbBrandCss3 color="blue" size={20} />}
                       language="css"
                       displayName="CSS"
-                      onChange={(value) => {
+                      onBeforeChange={(_editor, _data, value) => {
                         dispatch(updateEditorCSS(value));
                       }}
                       value={currentPenData?.css || ''}
@@ -96,7 +96,7 @@ export const EditorPage = () => {
                       icon={<TbBrandJavascript color="yellow" size={20} />}
                       language="javascript"
                       displayName="JS"
-                      onChange={(value) => {
+                      onBeforeChange={(_editor, _data, value) => {
                         dispatch(updateEditorJS(value));
                       }}
                       value={currentPenData?.js || ''}
