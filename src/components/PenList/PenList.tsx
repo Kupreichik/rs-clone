@@ -24,7 +24,8 @@ export const PenList = ({ getTabsPens, pageNumber, setPageNumber }: IPenListProp
 
   const allPens = useSelector(getPens);
 
-  const pens = isAuth ? getTabsPens() : allPens;
+  const pens = isAuth ? getTabsPens() : allPens.slice().sort((pen1, pen2) => pen2.viewsCount - pen1.viewsCount);
+
   const pensSearchFIlter = pens.filter(({ title, html, css, js, user }) =>
     [title, html, css, js, user.username].some((field) => field.toLowerCase().includes(pensQuery.toLowerCase())),
   );
