@@ -7,7 +7,7 @@ import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
-  status: 'loading' | 'loaded' | 'error';
+  status: 'loading' | 'loaded' | 'error' | 'error page';
   currentPen: IPenData;
   searchQuery: string;
   tabs: 'trending' | 'youWork' | 'likes';
@@ -123,6 +123,9 @@ const pens = createSlice({
     changeTabs(state, action) {
       state.tabs = action.payload;
     },
+    changeStatus(state, action) {
+      state.status = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -155,10 +158,10 @@ const pens = createSlice({
       })
       .addCase(fetchPen.fulfilled, (state, action) => {
         state.status = 'loaded';
-        state.currentPen = action.payload ?? emptyPen;
+        state.currentPen = action.payload;
       })
       .addCase(fetchPen.rejected, (state) => {
-        state.status = 'error';
+        state.status = 'error page';
       })
       .addCase(fetchPensLoved.pending, (state) => {
         state.status = 'loading';
@@ -206,6 +209,7 @@ export const {
   clearSearchQuery,
   clearPensLoved,
   changeTabs,
+  changeStatus,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;
