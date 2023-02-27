@@ -17,7 +17,7 @@ export const Layout = () => {
     <>
       <Header />
       <main className="main">
-        <div className="container">{status === 'error' ? <NotFoundPage /> : <Outlet />}</div>
+        <div className="container">{status === 'error page' ? <NotFoundPage /> : <Outlet />}</div>
       </main>
       <Footer />
     </>

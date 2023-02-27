@@ -7,7 +7,7 @@ import { RootState } from '../store';
 
 type InitialPensState = {
   pens: IPenData[];
-  status: 'loading' | 'loaded' | 'error';
+  status: 'loading' | 'loaded' | 'error' | 'error page';
   currentPen: IPenData;
   searchQuery: string;
   tabs: 'trending' | 'youWork' | 'likes';
@@ -161,7 +161,7 @@ const pens = createSlice({
         state.currentPen = action.payload;
       })
       .addCase(fetchPen.rejected, (state) => {
-        state.status = 'error';
+        state.status = 'error page';
       })
       .addCase(fetchPensLoved.pending, (state) => {
         state.status = 'loading';

@@ -37,7 +37,7 @@ export const Header = () => {
   };
 
   const onClickClearSearchQuery = () => {
-    dispatch(changeTabs('youWork'));
+    dispatch(changeTabs('trending'));
     dispatch(clearSearchQuery());
   };
 
