@@ -5,10 +5,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 100vh;
+  height: calc(100vh - 12px);
   width: 100vw;
   background: $background;
-
   z-index: 50;
 }
 

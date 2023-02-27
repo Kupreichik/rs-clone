@@ -1,8 +1,16 @@
 import { Link } from 'react-router-dom';
 
+import { changeStatus } from '../../redux/slices/pens';
+import { useAppDispatch } from '../../redux/store';
 import styles from './NotFoundPage.module.scss';
 
 export const NotFoundPage = () => {
+  const dispatch = useAppDispatch();
+
+  const handleGoHomeClick = () => {
+    dispatch(changeStatus('loading'));
+  };
+
   return (
     <section className={styles.notefoundpage}>
       <div className={styles.notefoundpage__inner}>
@@ -12,7 +20,7 @@ export const NotFoundPage = () => {
           link to something that has since been deleted. Or the link was incorrect to begin&nbsp;with.
         </p>
         <p>Sorry about that. We&apos;ve logged the error for review, in case it&apos;s our fault.</p>
-        <Link to="/" className={styles.notefoundpage__link}>
+        <Link to="/" className={styles.notefoundpage__link} onClick={handleGoHomeClick}>
           Go to the homepage
         </Link>
       </div>

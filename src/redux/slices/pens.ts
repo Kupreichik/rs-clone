@@ -123,6 +123,9 @@ const pens = createSlice({
     changeTabs(state, action) {
       state.tabs = action.payload;
     },
+    changeStatus(state, action) {
+      state.status = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -155,7 +158,7 @@ const pens = createSlice({
       })
       .addCase(fetchPen.fulfilled, (state, action) => {
         state.status = 'loaded';
-        state.currentPen = action.payload ?? emptyPen;
+        state.currentPen = action.payload;
       })
       .addCase(fetchPen.rejected, (state) => {
         state.status = 'error';
@@ -206,6 +209,7 @@ export const {
   clearSearchQuery,
   clearPensLoved,
   changeTabs,
+  changeStatus,
 } = pens.actions;
 
 export const pensReducer = pens.reducer;
