@@ -1,0 +1,69 @@
+.editors-container {
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 10px;
+  height: 100%;
+}
+
+.react-codemirror2.editor {
+  height: 100%;
+}
+
+.CodeMirror {
+  height: 100% !important;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar {
+  width: 7px;
+  background-color: #3d4d56;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
+  background-color: #666b7a;
+  border-radius: 3px;
+}
+
+.main-wrapper-editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.results-container {
+  height: 100%;
+  background: white;
+}
+
+.reflex-element::-webkit-scrollbar {
+  width: 9px;
+  background-color: #3d4d56;
+}
+
+.reflex-element::-webkit-scrollbar-thumb {
+  background-color: #666b7a;
+  border-radius: 5px;
+}
+
+.editor-container {
+  height: 100%;
+}
+
+.editor-title {
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  & svg {
+    flex-shrink: 0;
+  }
+}
+
+.div-absolute {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

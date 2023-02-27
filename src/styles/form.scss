@@ -1,0 +1,69 @@
+@import './vars.scss';
+
+.MuiFormLabel-root {
+  font-weight: 700 !important;
+  color: $text !important;
+  background-color: $gray !important;
+}
+
+.MuiInputBase-input {
+  color: white !important;
+  font-weight: 700 !important;
+  background-color: $gray !important;
+  padding: 12px 14px !important;
+}
+
+.MuiFormControl-root {
+  margin-bottom: 20px !important;
+}
+
+.MuiFormHelperText-root {
+  font-weight: 700 !important;
+}
+
+.MuiFormLabel-root {
+  border-radius: 5px !important;
+  margin: 0px -8px 0 -5px !important;
+  padding: 0 9px 0 7px !important;
+}
+
+.MuiInputLabel-root.Mui-error {
+  color: #d32f2f !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: white !important;
+}
+
+.Mui-error {
+  border-color: #d32f2f !important;
+}
+
+.MuiButton-root {
+  color: $background !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+  background: $green !important;
+  transition: 0.3s !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+.MuiButton-root:hover {
+  background: $greenHover !important;
+  color: white !important;
+}
+
+.Mui-disabled {
+  color: $background !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+  background: #d32f2f !important;
+}
+
+@media screen and (max-width: 700px) {
+  .MuiButton-root {
+    font-size: 14px !important;
+    padding: 5px 5px !important;
+  }
+}

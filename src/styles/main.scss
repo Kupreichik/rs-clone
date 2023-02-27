@@ -1,0 +1,149 @@
+@import '../styles/vars.scss';
+
+html {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  vertical-align: top;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: inherit;
+  font-size: inherit;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+fieldset {
+  border: none;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 auto;
+  color: white;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: $background;
+}
+
+.main {
+  flex-grow: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+.active-link {
+  color: white;
+  border-bottom: 2px solid $green;
+}
+
+.button {
+  padding: 10px 16px;
+  background: $btnBackground;
+  color: white;
+  border-radius: 5px;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.button:hover {
+  background: $lightBackground;
+  cursor: pointer;
+}
+
+.button-github {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: $text;
+  border: 2px solid $text;
+  position: relative;
+  font-weight: 700;
+  text-align: center;
+  padding-left: 40px;
+  max-width: 482px;
+  width: 100%;
+}
+
+.button-github::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 6px;
+  width: 35px;
+  height: 35px;
+  background-image: url('../assets/svg/github.svg');
+  background-repeat: no-repeat;
+  background-size: 25px;
+}
+
+.button-github:hover {
+  border: 2px solid $text;
+}
+
+@media screen and (max-width: 700px) {
+  // .main {
+  //   margin-top: 100px;
+  // }
+
+  .container {
+    padding: 0 5px;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 5.5px 5px;
+  }
+
+  .button-github::before {
+    top: 2px;
+  }
+}

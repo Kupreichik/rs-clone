@@ -1,0 +1,259 @@
+@import '../../styles/vars.scss';
+
+.home__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.home__btn {
+  position: relative;
+  margin: 40px auto;
+  display: inline-block;
+  background-color: black;
+}
+
+.home__btn:hover {
+  background-color: black;
+}
+
+.home__btn::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -0.125em;
+  left: -0.125em;
+  width: calc(100% + 0.25em);
+  height: calc(100% + 0.25em);
+  border-radius: 0.25em;
+  background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
+  background-size: 200%;
+  animation: animationBorder 1.5s linear infinite paused;
+}
+
+.home__btn:hover::after {
+  animation-play-state: running;
+}
+
+@keyframes animationBorder {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 400% 0;
+  }
+}
+
+.home__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 350px));
+  grid-gap: 50px 60px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 120px;
+}
+
+.home__item {
+  position: relative;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.home__item:hover .home__item-background {
+  width: 390px;
+  height: 110%;
+}
+
+.home__item-background {
+  position: absolute;
+  bottom: -10px;
+  right: -20px;
+  max-width: 390px;
+  width: 100%;
+  height: 100%;
+  background: $gray;
+  border-radius: 10px;
+  z-index: -1;
+  transition: all 0.3s;
+}
+
+.home__item-background:hover {
+  width: 110%;
+  height: 110%;
+}
+
+.home__item-iframe-wrapper {
+  display: flex;
+  max-width: 350px;
+  width: 100%;
+  height: 180px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  position: relative;
+  border: 1px solid #383838;
+  overflow: hidden;
+  background: $gray;
+}
+
+.home__item-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.home__item-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home__item-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  object-fit: cover;
+  vertical-align: middle;
+}
+
+.home__item-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+
+.home__item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 20px;
+}
+
+.home__item-author {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 300;
+}
+
+.home__item-controls {
+  display: flex;
+}
+
+.home__item-like
+.home__item-delete {
+  padding: 2px;
+}
+
+.home__item-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.home__item-stats {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: end;
+}
+
+.home__item-stats-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.home__btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.home__btn-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #444857;
+}
+
+.home__btn-pagination:hover {
+  background: #5a5f73;
+}
+
+.home__login {
+  margin-bottom: 40px;
+}
+
+.home__login-list {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid $text;
+}
+
+.home__login-item {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text;
+  padding: 20px;
+  margin-bottom: -2px;
+  cursor: pointer;
+}
+
+.home__login-item:hover {
+  color: $textHover;
+}
+
+.home__login-active {
+  color: white;
+  border-bottom: 2px solid $green;
+}
+
+.home__login-active:hover {
+  color: white;
+}
+
+@media screen and (max-width: 700px) {
+  .home__item-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  .home__login-list {
+    justify-content: center;
+  }
+
+  .home__login-item {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .home__item-background {
+    right: 0;
+  }
+
+  .home__item:hover .home__item-background {
+    right: -10px;
+    width: 370px;
+  }
+
+  .home__item-info {
+    padding: 0 10px;
+  }
+  .home__item-stats {
+    padding-right: 10px;
+  }
+}

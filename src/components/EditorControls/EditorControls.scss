@@ -1,0 +1,36 @@
+.editor-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.save-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+}
+
+.view-btn {
+  width: 36px;
+  height: 36px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.rotate {
+    transform: rotate(-90deg);
+  }
+
+  @media screen and (max-width: 700px) {
+    width: 28px;
+    height: 28px;
+    top: -43px;
+    right: 124px;
+  }
+
+  &:hover {
+    filter: brightness(0.5);
+  }
+}
+
