@@ -45,7 +45,7 @@ export const PenList = ({ getTabsPens, pageNumber, setPageNumber }: IPenListProp
       <div className={styles.home__items}>
         {pensPagination.length
           ? pensPagination.map((penData) => <PenItem key={penData._id} {...penData} />)
-          : 'No pens found'}
+          : 'No pens'}
       </div>
       <div className={styles['home__btns']}>
         <span
