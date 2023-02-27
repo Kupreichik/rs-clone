@@ -10,6 +10,10 @@
   align-items: center;
   gap: 10px;
   padding: 20px 0 10px;
+
+  @media screen and (max-width: 450px) {
+    flex-wrap: wrap;
+  }
 }
 
 .nav__list {
@@ -91,6 +95,11 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+
+  @media screen and (max-width: 450px) {
+    margin-left: auto;
+    justify-content: end;
+  }
 }
 
 .header__button {

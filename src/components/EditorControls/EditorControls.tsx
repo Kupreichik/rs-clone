@@ -3,9 +3,11 @@ import './EditorControls.scss';
 import { AlertColor } from '@mui/material';
 import cn from 'classnames';
 import { useRef, useState } from 'react';
+import { AiOutlineTeam } from 'react-icons/ai';
 import { TbCloudUpload } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useMediaQuery } from 'usehooks-ts';
 
 import { ReactComponent as ViewBtnIcon } from '../../assets/svg/viewBtn.svg';
 import { selectIsAuth, selectUserLogin } from '../../redux/slices/auth';
@@ -13,7 +15,7 @@ import { fetchEditingRoom, RoomData } from '../../redux/slices/editingRoom';
 import { getEditorData, updateViewMode, ViewMode } from '../../redux/slices/editor';
 import { addPen, getCurrentPen, updatePen } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
-import { clearPenData } from '../../utils/localstorage';
+import { clearPenDataLocalStorage } from '../../utils/localstorage';
 import { IPenData } from '../PenItem/PenItem';
 import { SnackbarCustom } from '../Snackbar/Snackbar';
 
@@ -24,6 +26,7 @@ export const oppositeViewMode = (viewMode: ViewMode) => {
 
 export const EditorControls = () => {
   const currentPenData = useSelector(getCurrentPen);
+  const isMobile = useMediaQuery('(min-width: 700px)');
 
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
@@ -58,7 +61,7 @@ export const EditorControls = () => {
         setText('pen saved');
         setMessageMode('success');
         setOpen(true);
-        clearPenData();
+        clearPenDataLocalStorage();
         navigate(`/editor/${(res.payload as IPenData)._id}`);
       } else {
         console.log(`error, can't save`);
@@ -107,14 +110,14 @@ export const EditorControls = () => {
     <div className="editor-controls">
       {isPenOwner && clearPath === '/editor' && (
         <div className="editor-controls__btn button save-btn" onClick={onSave}>
-          <TbCloudUpload size={30} />
-          Save
+          <TbCloudUpload size={isMobile ? 27 : 20} />
+          {isMobile && <span>Save</span>}
         </div>
       )}
       {clearPath === '/editor' && (
         <>
           <div className="button" style={coEditingStyle} onClick={handleCoEditingClick}>
-            Co-Editing
+            {isMobile ? <span>Co-Editing</span> : <AiOutlineTeam size={20} />}
           </div>
           <NavLink ref={editingRoomLinkRef} to={path} hidden></NavLink>
         </>

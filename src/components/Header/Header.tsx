@@ -17,6 +17,7 @@ import { PenInfo } from '../../components/index';
 import { fetchAuthLogout, logout, selectIsAuth, selectUserAvatarUrl } from '../../redux/slices/auth';
 import { changeTabs, clearPensLoved, clearSearchQuery, followSearchQuery, getPensQuery } from '../../redux/slices/pens';
 import { useAppDispatch } from '../../redux/store';
+import { clearPenDataLocalStorage } from '../../utils/localstorage';
 import { EditorControls } from '../EditorControls/EditorControls';
 import styles from './Header.module.scss';
 
@@ -37,7 +38,7 @@ export const Header = () => {
   };
 
   const onClickClearSearchQuery = () => {
-    dispatch(changeTabs('youWork'));
+    dispatch(changeTabs('trending'));
     dispatch(clearSearchQuery());
   };
 
@@ -54,6 +55,7 @@ export const Header = () => {
     homeLinkRef.current?.click();
     onClickClearSearchQuery();
     dispatch(clearPensLoved());
+    clearPenDataLocalStorage();
     dispatch(changeTabs('trending'));
     navigate('/');
   };

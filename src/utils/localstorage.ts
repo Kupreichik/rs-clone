@@ -18,6 +18,6 @@ export const getPenData = (): StorePenData => {
   return data === null ? emptyPenData : JSON.parse(data);
 };
 
-export const clearPenData = () => {
+export const clearPenDataLocalStorage = () => {
   localStorage.removeItem(PEN_DATA_KEY);
 };
