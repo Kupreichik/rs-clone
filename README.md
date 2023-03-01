@@ -41,7 +41,6 @@ Run to build the application
 - [Axios](https://axios-http.com/) - a library for making HTTP requests
 - [Socket.IO Client](https://socket.io/docs/v4/client-api/) - a library for working with WebSocket connections
 - [Codemirror](https://codemirror.net/) - a library for editing code in the browser
-- [Nanoid](https://github.com/ai/nanoid/) - a library for generating unique identifiers
 - [Sass](https://sass-lang.com/) - a CSS preprocessor
 - [@emotion/react](https://emotion.sh/docs/introduction) and [@emotion/styled](https://emotion.sh/docs/styled) - libraries for working with CSS in React
 - [@mui/material](https://mui.com/) and [@mui/icons-material](https://mui.com/components/icons/) - a library of components and icons for React from Material UI
