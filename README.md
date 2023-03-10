@@ -6,6 +6,8 @@ https://github.com/rolling-scopes-school/tasks/blob/master/tasks/rsclone/rsclone
 #### Deploy
 https://rss-clone.netlify.app/
 
+backend source: https://github.com/Kupreichik/rs-clone-api
+
 #### To work with the source code of an application, run the following commands:
 
 ### `npm run dev`  
